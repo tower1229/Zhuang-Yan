@@ -146,39 +146,39 @@
       "color": "#88619A",
       "members": [
         { "code": "INTJ", "name_zh": "建筑师", "name_en": "Architect", "tagline": "富有想象力的战略家，凡事皆有计划", "file": "INTJ.md", "status": "done" },
-        { "code": "INTP", "name_zh": "逻辑学家", "name_en": "Logician", "tagline": "富有创造力的发明家，对知识有着不可抑制的渴望", "file": "INTP.md", "status": "pending" },
-        { "code": "ENTJ", "name_zh": "指挥官", "name_en": "Commander", "tagline": "大胆、富有想象力且意志坚强的领导者", "file": "ENTJ.md", "status": "pending" },
-        { "code": "ENTP", "name_zh": "辩论家", "name_en": "Debater", "tagline": "聪明好奇的思想家，无法抗拒智识的挑战", "file": "ENTP.md", "status": "pending" }
+        { "code": "INTP", "name_zh": "逻辑学家", "name_en": "Logician", "tagline": "富有创造力的发明家，对知识有着不可抑制的渴望", "file": "INTP.md", "status": "done" },
+        { "code": "ENTJ", "name_zh": "指挥官", "name_en": "Commander", "tagline": "大胆、富有想象力且意志坚强的领导者", "file": "ENTJ.md", "status": "done" },
+        { "code": "ENTP", "name_zh": "辩论家", "name_en": "Debater", "tagline": "聪明好奇的思想家，无法抗拒智识的挑战", "file": "ENTP.md", "status": "done" }
       ]
     },
     "diplomats": {
       "label": "外交家",
       "color": "#33A474",
       "members": [
-        { "code": "INFJ", "name_zh": "提倡者", "name_en": "Advocate", "tagline": "安静而神秘，同时鼓舞人心且不知疲倦的理想主义者", "file": "INFJ.md", "status": "pending" },
-        { "code": "INFP", "name_zh": "调停者", "name_en": "Mediator", "tagline": "诗意、善良的利他主义者，总是热情地为美好事业服务", "file": "INFP.md", "status": "pending" },
-        { "code": "ENFJ", "name_zh": "主人公", "name_en": "Protagonist", "tagline": "富有魅力、鼓舞人心的领导者，能够迷住听众", "file": "ENFJ.md", "status": "pending" },
-        { "code": "ENFP", "name_zh": "竞选者", "name_en": "Campaigner", "tagline": "热情、有创造力、善于社交的自由精神，总能找到微笑的理由", "file": "ENFP.md", "status": "pending" }
+        { "code": "INFJ", "name_zh": "提倡者", "name_en": "Advocate", "tagline": "安静而神秘，同时鼓舞人心且不知疲倦的理想主义者", "file": "INFJ.md", "status": "done" },
+        { "code": "INFP", "name_zh": "调停者", "name_en": "Mediator", "tagline": "诗意、善良的利他主义者，总是热情地为美好事业服务", "file": "INFP.md", "status": "done" },
+        { "code": "ENFJ", "name_zh": "主人公", "name_en": "Protagonist", "tagline": "富有魅力、鼓舞人心的领导者，能够迷住听众", "file": "ENFJ.md", "status": "done" },
+        { "code": "ENFP", "name_zh": "竞选者", "name_en": "Campaigner", "tagline": "热情、有创造力、善于社交的自由精神，总能找到微笑的理由", "file": "ENFP.md", "status": "done" }
       ]
     },
     "sentinels": {
       "label": "守护者",
       "color": "#4298B4",
       "members": [
-        { "code": "ISTJ", "name_zh": "物流师", "name_en": "Logistician", "tagline": "务实且注重事实，其可靠性不容置疑", "file": "ISTJ.md", "status": "pending" },
-        { "code": "ISFJ", "name_zh": "守卫者", "name_en": "Defender", "tagline": "非常专注且温暖的守护者，时刻准备保护所爱之人", "file": "ISFJ.md", "status": "pending" },
-        { "code": "ESTJ", "name_zh": "总经理", "name_en": "Executive", "tagline": "出色的管理者，在管理事物或人方面无与伦比", "file": "ESTJ.md", "status": "pending" },
-        { "code": "ESFJ", "name_zh": "执政官", "name_en": "Consul", "tagline": "极具关爱心、善于社交且受欢迎的人，总是热心地帮助他人", "file": "ESFJ.md", "status": "pending" }
+        { "code": "ISTJ", "name_zh": "物流师", "name_en": "Logistician", "tagline": "务实且注重事实，其可靠性不容置疑", "file": "ISTJ.md", "status": "done" },
+        { "code": "ISFJ", "name_zh": "守卫者", "name_en": "Defender", "tagline": "非常专注且温暖的守护者，时刻准备保护所爱之人", "file": "ISFJ.md", "status": "done" },
+        { "code": "ESTJ", "name_zh": "总经理", "name_en": "Executive", "tagline": "出色的管理者，在管理事物或人方面无与伦比", "file": "ESTJ.md", "status": "done" },
+        { "code": "ESFJ", "name_zh": "执政官", "name_en": "Consul", "tagline": "极具关爱心、善于社交且受欢迎的人，总是热心地帮助他人", "file": "ESFJ.md", "status": "done" }
       ]
     },
     "explorers": {
       "label": "探险家",
       "color": "#E4AE3A",
       "members": [
-        { "code": "ISTP", "name_zh": "鉴赏家", "name_en": "Virtuoso", "tagline": "大胆而实际的实验者，擅长使用各种工具", "file": "ISTP.md", "status": "pending" },
-        { "code": "ISFP", "name_zh": "探险家", "name_en": "Adventurer", "tagline": "灵活迷人的艺术家，时刻准备探索和体验新事物", "file": "ISFP.md", "status": "pending" },
-        { "code": "ESTP", "name_zh": "企业家", "name_en": "Entrepreneur", "tagline": "聪明、精力充沛、善于感知的人，真正享受生活在边缘", "file": "ESTP.md", "status": "pending" },
-        { "code": "ESFP", "name_zh": "表演者", "name_en": "Entertainer", "tagline": "自发、精力充沛且热情的表演者，生活在他们周围从不无聊", "file": "ESFP.md", "status": "pending" }
+        { "code": "ISTP", "name_zh": "鉴赏家", "name_en": "Virtuoso", "tagline": "大胆而实际的实验者，擅长使用各种工具", "file": "ISTP.md", "status": "done" },
+        { "code": "ISFP", "name_zh": "探险家", "name_en": "Adventurer", "tagline": "灵活迷人的艺术家，时刻准备探索和体验新事物", "file": "ISFP.md", "status": "done" },
+        { "code": "ESTP", "name_zh": "企业家", "name_en": "Entrepreneur", "tagline": "聪明、精力充沛、善于感知的人，真正享受生活在边缘", "file": "ESTP.md", "status": "done" },
+        { "code": "ESFP", "name_zh": "表演者", "name_en": "Entertainer", "tagline": "自发、精力充沛且热情的表演者，生活在他们周围从不无聊", "file": "ESFP.md", "status": "done" }
       ]
     }
   }
