@@ -1,7 +1,7 @@
 {
   "_meta": {
     "version": "2.0.0",
-    "description": "MBTI 人格类型资产索引，供 persona skill 初始化使用",
+    "description": "MBTI 人格类型资产索引，供 persona skill 初始化与再初始化（重生）使用",
     "template_reference": "INTJ.md",
     "sections": [
       "基本信息",
@@ -15,15 +15,15 @@
     "compatibility_notes": {
       "source": "mbtiquiz.com / 16personalities 社区综合数据",
       "best_match_only": true,
-      "fallback_policy": "当用户对推荐不满意时，skill 应基于认知功能互补原则自行推断次优选项，而非查表"
+      "fallback_policy": "当用户对推荐不满意时，skill 应基于认知功能互补原则推断次优选项，而非直接查表"
     },
     "pairing_modes": {
       "direct": "用户直接指定数字人 MBTI 类型",
-      "reverse": "用户输入自己的 MBTI，skill 查 reverse_lookup 推荐单一最优数字人类型"
+      "reverse": "用户输入自己的 MBTI 与目标定位，skill 查 reverse_lookup 推荐单一最优数字人类型"
     }
   },
   "compatibility_matrix": {
-    "_note": "每种类型的最佳配对（best），仅用于反推模式的参照背景。运行时查询请使用 reverse_lookup。",
+    "_note": "每种类型的最佳配对（best）仅用于反推模式的参照背景；运行时推荐请使用 reverse_lookup（人类 MBTI × 定位）。",
     "INTJ": ["ENFP", "ENTP"],
     "INTP": ["ENTJ", "ENFJ"],
     "ENTJ": ["INTP", "INTJ"],
@@ -42,7 +42,7 @@
     "ESFP": ["ISFP", "ESTP"]
   },
   "reverse_lookup": {
-    "_description": "人类 MBTI × 定位 → 单一最优数字人类型推荐。四种定位：companion（伴侣）/ assistant（助手）/ mentor（导师）/ friend（朋友）",
+    "_description": "人类 MBTI × 定位 -> 单一最优数字人类型推荐。四种定位：companion（伴侣）/ assistant（助手）/ mentor（导师）/ friend（朋友）；定位是人格生成参数，不支持运行期切换。",
     "INTJ": {
       "companion": { "recommended": "ENFP", "reason": "互补型：ENFP 的活力与自发性软化 INTJ 的严苛，激发情感流动；共同的 N 维度保证智识共鸣" },
       "assistant": { "recommended": "ENTJ", "reason": "同频型：高效、战略性、直接，无需情感铺垫，沟通成本极低" },
