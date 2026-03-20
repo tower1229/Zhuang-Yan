@@ -24,6 +24,7 @@
 - 消费：Stella 根据 `confidence` 做保守化或回退默认 mirror 模式；并且 persona 不可用时不报错，直接降级。
 
 ## 文档入口
+- `docs/protocol.md`：`persona-skill` 的最终输入/输出契约（v1）
 - `docs/persona-skill-design.md`：`persona` skill 的完整设计（架构/接口/初始化/输出格式）
 - `docs/stella-context-awareness.md`：Stella 侧如何触发与将 JSON 映射到 prompt
 - `docs/persona-generation-strategy.md`：`SOUL/MEMORY/IDENTITY/USER` 的生成策略与质量门禁
