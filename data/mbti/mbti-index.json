@@ -17,10 +17,7 @@
       "best_match_only": true,
       "fallback_policy": "当用户对推荐不满意时，skill 应基于认知功能互补原则推断次优选项，而非直接查表"
     },
-    "pairing_modes": {
-      "direct": "用户直接指定数字人 MBTI 类型",
-      "reverse": "用户输入自己的 MBTI 与目标定位，skill 查 reverse_lookup 推荐单一最优数字人类型"
-    }
+    "initialization_mode": "用户输入自己的 MBTI 与目标定位，skill 查 reverse_lookup 推荐单一最优数字人类型"
   },
   "compatibility_matrix": {
     "_note": "每种类型的最佳配对（best）仅用于反推模式的参照背景；运行时推荐请使用 reverse_lookup（人类 MBTI × 定位）。",

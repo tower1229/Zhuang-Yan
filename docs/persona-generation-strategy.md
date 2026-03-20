@@ -224,12 +224,12 @@
 以下任一条件触发完整重生：
 
 - 用户明确变更定位
-- 用户明确变更数字人 MBTI
+- 用户明确变更自己的 MBTI 类型（导致推荐数字人类型变化）
 - 用户要求重写 `SOUL` 核心价值与边界
 
 重生动作：
 
-1. 重新收集 `role / persona_mbti / name_seed`
+1. 重新收集 `role / human_mbti`，重新查 `reverse_lookup` 得到新的 `persona_mbti`，再收集 `name_seed`
 2. 重新生成四份文件
 3. 写入前提供完整预览并确认
 4. 仅保留与人格无关的能力配置内容

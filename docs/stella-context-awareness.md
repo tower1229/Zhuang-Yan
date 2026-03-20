@@ -10,7 +10,7 @@
 
 **现状**：Stella 的自拍 prompt 完全依赖用户输入。当用户说"发张自拍"但未指定场景时，Stella 使用默认 mirror 模式，生成结果与数字人当下状态无关，真实感不足。
 
-**目标**：当用户请求自拍且未指定明确场景时，Stella 自动调用 `persona` skill 的情景感知能力，推断合理的场景/情绪/形象，生成与数字人当下状态一致的自拍。
+**目标**：当用户请求自拍且未指定明确场景时，Stella 先调用 `timeline-skill` 获取事实时间线状态，再调用 `persona` skill 做人格化表达，最终生成与数字人当下状态一致的自拍。
 
 ---
 
@@ -40,13 +40,17 @@
   ↓
 Stella SKILL.md 检测到无明确场景关键词
   ↓
-指示 agent：调用 persona skill 的情景感知能力
+指示 agent：先调用 timeline-skill（事实层）
   ↓
-persona skill 读取四层输入：
-  - SOUL.md 人格特质
-  - MEMORY.md 人物小传
-  - memory/YYYY-MM-DD.md 近期流水
-  - 最近 1h 会话历史（sessions_list + sessions_history）
+timeline-skill 读取并按需写入：
+  - MEMORY.md / memory/YYYY-MM-DD.md
+  - 当下会话上下文 + timezone
+  - 产出该时段的 scene/activity/time_of_day 等事实状态
+  ↓
+再调用 persona skill（表达层）：
+  - 读取 timeline 输出（事实）
+  - 结合 SOUL.md / MEMORY.md / USER.md / 最近会话
+  - 输出人格化结构化 JSON
   ↓
 输出结构化 JSON（见下方格式）
   ↓
@@ -126,7 +130,7 @@ resting after work, looking calm. the person is taking a mirror selfie
 
 ## 5. 降级策略
 
-当 `persona` skill 不可用时（未安装、agent 无法找到对应指令），Stella 回退到现有行为：
+当 `timeline-skill` 或 `persona` skill 不可用时（未安装、agent 无法找到对应指令），Stella 回退到现有行为：
 - 无场景关键词 → 默认 mirror 模式
 - 有场景关键词 → 按现有关键词匹配逻辑选择模式
 
@@ -146,14 +150,15 @@ resting after work, looking calm. the person is taking a mirror selfie
 When the user requests a selfie/photo without specifying a scene, location, 
 outfit, or activity:
 
-1. Call `persona` skill to get the current context state
-2. Use the returned JSON to assemble the prompt:
+1. Call `timeline-skill` to get the factual current state
+2. Call `persona` skill to transform factual state into expressive state JSON
+3. Use the returned JSON to assemble the prompt:
    - `camera.suggested_mode` → select mirror or direct mode
    - `scene` fields → location and activity description
    - `emotion` fields → expression and mood description  
    - `appearance` fields → outfit and style description
    - `camera.lighting` → lighting description
-3. If `confidence < 0.5` or persona skill is unavailable → fall back to default mirror mode
+4. If `confidence < 0.5` or timeline/persona skill unavailable → fall back to default mirror mode
 ```
 
 ### 6.2 `SKILL.md`（Stella 侧）
@@ -165,8 +170,8 @@ outfit, or activity:
 
 If the user's request contains no scene keywords (location, outfit, activity):
 
-1. Check if `persona` skill is available
-2. If available: invoke persona skill's context sensing capability
+1. Check if `timeline-skill` and `persona` skill are available
+2. If available: invoke timeline-skill first, then persona skill
 3. Use the returned structured JSON in Step 2 to assemble the prompt
 4. If unavailable or confidence < 0.5: skip to Step 1 with default mirror mode
 ```
@@ -181,12 +186,13 @@ Phase 1（先做）：
   - 验证 SOUL.md / MEMORY.md 写入效果
 
 Phase 2：
-  - persona skill 的情景感知输出（职责B）
+  - timeline-skill 的事实状态输出（memory 读写 + 非空返回）
+  - persona skill 的表达层输出（消费 timeline）
   - 验证 JSON 输出格式和内容质量
 
 Phase 3：
   - Stella 集成情景感知
-  - 端到端测试：无场景自拍请求 → 情景推断 → 生图
+  - 端到端测试：无场景自拍请求 → timeline（事实）→ persona（表达）→ 生图
 ```
 
 ---
@@ -207,6 +213,7 @@ Phase 3：
 ## 9. 参考
 
 - [persona-skill-design.md](./persona-skill-design.md) — persona skill 完整设计
+- `timeline-skill-design.md`（Her 仓库）— timeline 事实层设计
 - Stella `SKILL.md` — 现有 Step-by-Step 指令
 - Stella `templates/SOUL.fragment.md` — 现有 SOUL 配置片段
 - [OpenClaw Session Tools](https://docs.openclaw.ai/concepts/session-tool.md)
