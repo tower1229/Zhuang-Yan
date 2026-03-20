@@ -1,7 +1,7 @@
-# Stella × Persona — 情景感知集成方案
+# Stella × Timeline × Persona — 情景感知集成方案
 
 > 更新时间：2026-03-19  
-> 状态：设计完成，待实现  
+> 状态：实施规范（v1）  
 > 依赖文档：[persona-skill-design.md](./persona-skill-design.md)
 
 ---
@@ -138,11 +138,11 @@ resting after work, looking calm. the person is taking a mirror selfie
 
 ---
 
-## 6. 需要修改的文件
+## 6. 实施规范（Stella 侧）
 
 ### 6.1 `templates/SOUL.fragment.md`（Stella 侧）
 
-在"Mode selection"部分之前，新增情景感知规则：
+在 `templates/SOUL.fragment.md` 的 "Mode selection" 部分之前，**必须**新增以下规则：
 
 ```markdown
 ### Context-Aware Mode (when no scene is specified)
@@ -163,7 +163,7 @@ outfit, or activity:
 
 ### 6.2 `SKILL.md`（Stella 侧）
 
-在"Step 1: Collect User Input"之前，新增 Step 0：
+在 `SKILL.md` 的 "Step 1: Collect User Input" 之前，**必须**新增 Step 0：
 
 ```markdown
 ### Step 0: Context Inference (when no scene specified)
@@ -194,6 +194,13 @@ Phase 3：
   - Stella 集成情景感知
   - 端到端测试：无场景自拍请求 → timeline（事实）→ persona（表达）→ 生图
 ```
+
+### 7.1 强制执行约束（MUST）
+
+1. 无场景关键词命中时，调用顺序必须固定为：`timeline-skill` → `persona`。不得交换顺序。
+2. 进入 Step 0 后必须先读取 timeline 事实层，再消费 persona 表达层，不得跳过 timeline 直接调用 persona。
+3. 若 `timeline-skill` 或 `persona` 任一不可用，必须回退到 Stella 默认模式，不得伪造事实层场景。
+4. 若 `confidence < 0.5`，必须走保守或默认回退策略（按 §4.5）。
 
 ---
 
