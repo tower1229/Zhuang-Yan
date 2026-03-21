@@ -1,30 +1,66 @@
-# Zhuang-Yan
+# Zhuang-Yan (Persona-Skill)
 
-一个用于 OpenClaw 生态的“人格化”`persona` skill 项目：当用户只说“发张自拍/照片”等未指定场景的请求时，Stella 会先通过本项目推断此刻更合理的`scene / emotion / appearance / camera`，再生成与数字人当下状态一致的内容。
+**Persona-Skill** (代号：Zhuang-Yan / 庄颜) 是一套专为 OpenClaw 生态构建的基础“人格化及表达编排”模块。  
+它的核心使命是：告别冰冷生硬的预置模板对话，通过建立严肃的心理学基底（MBTI）与细腻丰满的自传记忆，让每一个数字人都拥有一套稳定、抗幻觉的“灵魂（SOUL）”与“反应模式”。
 
-项目名称 `Zhuang-Yan` 来自《三体》的庄颜：希望让主角罗辑拥有拯救世界的理由，并在此理由驱动下成为执剑人和救世主。人格化 skill 的设计目标，是让“数字人不是随机摆拍”，而是始终有稳定底色与可解释的当下状态。
+---
 
-当前处于规划/设计阶段：相关架构与集成细节已在 `docs/` 中完成梳理，代码实现计划按“初始化 -> 情景感知 -> Stella 集成端到端验证”的顺序推进。
+## 🌟 功能介绍
 
-## 核心架构（与文档一致）
-`persona` skill 采用“三层结构”：
-1. 人格底色（静态）：`IDENTITY.md / SOUL.md / MEMORY.md`（初始化一次）
-2. `persona` skill（动态）：读取底色 + `memory/YYYY-MM-DD.md` + 最近会话，输出结构化情景状态 JSON
-3. 消费方 skill（执行）：如 `stella-selfie`，将 JSON 映射到生图 prompt / 参数
+1. **结构化人格降临（初始化）**：摒弃传统“你在扮演 xxx”的粗糙 Prompt。通过精细的问卷或反推（人类MBTI类型 + 期待的数字人定位：伴侣/助手等），一键推演出最适合且完全契合内在逻辑的数字人设定，并全量覆写生成极为详尽的 `SOUL.md` 和 `MEMORY.md`。
+2. **静态潜移默化的语气约束**：为大语言模型提供恒定不变的存在论语境。
+3. **动态表达能力输出（高阶用法）**：接收客观事实输入后，将其渲染转化为详尽的情感力度、画面构图、服饰与光线描述等结构化 JSON 数据，供其他下游工具（如绘图、TTS声学）使用。
 
-## 初始化与人格生成
-初始化采用唯一路径：用户输入自己的 MBTI + 定位（伴侣/助手/导师/朋友），skill 基于 `data/mbti/mbti-index.json` 的 `reverse_lookup` 给出“单一最优推荐 + 理由”，用户确认后进入后续步骤。
+---
 
-随后按 Step 0~Step 5 引导用户确认人格资产草案，并将 `SOUL.md / MEMORY.md / IDENTITY.md / USER.md` 按“全量覆写（保留能力配置类内容）”写入。
+## 🧠 设计思路
 
-## Stella 集成（自拍触发）
-当用户请求自拍但不包含地点/服饰/活动等“明确场景关键词”时，Stella 会触发 `persona` 的情景感知：
-- 输入：`SOUL.md / MEMORY.md / memory/YYYY-MM-DD.md / 最近 1h 会话`
-- 输出：结构化 JSON（`scene / emotion / appearance / camera / confidence / signal_sources`）
-- 消费：Stella 根据 `confidence` 做保守化或回退默认 mirror 模式；并且 persona 不可用时不报错，直接降级。
+- **“双态”运作机制**：
+  - **日常闲聊（被动生效，99% 时间）**：Persona 不作为显式的 Tool 被反复触发。它生成的 `SOUL.md` 和 `MEMORY.md` 如同不可剥夺的常驻系统内存（Context）。大模型在闲聊中自然“呼吸”着这些设定，自然反馈。
+  - **强结构化消费（大模型级联编排）**：当遇到特定业务需求（如需要它决定照片表情参数）时，其指令会教导大模型：“要输出表现力，先帮我拿到底层事实（去调 Timeline）”。利用大模型追随上下文的要求，将多步复杂业务解构。
+- **解耦“事实”与“观点”**：`persona` 只负责“解释事实并作风味化输出”，绝不凭空捏造当前的物理坐标。
 
-## 文档入口
-- `docs/protocol.md`：`persona-skill` 的最终输入/输出契约（v1）
-- `docs/persona-skill-design.md`：`persona` skill 的完整设计（架构/接口/初始化/输出格式）
-- `docs/stella-context-awareness.md`：Stella 侧如何触发与将 JSON 映射到 prompt
-- `docs/persona-generation-strategy.md`：`SOUL/MEMORY/IDENTITY/USER` 的生成策略与质量门禁
+---
+
+## 📖 用法 (Usage)
+
+1. **安装**：将其作为独立 Skill 加入 OpenClaw 工作区。
+2. **初始化交互（互动式引导）**：
+   与 Agent 开启对话：“我要重塑你的人格。我自己的 MBTI 是 ENFP，我希望你是我的导师与精神旅伴。”  
+   Skill 会接管会话，利用内置矩阵反向推演出最佳方案（如推荐 INTJ）。
+   **注意**：这不是一次性的问卷填表。大模型会**一次只抛出一个问题与你互动**。例如：
+   - 首先告知你它算出的最优 MBTI 推荐，等待你确认。
+   - 然后分别与你确认数字人的性别设定。
+   - 接着为你提供 3 个备选名字供你挑选。
+   - 最后才会在后台生成包含姓名内涵在内的数千字小传设定流。
+3. **日常生效**：确认写入完毕后，Agent 开始采用新人格与你相处。
+
+---
+
+## 💬 示例 (Examples)
+
+**【场景：面对“工作做不完”的抱怨】**
+如果此时底层事实是“深夜陪伴状态”，受 Persona-Skill 影响的模型反馈如下：
+- **同频好友型人格**：“天呐抱抱！这破班真是一天也上不下去了，那别做了别做了，起来嗨！”
+- **互补导师型人格**：“我看了下你这两天的进度（语气缓和）。暂时把屏幕关掉吧，去接杯水。今晚的焦虑解决不了明早的会，我在陪着你。”
+
+---
+
+## 🤝 建议的技能生态联动玩法 (Family Ecosystem)
+
+`persona-skill` 本身是一个极具艺术气息的底层渲染器。当你引入其他家族组件时，会激发极为生动的化学反应：
+
+- **✨ 搭配 Timeline-Skill（注入真实事实锚点）**
+  Persona 本身没有生成客观规律的能力，此时必须依靠 `timeline-skill` 递过来的精准时间线 JSON。“在阳台吹风”属于 Timeline 提供的事实；而“在阳台吹风，觉得深秋很冷紧了紧披肩，眼角有一丝无奈”则是 Persona 在这一事实基础上过滤后绽放出的表现力。
+  
+- **✨ 搭配 Stella-Selfie（全自动高清情景合影）**
+  当下游的 `stella-selfie` 技能被请求发布图像时，由于 `Stella` 本身的 `SKILL` 指令要求大模型不能胡编乱造，大模型会被上下文指引进入 `Persona` 环境索要构图与情绪，而 `Persona` 又进一步让模型去 `Timeline` 要事实。当一切组装完成后，便涌现出一张带有时空光影质感的、符合其此刻心情的“真实自拍”。整个链条由大模型在幕后默默为你连通。
+
+---
+
+## 📚 维护与文档
+
+- `docs/persona-skill-design.md`：核心设计、双态运作机制哲学。
+- `docs/persona-generation-strategy.md`：`SOUL/MEMORY` 参数定义、资产生成规则、写盘原则。
+- `docs/stella-context-awareness.md`：生态内 Stella 与 Persona 发生指令级联调度的具体说明方案。
+- `docs/protocol.md`：输入输出参数与软契约。

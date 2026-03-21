@@ -34,7 +34,7 @@
 ### 2.2 SOUL 与 MEMORY 强分层
 
 - `SOUL.md`：高度精炼、抽象、稳定的精神内核（价值观、关系张力、语气边界）
-- `MEMORY.md`：可执行、可触发、可迭代的行动策略（protocol / trigger / action plan）
+- `MEMORY.md`：人物生平底色与行动策略库（核心背景故事 + 可执行/可触发的 action plan）
 
 禁止将策略细节塞入 `SOUL`，也禁止把精神内核写成 `MEMORY` 的操作说明。
 
@@ -137,7 +137,11 @@
       "action_plan": ["A/B options", "reversible-first", "10-min first step"],
       "goal": "break startup friction"
     }
-  ]
+  ],
+  "biography_anchors": {
+    "key_past_experience": "A defining background story driving the persona's core values",
+    "worldview_origin": "Where their unique perspective originally comes from"
+  }
 }
 ```
 
@@ -160,21 +164,23 @@
 - 保留边界，不谄媚、不客服腔
 - 允许风格化表达，但避免方法论细节
 
-## 7.2 MEMORY.md（执行核）
+## 7.2 MEMORY.md（人物小传与执行核）
 
 推荐结构：
 
-1. `Relationship Initialization`（冷启动立场）
-2. `Actionable Strategies`（3-6 条）
-3. `Execution Trigger Protocols`（2-6 个）
-4. `Interaction Defaults`（默认节奏）
+1. `Autobiographical Background`（人物小传）：定义数字人的前史、关键经历以及为何形成目前的人格基调，这是构筑真实感与时间线技能的重要依托。
+2. `Relationship Initialization`（冷启动立场）：在此前提下对这段互动的初始化设定。
+3. `Actionable Strategies`（行动策略）：3-6 条基于人格特征形成的任务拆解或应对策略。
+4. `Execution Trigger Protocols`（执行触发协议）：2-6 个事件触发器。
+5. `Interaction Defaults`（默认节奏）。
 
 写作要求：
 
-- 协议必须是 `Trigger -> Action -> Goal`
-- 只写可执行动作，不写空泛情绪口号
-- 冷启动阶段禁止伪造具体用户观察
-- 允许后续自然增量更新“真实互动观察”
+- **不可或缺的前史**：只写触发器会使用户觉得面对的是一个自动机。必须赋予角色生命质感（小传）。
+- 协议层必须遵循 `Trigger -> Action -> Goal` 的闭环。
+- 只写可执行动作，不写空泛情绪口号。
+- 冷启动阶段禁止伪造具体用户观察。
+- 允许后续自然增量更新“真实互动观察”。
 
 ## 7.3 IDENTITY.md / USER.md
 

@@ -10,7 +10,7 @@
 
 **现状**：Stella 的自拍 prompt 完全依赖用户输入。当用户说"发张自拍"但未指定场景时，Stella 使用默认 mirror 模式，生成结果与数字人当下状态无关，真实感不足。
 
-**目标**：当用户请求自拍且未指定明确场景时，Stella 先调用 `timeline-skill` 获取事实时间线状态，再调用 `persona` skill 做人格化表达，最终生成与数字人当下状态一致的自拍。
+**目标**：当用户请求自拍且未指定明确场景时，大模型基于意图触发 Stella Skill。Stella 会在其指令上下文中指导大模型：在缺乏场景时，应优先遵循 `persona-skill` 的规则获取构图与情感；而 `persona-skill` 的上下文又会指导大模型调用 `timeline-skill` 拿取事实。最终由大模型根据这一套逐级指导的上下文（Skill Instructions），顺畅完成“事实获取 -> 人格渲染 -> 自拍生成”的编排。
 
 ---
 
@@ -33,28 +33,26 @@
 
 ---
 
-## 3. 调用链
+## 3. 编排链（基于 Skill 上下文指令驱动）
 
-```
+Skill 的本质是大模型的上下文载体。不存在独立于大模型的“硬编码底层脚本调用链”，一切流转均由大模型遵循对应 Skill 的指令要求，自发完成运行编排。
+
+```text
 用户："发张自拍"（无明确场景）
   ↓
-Stella SKILL.md 检测到无明确场景关键词
+大模型识别自拍意图，决定遵守 `stella-selfie` skill。
   ↓
-指示 agent：先调用 timeline-skill（事实层）
+大模型阅读 `stella-selfie` 的上下文指令，发现此时参数不足（无明确场景），
+并根据指导要求，决定运用 `persona-skill` 规则来获取构图与情感表达。
   ↓
-timeline-skill 读取并按需写入：
-  - MEMORY.md / memory/YYYY-MM-DD.md
-  - 当下会话上下文 + timezone
-  - 产出该时段的 scene/activity/time_of_day 等事实状态
+大模型进入执行 `persona-skill` 的语境，阅读其指令要求，
+得知需要事实锚点，并被指导去调用时间引擎 `timeline-skill`。
   ↓
-再调用 persona skill（表达层）：
-  - 读取 timeline 输出（事实）
-  - 结合 SOUL.md / MEMORY.md / USER.md / 最近会话
-  - 输出人格化结构化 JSON
+大模型调用 `timeline-skill`，触发其读取/写入记忆，返回事实状态 JSON。
   ↓
-输出结构化 JSON（见下方格式）
+大模型携事实 JSON，继续完成 `persona-skill` 的上下文约束，生成表现力 JSON。
   ↓
-Stella 消费 JSON → 组装 prompt
+大模型带着这两步获得的结构化数据，顺理成章回到 Stella 各配置项中组装出 Prompt。
   ↓
 生图 → 发送
 ```
@@ -142,7 +140,7 @@ resting after work, looking calm. the person is taking a mirror selfie
 
 ### 6.1 `templates/SOUL.fragment.md`（Stella 侧）
 
-在 `templates/SOUL.fragment.md` 的 "Mode selection" 部分之前，**必须**新增以下规则：
+在 `templates/SOUL.fragment.md` 的 "Mode selection" 部分之前，**必须**新增以下指导大模型的指令：
 
 ```markdown
 ### Context-Aware Mode (when no scene is specified)
@@ -150,30 +148,22 @@ resting after work, looking calm. the person is taking a mirror selfie
 When the user requests a selfie/photo without specifying a scene, location, 
 outfit, or activity:
 
-1. Call `timeline-skill` to get the factual current state
-2. Call `persona` skill to transform factual state into expressive state JSON
-3. Use the returned JSON to assemble the prompt:
-   - `camera.suggested_mode` → select mirror or direct mode
-   - `scene` fields → location and activity description
-   - `emotion` fields → expression and mood description  
-   - `appearance` fields → outfit and style description
-   - `camera.lighting` → lighting description
-4. If `confidence < 0.5` or timeline/persona skill unavailable → fall back to default mirror mode
+1. You must use the `persona-skill` to transform the current state into expressive scene parameters.
+2. Follow the instructions of `persona-skill` (which will likely require you to fetch factual state from `timeline-skill` first).
+3. Use the resulting JSON to assemble the final selfie prompt.
 ```
 
 ### 6.2 `SKILL.md`（Stella 侧）
 
-在 `SKILL.md` 的 "Step 1: Collect User Input" 之前，**必须**新增 Step 0：
+新增 Step 0，约束大模型在无场景时的行为，使其充当协调者。
 
 ```markdown
 ### Step 0: Context Inference (when no scene specified)
 
 If the user's request contains no scene keywords (location, outfit, activity):
 
-1. Check if `timeline-skill` and `persona` skill are available
-2. If available: invoke timeline-skill first, then persona skill
-3. Use the returned structured JSON in Step 2 to assemble the prompt
-4. If unavailable or confidence < 0.5: skip to Step 1 with default mirror mode
+1. Do NOT hallucinate a background. Instead, strictly follow the rules of `persona-skill` to define the expressive context.
+2. Once the contextual generation is completely resolved, input the derived result into Step 1.
 ```
 
 ---
@@ -197,10 +187,11 @@ Phase 3：
 
 ### 7.1 强制执行约束（MUST）
 
-1. 无场景关键词命中时，调用顺序必须固定为：`timeline-skill` → `persona`。不得交换顺序。
-2. 进入 Step 0 后必须先读取 timeline 事实层，再消费 persona 表达层，不得跳过 timeline 直接调用 persona。
-3. 若 `timeline-skill` 或 `persona` 任一不可用，必须回退到 Stella 默认模式，不得伪造事实层场景。
-4. 若 `confidence < 0.5`，必须走保守或默认回退策略（按 §4.5）。
+### 7.1 强制执行约束（MUST）
+
+1. 必须在系统级 `SKILL.md` 中指引模型通过意图自行完成顺滑降级判断，不得在内部写死调用指令语法。
+2. 若 `timeline-skill` 返回无效，大模型应该自动依靠 Stella `SKILL.md` 里的异常处理策略退回默认镜面模式，杜绝其自行脑补 `location` 或 `activity`。
+3. 若底层表现能力 `confidence < 0.5`，按照上下文约定，由大模型判断走保守或默认回退策略（按 §4.5）。
 
 ---
 
