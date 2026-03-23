@@ -1,7 +1,9 @@
-﻿{
+{
   "name": "persona-skill",
   "private": true,
   "scripts": {
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests",
+    "publish:clawhub": "node ./scripts/release-clawhub.mjs --version 0.1.0",
+    "publish:clawhub:latest": "node ./scripts/release-clawhub.mjs --version 0.1.0 --tag latest"
   }
 }
