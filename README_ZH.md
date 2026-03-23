@@ -22,7 +22,7 @@
 
 1. **关键词触发初始化**：仅在用户明确表达初始化、重建或重塑人格意图时启动。
 2. **渐进式信息收集**：一次只问一个问题，逐步确认用户 MBTI、数字人性别、关系定位、名字、称呼偏好以及重要边界。
-3. **基于 MBTI 的人格推荐**：通过 `data/mbti/mbti-index.json` 中的 `reverse_lookup` 推荐最适合的数字人人格类型。
+3. **基于 MBTI 的人格推荐**：通过 `assets/mbti/mbti-index.json` 中的 `reverse_lookup` 推荐最适合的数字人人格类型。
 4. **四文件草案生成后直接写入**：生成 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 后直接写入，并在完成后告知用户。
 
 ---

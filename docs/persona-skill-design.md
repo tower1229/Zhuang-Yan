@@ -1,4 +1,4 @@
-﻿# Persona Skill — 设计文档
+# Persona Skill — 设计文档
 
 > 更新时间：2026-03-23
 > 状态：v2（收敛为“仅初始化人格资产”）
@@ -98,7 +98,7 @@ Step 3：确认关系定位
   - A. 伴侣 B. 助手 C. 导师 D. 朋友
 
 Step 4：根据 human_mbti × role 查 reverse_lookup
-  - 从 data/mbti/mbti-index.json 读取单一最优推荐
+  - 从 assets/mbti/mbti-index.json 读取单一最优推荐
   - 输出推荐结果与推荐理由
 
 Step 5：生成候选名字
@@ -140,7 +140,7 @@ Step 9：提示完成
 
 初始化还依赖以下静态资产：
 
-- `data/mbti/mbti-index.json`
+- `assets/mbti/mbti-index.json`
 - `references/mbti/*.md`
 
 其中 `reverse_lookup` 是确定性映射，必须以资产文件内容为准，不应凭模型印象自由发挥。

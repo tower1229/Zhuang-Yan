@@ -1,5 +1,5 @@
-﻿# ClawHub publish only the runtime skill files.
-# Keep: SKILL.md, data/mbti/mbti-index.json, references/**, scripts/mbti-lookup.js
+# ClawHub publish only the runtime skill files.
+# Keep: SKILL.md, assets/mbti/mbti-index.json, references/**, scripts/mbti-lookup.js
 
 # VCS and local metadata
 .git/

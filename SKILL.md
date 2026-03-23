@@ -28,7 +28,7 @@ Treat this skill as initialization-only.
 1. Read `references/initialization-flow.md` before starting the interview.
 2. Read `references/write-safety.md` before drafting or writing any file.
 3. Use one-question-at-a-time interaction. Prefer A/B/C/D style choices whenever possible.
-4. Use the deterministic MBTI mapping in `data/mbti/mbti-index.json`.
+4. Use the deterministic MBTI mapping in `assets/mbti/mbti-index.json`.
 5. Prefer running `node scripts/mbti-lookup.js <human_mbti> <role>` to get the exact recommendation.
 6. Read `references/persona-generation-strategy.md` before drafting any of the four persona files. Treat it as the canonical generation specification.
 7. After the four-file draft is complete, write it directly without waiting for user confirmation.

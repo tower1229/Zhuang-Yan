@@ -12,7 +12,7 @@ function exists(relativePath) {
 
 test("runtime files required by the skill exist", () => {
   assert.equal(exists("SKILL.md"), true);
-  assert.equal(exists("data/mbti/mbti-index.json"), true);
+  assert.equal(exists("assets/mbti/mbti-index.json"), true);
   assert.equal(exists("references/initialization-flow.md"), true);
   assert.equal(exists("references/write-safety.md"), true);
   assert.equal(exists("references/persona-generation-strategy.md"), true);

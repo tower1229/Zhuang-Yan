@@ -58,7 +58,7 @@ function lookupRecommendation(humanMbtiRaw, roleRaw, index) {
 }
 
 function loadIndex() {
-  const indexPath = path.join(__dirname, "..", "data", "mbti", "mbti-index.json");
+  const indexPath = path.join(__dirname, "..", "assets", "mbti", "mbti-index.json");
   return JSON.parse(fs.readFileSync(indexPath, "utf8"));
 }
 

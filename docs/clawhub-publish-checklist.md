@@ -3,7 +3,7 @@
 ## 发布结构
 
 - 根目录包含 `SKILL.md`
-- 运行时资源只依赖 `data/mbti/mbti-index.json`、`references/`、`scripts/mbti-lookup.js`
+- 运行时资源只依赖 `assets/mbti/mbti-index.json`、`references/`、`scripts/mbti-lookup.js`
 - `.clawhubignore` 已排除 README、docs、skills 包装目录和其他维护态文件
 
 ## 发布前检查
@@ -11,7 +11,7 @@
 - 先运行：`npm run test`
 - 确认 `package.json` 中的 `version` 已更新为本次发布版本
 - 确认 `SKILL.md` frontmatter 可被 OpenClaw 正常识别
-- 确认 `data/mbti/mbti-index.json` 与 `references/mbti/*.md` 完整存在
+- 确认 `assets/mbti/mbti-index.json` 与 `references/mbti/*.md` 完整存在
 - 确认 `references/*.md` 与 `scripts/mbti-lookup.js` 路径匹配 `SKILL.md`
 - 确认 skill 仍只承担人格初始化，不含状态查询和跨 skill 联动
 

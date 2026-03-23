@@ -22,7 +22,7 @@ Its job is singular: after the user triggers it with an explicit initialization 
 
 1. **Keyword-triggered initialization**: starts only when the user explicitly asks to initialize, rebuild, or reshape the persona.
 2. **Progressive information collection**: asks one question at a time to gather the user's MBTI, target persona gender, relationship role, name, preferred address, and important preferences or boundaries.
-3. **MBTI-based persona recommendation**: uses `reverse_lookup` from `data/mbti/mbti-index.json` to recommend the best-fit persona type.
+3. **MBTI-based persona recommendation**: uses `reverse_lookup` from `assets/mbti/mbti-index.json` to recommend the best-fit persona type.
 4. **Direct four-file write after drafting**: generates `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`, writes them directly, and then tells the user initialization is complete.
 
 ---
