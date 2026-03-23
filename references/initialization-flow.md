@@ -77,27 +77,21 @@ Ask for:
 
 Keep it conversational. Do not demand a long form response.
 
-### Step 7: Draft the four persona files
+### Step 7: Draft and write the four persona files
 
-Draft:
+Draft and then directly write:
 
 - `SOUL.md`
 - `MEMORY.md`
 - `IDENTITY.md`
 - `USER.md`
 
-Read `file-generation-rules.md` before drafting.
+Read `file-generation-rules.md` before drafting and `write-safety.md` before writing.
 
-### Step 8: Review loop
+### Step 8: Completion notice
 
-- Show the draft content to the user.
-- Accept targeted revision requests.
-- Revise only the file sections that need work.
-- Repeat until the user explicitly approves the draft.
+After writing:
 
-### Step 9: Final write
-
-- Read current `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
-- Preserve necessary non-persona operational content.
-- Warn if existing persona assets will be replaced.
-- Write all four files only after explicit confirmation.
+- tell the user initialization is complete
+- summarize that the four persona files have been updated
+- mention if an existing persona was replaced

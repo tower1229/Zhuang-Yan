@@ -31,8 +31,9 @@ Treat this skill as initialization-only.
 4. Use the deterministic MBTI mapping in `{baseDir}/data/mbti/mbti-index.json`.
 5. Prefer running `node {baseDir}/scripts/mbti-lookup.js <human_mbti> <role>` to get the exact recommendation.
 6. Read `{baseDir}/references/file-generation-rules.md` before drafting `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, or `USER.md`.
-7. Show drafts before writing. Revise until the user is satisfied.
-8. Warn clearly when the operation will replace an existing persona.
+7. After the four-file draft is complete, write it directly without waiting for user confirmation.
+8. After writing, clearly tell the user that initialization is complete and which files were updated.
+9. Warn clearly when the operation will replace an existing persona.
 
 ## Drafting rules
 
@@ -45,5 +46,3 @@ Treat this skill as initialization-only.
 ## Fallback behavior
 
 If the request is not an explicit persona initialization request, do not start the workflow. Briefly explain that this skill only handles persona initialization and ask for a clear initialization request instead.
-
-

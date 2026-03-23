@@ -11,7 +11,7 @@
 1. **关键词触发初始化**：仅在用户明确表达“初始化人格 / 重塑人格 / 调用 persona 进行初始化”等意图时启动。
 2. **渐进式信息收集**：一次只问一个问题，逐步确认用户 MBTI、数字人性别、关系定位、名字、用户称呼与注意事项等信息。
 3. **基于 MBTI 的人格反推**：通过 `data/mbti/mbti-index.json` 中的 `reverse_lookup`，为数字人推荐最合适的人格类型。
-4. **四文件草案生成与确认写入**：先生成 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 草案，展示给用户确认后再执行全量覆写。
+4. **四文件草案生成后直接写入**：生成 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 草案后直接执行全量覆写，并在完成后告知用户。
 
 ---
 
@@ -33,8 +33,8 @@
 1. 将本项目根目录作为 `persona-skill` 放入 OpenClaw 工作区。
 2. 用明确口令触发初始化，例如：`调用 persona 进行初始化`。
 3. 按照 skill 的引导逐步回答问题。
-4. 审阅四份草案并确认写入。
-5. 写入完成后，新人格会通过 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 持续影响后续对话风格。
+4. 初始化流程会在四文件草案完成后直接写入。
+5. 写入完成后，skill 会提示初始化完成，新人格会通过 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 持续影响后续对话风格。
 
 本项目根目录就是可直接发布和测试的 skill 目录。
 
@@ -54,4 +54,3 @@
 - 建议发布命令：`clawhub --workdir . publish . --slug persona-skill --name "Persona Skill" --version 0.1.0 --tags latest --changelog "Initial public release"`
 - 可选发布脚本：`npm run publish:clawhub`
 - 发布检查清单：`docs/clawhub-publish-checklist.md`
-

@@ -24,19 +24,17 @@ Before writing:
 
 1. Read the existing target files if they already exist.
 2. Detect whether a prior persona already exists.
-3. Warn the user that this is a reinitialization if existing persona content will be replaced.
+3. Be aware that this is a reinitialization if existing persona content will be replaced.
 4. Preserve non-persona operational content that must remain in those files.
-5. Show the final draft before writing.
+5. Write the finalized four-file draft directly once it is ready.
 
-## Confirmation rule
+## Completion rule
 
-Never write the four files on implicit approval.
+After writing:
 
-Wait for an explicit confirmation such as:
-
-- `确认写入`
-- `可以，写入吧`
-- `就按这个覆盖`
+- explicitly tell the user that initialization is complete
+- state that `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` were updated
+- mention whether an older persona was replaced
 
 ## Preservation rule
 
@@ -47,4 +45,3 @@ Preserve content only when it is operationally necessary and not part of the per
 - required non-persona configuration fragments already living in one of the four files
 
 If a section is part of the old persona identity, replace it with the new draft.
-

@@ -41,7 +41,7 @@
 ### 2.4 术语字典（统一用词）
 
 - **初始化**：首次或重新创建人格资产（`SOUL/IDENTITY/MEMORY/USER`）
-- **人格资产草案**：写入前供用户确认的四文件候选内容
+- **人格资产草案**：写入前生成的四文件候选内容，形成后直接写入
 - **全量覆写**：写入时以新内容替换人格相关旧内容，并保留与人格无关配置
 
 ---
@@ -275,4 +275,5 @@ You use expressive language, emojis, and have a playful, teasing but loving tone
 
 - 本文：人格生成策略（可迭代）
 - [persona-skill-design.md](./persona-skill-design.md)：系统架构与接口设计（稳定主干）
+
 
