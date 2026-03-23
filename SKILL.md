@@ -30,13 +30,14 @@ Treat this skill as initialization-only.
 3. Use one-question-at-a-time interaction. Prefer A/B/C/D style choices whenever possible.
 4. Use the deterministic MBTI mapping in `data/mbti/mbti-index.json`.
 5. Prefer running `node scripts/mbti-lookup.js <human_mbti> <role>` to get the exact recommendation.
-6. Read `references/file-generation-rules.md` before drafting `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, or `USER.md`.
+6. Read `references/persona-generation-strategy.md` before drafting any of the four persona files. Treat it as the canonical generation specification.
 7. After the four-file draft is complete, write it directly without waiting for user confirmation.
 8. After writing, clearly tell the user that initialization is complete and which files were updated.
 9. Warn clearly when the operation will replace an existing persona.
 
 ## Drafting rules
 
+- Treat `references/persona-generation-strategy.md` as the only generation contract for the four persona files.
 - Keep `SOUL.md` focused on personality core, values, tone boundaries, and interaction principles.
 - Keep `MEMORY.md` focused on biography, relationship background, and long-term behavioral context.
 - Keep `IDENTITY.md` short and template-shaped.
@@ -46,4 +47,3 @@ Treat this skill as initialization-only.
 ## Fallback behavior
 
 If the request is not an explicit persona initialization request, do not start the workflow. Briefly explain that this skill only handles persona initialization and ask for a clear initialization request instead.
-

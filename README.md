@@ -1,56 +1,64 @@
-﻿# Zhuang-Yan (Persona-Skill)
+[中文说明 / Chinese](./README_ZH.md)
 
-**Persona-Skill** 是一个面向 OpenClaw 的人格初始化 skill。
+# Zhuang-Yan (Persona-Skill)
 
-它的职责只有一件事：在用户用明确关键词触发后，以交互式、一问一答的方式收集信息，最终生成并覆写 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 四份人格资产，让 OpenClaw 在后续每一次对话中自然呈现新的沟通风格。
+**Persona-Skill** is an OpenClaw skill for persona initialization.
 
----
-
-## 核心能力
-
-1. **关键词触发初始化**：仅在用户明确表达“初始化人格 / 重塑人格 / 调用 persona 进行初始化”等意图时启动。
-2. **渐进式信息收集**：一次只问一个问题，逐步确认用户 MBTI、数字人性别、关系定位、名字、用户称呼与注意事项等信息。
-3. **基于 MBTI 的人格反推**：通过 `data/mbti/mbti-index.json` 中的 `reverse_lookup`，为数字人推荐最合适的人格类型。
-4. **四文件草案生成后直接写入**：生成 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 草案后直接执行全量覆写，并在完成后告知用户。
+Its job is singular: after the user triggers it with an explicit initialization request, it collects persona inputs through an interactive one-question-at-a-time flow, then generates and overwrites `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` so the new persona can shape OpenClaw's future communication style.
 
 ---
 
-## 不再承担的职责
+## Why Install It
 
-为避免边界失控，`persona-skill` **不再提供**以下能力：
-
-- 查询 OpenClaw 当前状态
-- 读取或推断时间线事实
-- 主动调用或编排其他 skill
-- 输出运行时结构化 JSON 供下游消费
-
-它只负责初始化人格资产，不负责运行时状态感知和跨 skill 协同。
+- **Turn persona setup into a real onboarding flow**: instead of a one-shot dump of preferences, the skill collects persona signals step by step, making initialization feel guided and intentional.
+- **Write directly into OpenClaw's core persona files**: it updates `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`, so the result does not live in a temporary prompt fragment.
+- **Build from structured MBTI assets instead of vague roleplay**: persona recommendation uses the repository's deterministic `reverse_lookup` mapping and MBTI references instead of ad hoc guessing.
+- **Create long-tail influence on future conversations**: once written, the persona continues to affect tone, boundaries, and relationship feel across later chats.
+- **Keep the workflow focused**: the skill is built specifically for persona initialization, so the interaction stays clean and does not drift into unrelated runtime behaviors.
 
 ---
 
-## 使用方式
+## Core Capabilities
 
-1. 将本项目根目录作为 `persona-skill` 放入 OpenClaw 工作区。
-2. 用明确口令触发初始化，例如：`调用 persona 进行初始化`。
-3. 按照 skill 的引导逐步回答问题。
-4. 初始化流程会在四文件草案完成后直接写入。
-5. 写入完成后，skill 会提示初始化完成，新人格会通过 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 持续影响后续对话风格。
-
-本项目根目录就是可直接发布和测试的 skill 目录。
+1. **Keyword-triggered initialization**: starts only when the user explicitly asks to initialize, rebuild, or reshape the persona.
+2. **Progressive information collection**: asks one question at a time to gather the user's MBTI, target persona gender, relationship role, name, preferred address, and important preferences or boundaries.
+3. **MBTI-based persona recommendation**: uses `reverse_lookup` from `data/mbti/mbti-index.json` to recommend the best-fit persona type.
+4. **Direct four-file write after drafting**: generates `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`, writes them directly, and then tells the user initialization is complete.
 
 ---
 
-## 文档
+## Writing Highlights
 
-- `docs/persona-skill-design.md`：初始化流程、职责边界、写入策略
-- `docs/persona-generation-strategy.md`：四份人格资产的生成规范
-- `docs/AGENTS.fragment.md`：供宿主 `AGENTS.md` 参考的人格初始化约束片段
+- **Second-person `SOUL.md` design**: the persona core is written as high-priority identity guidance rather than loose flavor text.
+- **Multi-layer `MEMORY.md` generation**: biography, psychology, relationship dynamics, and behavioral tendencies are written as a coherent long-form background.
+- **User-aware `USER.md` constraints**: address style, preferences, and communication boundaries are captured so future replies stay consistent.
+- **Stable identity card in `IDENTITY.md`**: name, vibe, creature, emoji, and avatar stay compact and reusable.
 
-## 本地测试与发布
+---
 
-- Skill 目录：项目根目录
-- 建议先执行：`npm run test`
-- 建议先在 OpenClaw 工作区中直接挂载这个目录进行实际对话测试
-- 建议发布命令：`clawhub --workdir . publish . --slug persona-skill --name "Persona Skill" --version 0.1.0 --tags latest --changelog "Initial public release"`
-- 可选发布脚本：`npm run publish:clawhub`
-- 发布检查清单：`docs/clawhub-publish-checklist.md`
+## Usage
+
+1. Use the project root as the `persona-skill` directory in your OpenClaw workspace.
+2. Trigger initialization with an explicit phrase such as `调用 persona 进行初始化`.
+3. Answer the guided questions step by step.
+4. Once the four-file draft is complete, the skill writes it directly.
+5. After the write, the skill reports completion, and the updated `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` continue to influence future conversations.
+
+The project root is the publishable and testable skill directory.
+
+---
+
+## Documents
+
+- `docs/persona-skill-design.md`: initialization flow, responsibility boundary, and write strategy
+- `docs/persona-generation-strategy.md`: generation rules for the four persona files
+- `docs/AGENTS.fragment.md`: host-side AGENTS fragment for persona initialization constraints
+
+## Local Testing And Publish
+
+- Skill directory: project root
+- Run tests first: `npm run test`
+- Mount this directory in an OpenClaw workspace and test the interaction flow directly
+- Direct publish command: `clawhub --workdir . publish . --slug persona-skill --name "Persona Skill" --version 0.1.0 --tags latest --changelog "Initial public release"`
+- Helper script: `npm run publish:clawhub`
+- Publish checklist: `docs/clawhub-publish-checklist.md`

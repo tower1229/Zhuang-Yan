@@ -86,7 +86,7 @@ Draft and then directly write:
 - `IDENTITY.md`
 - `USER.md`
 
-Read `file-generation-rules.md` before drafting and `write-safety.md` before writing.
+Read `persona-generation-strategy.md` as the canonical drafting specification and `write-safety.md` before writing.
 
 ### Step 8: Completion notice
 
@@ -95,4 +95,3 @@ After writing:
 - tell the user initialization is complete
 - summarize that the four persona files have been updated
 - mention if an existing persona was replaced
-
