@@ -1,4 +1,4 @@
-# Persona Skill — 设计文档
+﻿# Persona Skill — 设计文档
 
 > 更新时间：2026-03-23
 > 状态：v2（收敛为“仅初始化人格资产”）
@@ -140,7 +140,7 @@ Step 9：确认写入
 初始化还依赖以下静态资产：
 
 - `data/mbti/mbti-index.json`
-- `data/mbti/*.md`
+- `references/mbti/*.md`
 
 其中 `reverse_lookup` 是确定性映射，必须以资产文件内容为准，不应凭模型印象自由发挥。
 
@@ -197,3 +197,4 @@ Step 9：确认写入
 
 - [persona-generation-strategy.md](./persona-generation-strategy.md)：四份文件的生成规范与质量门禁
 - [AGENTS.fragment.md](./AGENTS.fragment.md)：供宿主系统引用的人格初始化约束片段
+

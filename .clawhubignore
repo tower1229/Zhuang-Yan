@@ -1,0 +1,39 @@
+﻿# ClawHub publish only the runtime skill files.
+# Keep: SKILL.md, data/mbti/mbti-index.json, references/**, scripts/mbti-lookup.js
+
+# VCS and local metadata
+.git/
+.github/
+.clawhub/
+.cursor/
+.vscode/
+.idea/
+.DS_Store
+**/.DS_Store
+
+# Maintainer docs and repo files
+README.md
+.gitignore
+.clawhubignore
+docs/
+
+# Nested package wrapper from earlier iterations
+skills/
+
+# Local secrets and overrides
+.env
+.env.*
+
+# Logs and output
+out/
+sandbox/
+coverage/
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Maintainer-only scripts
+scripts/release-clawhub.mjs
+
+
