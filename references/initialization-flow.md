@@ -1,4 +1,4 @@
-﻿# Initialization Flow
+# Initialization Flow
 
 Follow this sequence exactly. Keep the interaction lightweight and gradual.
 
@@ -52,7 +52,7 @@ Use the deterministic reverse lookup table.
 Preferred command:
 
 ```powershell
-node {baseDir}/scripts/mbti-lookup.js ENFP companion
+node scripts/mbti-lookup.js ENFP companion
 ```
 
 Return:
@@ -95,3 +95,4 @@ After writing:
 - tell the user initialization is complete
 - summarize that the four persona files have been updated
 - mention if an existing persona was replaced
+
