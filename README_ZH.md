@@ -59,6 +59,5 @@
 - Skill 目录：项目根目录
 - 先运行测试：`npm run test`
 - 将本目录挂载到 OpenClaw 工作区后直接测试交互流程
-- 直接发布命令：`clawhub --workdir . publish . --slug persona-skill --name "Persona Skill" --version 0.1.0 --tags latest --changelog "Initial public release"`
-- 快捷发布脚本：`npm run publish:clawhub`
+- 发布命令：`npm run publish:clawhub`（自动读取 `package.json` 中的 `version`）
 - 发布检查清单：`docs/clawhub-publish-checklist.md`

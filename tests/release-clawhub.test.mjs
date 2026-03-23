@@ -1,7 +1,21 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-import { buildCommandSpec, quoteWin } from "../scripts/release-clawhub.mjs";
+import { buildCommandSpec, parseArgs, quoteWin, readPackageVersion } from "../scripts/release-clawhub.mjs";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+test("readPackageVersion returns package.json version", () => {
+  assert.equal(readPackageVersion(path.join(root, "package.json")), "0.1.0");
+});
+
+test("parseArgs uses package.json version by default", () => {
+  const args = parseArgs([], { defaultVersion: "0.1.0" });
+  assert.equal(args.version, "0.1.0");
+  assert.equal(args.tag, "latest");
+});
 
 test("quoteWin preserves spaced arguments", () => {
   assert.equal(quoteWin("Persona Skill"), '"Persona Skill"');

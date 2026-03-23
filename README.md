@@ -59,6 +59,5 @@ The project root is the publishable and testable skill directory.
 - Skill directory: project root
 - Run tests first: `npm run test`
 - Mount this directory in an OpenClaw workspace and test the interaction flow directly
-- Direct publish command: `clawhub --workdir . publish . --slug persona-skill --name "Persona Skill" --version 0.1.0 --tags latest --changelog "Initial public release"`
-- Helper script: `npm run publish:clawhub`
+- Publish command: `npm run publish:clawhub` (reads `version` from `package.json`)
 - Publish checklist: `docs/clawhub-publish-checklist.md`

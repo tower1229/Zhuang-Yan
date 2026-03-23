@@ -1,16 +1,19 @@
+import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const PACKAGE_JSON_PATH = path.join(ROOT_DIR, "package.json");
 
 function usage(exitCode = 0) {
   const msg = `
 Usage:
-  node ./scripts/release-clawhub.mjs --version <semver> [--slug persona-skill] [--name "Persona Skill"] [--tag latest] [--changelog "..."]
+  node ./scripts/release-clawhub.mjs [--slug persona-skill] [--name "Persona Skill"] [--tag latest] [--changelog "..."] [--version <semver>]
 
 Behavior:
   - Publishes this repo root as the ClawHub skill directory
+  - Reads version from package.json by default
   - Pins --workdir to the repo root to avoid cwd resolution issues
   - Uses clawhub if present, otherwise falls back to npx clawhub
 `.trim();
@@ -18,9 +21,17 @@ Behavior:
   process.exit(exitCode);
 }
 
-function parseArgs(argv) {
+function readPackageVersion(packageJsonPath = PACKAGE_JSON_PATH) {
+  const pkg = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+  if (!pkg.version || typeof pkg.version !== "string") {
+    throw new Error("package.json is missing a string version field");
+  }
+  return pkg.version;
+}
+
+function parseArgs(argv, options = {}) {
   const out = {
-    version: "",
+    version: options.defaultVersion ?? readPackageVersion(),
     slug: "persona-skill",
     name: "Persona Skill",
     tag: "latest",
@@ -42,7 +53,7 @@ function parseArgs(argv) {
   }
 
   if (!out.version) {
-    console.error("Missing required --version <semver>");
+    console.error("Missing version value");
     usage(2);
   }
 
@@ -126,7 +137,7 @@ function main(argv = process.argv.slice(2)) {
 const isDirectRun =
   process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
 
-export { buildCommandSpec, parseArgs, quoteWin };
+export { buildCommandSpec, parseArgs, quoteWin, readPackageVersion };
 
 if (isDirectRun) {
   main();
