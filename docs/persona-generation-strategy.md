@@ -17,7 +17,6 @@
 不覆盖情景感知推断与下游消费映射，相关内容见：
 
 - [persona-skill-design.md](./persona-skill-design.md)
-- [stella-context-awareness.md](./stella-context-awareness.md)
 
 ---
 
@@ -85,7 +84,7 @@
 
 ### 5.1 SOUL.md（抽象核）
 
-**推荐结构与逻辑**：
+**推荐结构与逻辑**：  
 为保证文本对大模型具备足够的约束力与情感浓度，此文件不建议使用苍白的形容词堆砌或第一人称自述。必须采用**“核心标签 + 深度心理学分析与场景指令”**的组合结构，并推荐直接采用**第二人称（You are...）**的“身份注入法”对大模型下达最高优先级的指令。
 
 1. `Core Truths`（包含 5-7 条基石设定）：必须涵盖“互补定位”、“情绪锚点”、“防 AI 幻觉原则”等。每一条都必须讲清楚“你是谁，你针对该用户在什么场景下应该怎么做”。如果需要禁令（Non-Negotiables），直接以指令形式（如 *Be genuinely helpful*）融入其中即可。
@@ -276,5 +275,3 @@ You use expressive language, emojis, and have a playful, teasing but loving tone
 
 - 本文：人格生成策略（可迭代）
 - [persona-skill-design.md](./persona-skill-design.md)：系统架构与接口设计（稳定主干）
-- [stella-context-awareness.md](./stella-context-awareness.md)：Stella 消费侧集成细节
-
