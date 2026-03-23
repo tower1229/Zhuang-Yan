@@ -49,10 +49,8 @@
 ## 本地测试与发布
 
 - Skill 目录：项目根目录
+- 建议先执行：`node --test tests/*.test.mjs`
 - 建议先在 OpenClaw 工作区中直接挂载这个目录进行实际对话测试
 - 建议发布命令：`clawhub --workdir . publish . --slug persona-skill --name "Persona Skill" --version 0.1.0 --tags latest --changelog "Initial public release"`
 - 可选发布脚本：`node ./scripts/release-clawhub.mjs --version 0.1.0`
 - 发布检查清单：`docs/clawhub-publish-checklist.md`
-
-
-

@@ -60,7 +60,7 @@ Return:
 - the single best recommended persona MBTI
 - the exact reason from the asset file
 
-If the user dislikes the result, explain that the first result is the best-fit default and then offer one adjusted reroll or a second-best alternative.
+If the user dislikes the result, explain that this recommendation is the deterministic default derived from the current mapping table. Do not invent a "second-best" MBTI unless the project later adds a deterministic source for it.
 
 ### Step 5: Propose persona names
 
@@ -101,4 +101,3 @@ Read `file-generation-rules.md` before drafting.
 - Preserve necessary non-persona operational content.
 - Warn if existing persona assets will be replaced.
 - Write all four files only after explicit confirmation.
-

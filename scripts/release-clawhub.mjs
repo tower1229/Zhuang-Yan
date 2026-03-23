@@ -1,6 +1,6 @@
 ﻿import { spawnSync } from "node:child_process";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -49,19 +49,41 @@ function parseArgs(argv) {
   return out;
 }
 
-function run(cmd, args) {
-  const isWin = process.platform === "win32";
-  const result = isWin
-    ? spawnSync([cmd, ...args].join(" "), {
+function quoteWin(arg) {
+  const value = String(arg);
+  const escaped = value.replace(/"/g, '\\"');
+  return /[ \t&()^<>|]/.test(escaped) ? `"${escaped}"` : escaped;
+}
+
+function buildCommandSpec(cmd, args, platform = process.platform) {
+  if (platform === "win32") {
+    return {
+      command: [cmd, ...args].map(quoteWin).join(" "),
+      options: {
         stdio: "inherit",
         cwd: ROOT_DIR,
         shell: true,
-      })
-    : spawnSync(cmd, args, {
-        stdio: "inherit",
-        cwd: ROOT_DIR,
-        shell: false,
-      });
+      },
+    };
+  }
+
+  return {
+    command: cmd,
+    args,
+    options: {
+      stdio: "inherit",
+      cwd: ROOT_DIR,
+      shell: false,
+    },
+  };
+}
+
+function run(cmd, args) {
+  const spec = buildCommandSpec(cmd, args);
+  const result =
+    spec.args === undefined
+      ? spawnSync(spec.command, spec.options)
+      : spawnSync(spec.command, spec.args, spec.options);
 
   if (result.error) throw result.error;
   if (typeof result.status === "number" && result.status !== 0) process.exit(result.status);
@@ -75,26 +97,37 @@ function hasCmd(cmd) {
   return !result.error && result.status === 0;
 }
 
-const args = parseArgs(process.argv.slice(2));
-const publishArgs = [
-  "--workdir",
-  ROOT_DIR,
-  "publish",
-  ".",
-  "--slug",
-  args.slug,
-  "--name",
-  args.name,
-  "--version",
-  args.version,
-  "--tags",
-  args.tag,
-  "--changelog",
-  String(args.changelog).replace(/\r?\n/g, "\\n"),
-];
+function main(argv = process.argv.slice(2)) {
+  const args = parseArgs(argv);
+  const publishArgs = [
+    "--workdir",
+    ROOT_DIR,
+    "publish",
+    ".",
+    "--slug",
+    args.slug,
+    "--name",
+    args.name,
+    "--version",
+    args.version,
+    "--tags",
+    args.tag,
+    "--changelog",
+    String(args.changelog).replace(/\r?\n/g, "\\n"),
+  ];
 
-if (hasCmd("clawhub")) {
-  run("clawhub", publishArgs);
-} else {
-  run("npx", ["-y", "clawhub", ...publishArgs]);
+  if (hasCmd("clawhub")) {
+    run("clawhub", publishArgs);
+  } else {
+    run("npx", ["-y", "clawhub", ...publishArgs]);
+  }
+}
+
+const isDirectRun =
+  process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
+
+export { buildCommandSpec, parseArgs, quoteWin };
+
+if (isDirectRun) {
+  main();
 }

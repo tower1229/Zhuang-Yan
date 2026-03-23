@@ -16,6 +16,8 @@ README.md
 .gitignore
 .clawhubignore
 docs/
+package.json
+tests/
 
 # Nested package wrapper from earlier iterations
 skills/
@@ -35,5 +37,6 @@ pnpm-lock.yaml
 
 # Maintainer-only scripts
 scripts/release-clawhub.mjs
+
 
 

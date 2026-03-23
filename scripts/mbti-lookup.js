@@ -32,51 +32,59 @@ function normalizeRole(value) {
   return ROLE_MAP[key] || null;
 }
 
+function lookupRecommendation(humanMbtiRaw, roleRaw, index) {
+  const humanMbti = normalizeMbti(humanMbtiRaw);
+  const role = normalizeRole(roleRaw);
+
+  if (!/^[EI][NS][FT][JP]$/.test(humanMbti)) {
+    throw new Error(`Invalid MBTI: ${humanMbtiRaw}`);
+  }
+
+  if (!role) {
+    throw new Error(`Unsupported role: ${roleRaw}`);
+  }
+
+  const row = index.reverse_lookup?.[humanMbti]?.[role];
+  if (!row) {
+    throw new Error(`No recommendation found for ${humanMbti} x ${role}`);
+  }
+
+  return {
+    human_mbti: humanMbti,
+    role,
+    recommended: row.recommended,
+    reason: row.reason,
+  };
+}
+
+function loadIndex() {
+  const indexPath = path.join(__dirname, "..", "data", "mbti", "mbti-index.json");
+  return JSON.parse(fs.readFileSync(indexPath, "utf8"));
+}
+
 function main() {
   const [, , humanMbtiRaw, roleRaw] = process.argv;
-
   if (!humanMbtiRaw || !roleRaw) {
     printUsage();
     process.exit(1);
   }
 
-  const humanMbti = normalizeMbti(humanMbtiRaw);
-  const role = normalizeRole(roleRaw);
-
-  if (!/^[EI][NS][FT][JP]$/.test(humanMbti)) {
-    console.error(`Invalid MBTI: ${humanMbtiRaw}`);
+  try {
+    const result = lookupRecommendation(humanMbtiRaw, roleRaw, loadIndex());
+    process.stdout.write(JSON.stringify(result, null, 2));
+  } catch (error) {
+    console.error(error.message);
     process.exit(1);
   }
-
-  if (!role) {
-    console.error(`Unsupported role: ${roleRaw}`);
-    process.exit(1);
-  }
-
-  const indexPath = path.join(__dirname, "..", "data", "mbti", "mbti-index.json");
-  const index = JSON.parse(fs.readFileSync(indexPath, "utf8"));
-  const row = index.reverse_lookup?.[humanMbti]?.[role];
-
-  if (!row) {
-    console.error(`No recommendation found for ${humanMbti} x ${role}`);
-    process.exit(1);
-  }
-
-  process.stdout.write(
-    JSON.stringify(
-      {
-        human_mbti: humanMbti,
-        role,
-        recommended: row.recommended,
-        reason: row.reason,
-      },
-      null,
-      2
-    )
-  );
 }
 
-main();
+module.exports = {
+  loadIndex,
+  lookupRecommendation,
+  normalizeMbti,
+  normalizeRole,
+};
 
-
-
+if (require.main === module) {
+  main();
+}
