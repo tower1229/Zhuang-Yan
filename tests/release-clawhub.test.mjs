@@ -1,19 +1,28 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { buildCommandSpec, parseArgs, quoteWin, readPackageVersion } from "../scripts/release-clawhub.mjs";
+import {
+  buildCommandSpec,
+  detectPublisherBootstrapBug,
+  parseArgs,
+  quoteWin,
+  readPackageVersion,
+} from "../scripts/release-clawhub.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const packageJsonPath = path.join(root, "package.json");
+const packageVersion = JSON.parse(fs.readFileSync(packageJsonPath, "utf8")).version;
 
 test("readPackageVersion returns package.json version", () => {
-  assert.equal(readPackageVersion(path.join(root, "package.json")), "0.1.0");
+  assert.equal(readPackageVersion(packageJsonPath), packageVersion);
 });
 
 test("parseArgs uses package.json version by default", () => {
-  const args = parseArgs([], { defaultVersion: "0.1.0" });
-  assert.equal(args.version, "0.1.0");
+  const args = parseArgs([], { defaultVersion: packageVersion });
+  assert.equal(args.version, packageVersion);
   assert.equal(args.tag, "latest");
 });
 
@@ -32,4 +41,13 @@ test("buildCommandSpec keeps argv array on non-Windows", () => {
   assert.equal(spec.command, "clawhub");
   assert.deepEqual(spec.args, ["publish", ".", "--name", "Persona Skill"]);
   assert.equal(spec.options.shell, false);
+});
+
+test("detectPublisherBootstrapBug matches the ClawHub backend error", () => {
+  const output = `Error: Uncaught Error: This query or mutation function ran multiple paginated queries.\n    at async ensurePersonalPublisherForUser (../../convex/lib/publishers.ts:169:14)`;
+  assert.equal(detectPublisherBootstrapBug(output), true);
+});
+
+test("detectPublisherBootstrapBug ignores unrelated errors", () => {
+  assert.equal(detectPublisherBootstrapBug("network timeout"), false);
 });

@@ -12,6 +12,7 @@ Usage:
   node ./scripts/release-clawhub.mjs [--slug persona-skill] [--name "Persona Skill"] [--tag latest] [--changelog "..."] [--version <semver>]
 
 Behavior:
+  - Runs local tests before publishing
   - Publishes this repo root as the ClawHub skill directory
   - Reads version from package.json by default
   - Pins --workdir to the repo root to avoid cwd resolution issues
@@ -66,14 +67,15 @@ function quoteWin(arg) {
   return /[ \t&()^<>|]/.test(escaped) ? `"${escaped}"` : escaped;
 }
 
-function buildCommandSpec(cmd, args, platform = process.platform) {
+function buildCommandSpec(cmd, args, platform = process.platform, capture = false) {
   if (platform === "win32") {
     return {
       command: [cmd, ...args].map(quoteWin).join(" "),
       options: {
-        stdio: "inherit",
+        stdio: capture ? "pipe" : "inherit",
         cwd: ROOT_DIR,
         shell: true,
+        encoding: capture ? "utf8" : undefined,
       },
     };
   }
@@ -82,9 +84,10 @@ function buildCommandSpec(cmd, args, platform = process.platform) {
     command: cmd,
     args,
     options: {
-      stdio: "inherit",
+      stdio: capture ? "pipe" : "inherit",
       cwd: ROOT_DIR,
       shell: false,
+      encoding: capture ? "utf8" : undefined,
     },
   };
 }
@@ -100,6 +103,21 @@ function run(cmd, args) {
   if (typeof result.status === "number" && result.status !== 0) process.exit(result.status);
 }
 
+function runCapture(cmd, args) {
+  const spec = buildCommandSpec(cmd, args, process.platform, true);
+  const result =
+    spec.args === undefined
+      ? spawnSync(spec.command, spec.options)
+      : spawnSync(spec.command, spec.args, spec.options);
+
+  return {
+    status: result.status ?? 1,
+    error: result.error,
+    stdout: typeof result.stdout === "string" ? result.stdout : "",
+    stderr: typeof result.stderr === "string" ? result.stderr : "",
+  };
+}
+
 function hasCmd(cmd) {
   const isWin = process.platform === "win32";
   const result = isWin
@@ -108,8 +126,31 @@ function hasCmd(cmd) {
   return !result.error && result.status === 0;
 }
 
-function main(argv = process.argv.slice(2)) {
-  const args = parseArgs(argv);
+function detectPublisherBootstrapBug(output) {
+  const text = String(output || "");
+  return (
+    text.includes("This query or mutation function ran multiple paginated queries") &&
+    (text.includes("ensurePersonalPublisherForUser") ||
+      text.includes("syncSkillSearchDigestsForOwnerPublisherId"))
+  );
+}
+
+function printPublisherBootstrapHelp() {
+  console.error("\nClawHub publish failed because the registry backend appears to have hit a personal-publisher bootstrap bug.");
+  console.error("This error is coming from ClawHub/Convex while auto-creating or syncing your publisher, not from this skill bundle.");
+  console.error("\nRecommended next steps:");
+  console.error("1. Run `clawhub whoami` and confirm the CLI token is valid.");
+  console.error("2. Sign in to ClawHub in the browser and make sure your account/publisher profile is initialized.");
+  console.error("3. Retry `npm run publish:clawhub` after the publisher exists.");
+  console.error("4. If it still fails, report this exact stack trace to ClawHub maintainers because it is a server-side bug.");
+}
+
+function runTests() {
+  console.log("Running tests before publish...");
+  run(process.execPath, ["--test", "tests"]);
+}
+
+function publish(args) {
   const publishArgs = [
     "--workdir",
     ROOT_DIR,
@@ -127,17 +168,42 @@ function main(argv = process.argv.slice(2)) {
     String(args.changelog).replace(/\r?\n/g, "\\n"),
   ];
 
-  if (hasCmd("clawhub")) {
-    run("clawhub", publishArgs);
-  } else {
-    run("npx", ["-y", "clawhub", ...publishArgs]);
+  const command = hasCmd("clawhub")
+    ? { cmd: "clawhub", args: publishArgs }
+    : { cmd: "npx", args: ["-y", "clawhub", ...publishArgs] };
+
+  const result = runCapture(command.cmd, command.args);
+
+  if (result.stdout) process.stdout.write(result.stdout);
+  if (result.stderr) process.stderr.write(result.stderr);
+
+  if (result.error) throw result.error;
+  if (result.status !== 0) {
+    const combined = `${result.stdout}\n${result.stderr}`;
+    if (detectPublisherBootstrapBug(combined)) {
+      printPublisherBootstrapHelp();
+    }
+    process.exit(result.status);
   }
+}
+
+function main(argv = process.argv.slice(2)) {
+  const args = parseArgs(argv);
+  runTests();
+  publish(args);
 }
 
 const isDirectRun =
   process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
 
-export { buildCommandSpec, parseArgs, quoteWin, readPackageVersion };
+export {
+  buildCommandSpec,
+  detectPublisherBootstrapBug,
+  parseArgs,
+  printPublisherBootstrapHelp,
+  quoteWin,
+  readPackageVersion,
+};
 
 if (isDirectRun) {
   main();

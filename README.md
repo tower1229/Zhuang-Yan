@@ -59,5 +59,5 @@ The project root is the publishable and testable skill directory.
 - Skill directory: project root
 - Run tests first: `npm run test`
 - Mount this directory in an OpenClaw workspace and test the interaction flow directly
-- Publish command: `npm run publish:clawhub` (reads `version` from `package.json`)
+- Publish command: `npm run publish:clawhub` (runs tests first, then publishes using `version` from `package.json`)
 - Publish checklist: `docs/clawhub-publish-checklist.md`

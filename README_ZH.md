@@ -59,5 +59,5 @@
 - Skill 目录：项目根目录
 - 先运行测试：`npm run test`
 - 将本目录挂载到 OpenClaw 工作区后直接测试交互流程
-- 发布命令：`npm run publish:clawhub`（自动读取 `package.json` 中的 `version`）
+- 发布命令：`npm run publish:clawhub`（会先跑测试，再自动读取 `package.json` 中的 `version` 发布）
 - 发布检查清单：`docs/clawhub-publish-checklist.md`

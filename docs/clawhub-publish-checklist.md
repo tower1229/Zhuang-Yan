@@ -23,7 +23,7 @@
 npm run publish:clawhub
 ```
 
-该命令会自动读取 `package.json` 中的 `version` 并发布当前 skill 根目录。
+该命令会先运行测试；只有测试通过后，才会自动读取 `package.json` 中的 `version` 并发布当前 skill 根目录。
 
 ## 发布后验证
 
