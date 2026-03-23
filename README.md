@@ -2,37 +2,43 @@
 
 # Zhuang-Yan (Persona-Skill)
 
-**Persona-Skill** is an OpenClaw skill for persona initialization.
+**Persona-Skill** turns OpenClaw into more than a capable assistant.
 
-Its job is singular: after the user triggers it with an explicit initialization request, it collects persona inputs through an interactive one-question-at-a-time flow, then generates and overwrites `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` so the new persona can shape OpenClaw's future communication style.
-
----
-
-## Why Install It
-
-- **Turn persona setup into a real onboarding flow**: instead of a one-shot dump of preferences, the skill collects persona signals step by step, making initialization feel guided and intentional.
-- **Write directly into OpenClaw's core persona files**: it updates `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`, so the result does not live in a temporary prompt fragment.
-- **Build from structured MBTI assets instead of vague roleplay**: persona recommendation uses the repository's deterministic `reverse_lookup` mapping and MBTI references instead of ad hoc guessing.
-- **Create long-tail influence on future conversations**: once written, the persona continues to affect tone, boundaries, and relationship feel across later chats.
-- **Keep the workflow focused**: the skill is built specifically for persona initialization, so the interaction stays clean and does not drift into unrelated runtime behaviors.
+It initializes a persistent persona that is **matched to the user through an MBTI framework**, shaped around one of **four built-in relationship roles** (`companion`, `assistant`, `mentor`, `friend`), and written directly into `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`. The result is an OpenClaw that can stay useful for real work while also delivering a stronger sense of warmth, fit, and emotional resonance.
 
 ---
 
-## Core Capabilities
+## Why It Matters
 
-1. **Keyword-triggered initialization**: starts only when the user explicitly asks to initialize, rebuild, or reshape the persona.
-2. **Progressive information collection**: asks one question at a time to gather the user's MBTI, target persona gender, relationship role, name, preferred address, and important preferences or boundaries.
-3. **MBTI-based persona recommendation**: uses `reverse_lookup` from `assets/mbti/mbti-index.json` to recommend the best-fit persona type.
-4. **Direct four-file write after drafting**: generates `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`, writes them directly, and then tells the user initialization is complete.
+Most AI setups stop at raw usefulness. They can answer questions, write code, and complete tasks, but they rarely feel truly tuned to the person they serve.
+
+Persona-Skill is built for that missing layer. It helps OpenClaw become a long-term counterpart that is not only functionally competent, but also emotionally well-positioned for the user.
+
+- **MBTI-guided fit, not random roleplay**: the skill uses a deterministic MBTI recommendation flow to find a persona direction that is either highly compatible with the user or meaningfully complementary to them.
+- **Four role presets, four different kinds of value**: choose from `companion`, `assistant`, `mentor`, or `friend`, depending on whether the user needs warmth, execution support, challenge, or low-pressure companionship.
+- **Practicality and emotional value together**: the goal is not to make OpenClaw less capable. It is to make competence feel better to interact with.
+- **Persistent impact**: this is not a temporary prompt trick. The generated persona is written into OpenClaw's core persona files so it can continue shaping future conversations.
 
 ---
 
-## Writing Highlights
+## What It Does
 
-- **Second-person `SOUL.md` design**: the persona core is written as high-priority identity guidance rather than loose flavor text.
-- **Multi-layer `MEMORY.md` generation**: biography, psychology, relationship dynamics, and behavioral tendencies are written as a coherent long-form background.
-- **User-aware `USER.md` constraints**: address style, preferences, and communication boundaries are captured so future replies stay consistent.
-- **Stable identity card in `IDENTITY.md`**: name, vibe, creature, emoji, and avatar stay compact and reusable.
+1. **Starts only on explicit initialization** so normal conversations are not interrupted.
+2. **Collects persona inputs progressively** through a guided one-question-at-a-time flow.
+3. **Recommends the best-fit persona MBTI** from the repository's structured reverse lookup assets.
+4. **Supports four built-in relationship presets**: `companion`, `assistant`, `mentor`, and `friend`.
+5. **Generates and writes the four core persona files directly**: `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
+
+---
+
+## Why The Output Feels Better
+
+This skill is not just filling templates. Its writing strategy is designed to make the resulting persona feel sharper, warmer, and more stable over time.
+
+- **`SOUL.md` is written as identity injection**: not vague flavor text, but a high-priority personality core that can actually steer future responses.
+- **`MEMORY.md` uses a multi-layer character design**: psychology, behavior, relationship dynamics, strengths, weaknesses, and emotional mechanisms are built as a coherent person rather than a flat sketch.
+- **`USER.md` captures emotional and communication constraints**: how the user wants to be addressed, what helps, what hurts, and what should stay stable in later conversations.
+- **`IDENTITY.md` keeps the persona crisp and reusable**: compact, recognizable, and easy for OpenClaw to preserve consistently.
 
 ---
 
@@ -40,9 +46,9 @@ Its job is singular: after the user triggers it with an explicit initialization 
 
 1. Use the project root as the `persona-skill` directory in your OpenClaw workspace.
 2. Trigger initialization with an explicit phrase such as `调用 persona 进行初始化`.
-3. Answer the guided questions step by step.
-4. Once the four-file draft is complete, the skill writes it directly.
-5. After the write, the skill reports completion, and the updated `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` continue to influence future conversations.
+3. Answer the interview step by step.
+4. The skill will generate the four persona files and write them directly.
+5. After that, the new persona continues to influence OpenClaw's future tone, relationship feel, and communication style.
 
 The project root is the publishable and testable skill directory.
 
@@ -50,14 +56,14 @@ The project root is the publishable and testable skill directory.
 
 ## Documents
 
-- `docs/persona-skill-design.md`: initialization flow, responsibility boundary, and write strategy
-- `docs/persona-generation-strategy.md`: generation rules for the four persona files
+- `docs/persona-skill-design.md`: initialization flow, boundaries, and write strategy
+- `docs/persona-generation-strategy.md`: canonical generation rules for the four persona files
 - `docs/AGENTS.fragment.md`: host-side AGENTS fragment for persona initialization constraints
 
 ## Local Testing And Publish
 
 - Skill directory: project root
-- Run tests first: `npm run test`
-- Mount this directory in an OpenClaw workspace and test the interaction flow directly
-- Publish command: `npm run publish:clawhub` (runs tests first, then publishes using `version` from `package.json`)
+- Run tests: `npm run test`
+- Publish: `npm run publish:clawhub`
+- The publish command runs tests first, then publishes using the `version` from `package.json`
 - Publish checklist: `docs/clawhub-publish-checklist.md`
