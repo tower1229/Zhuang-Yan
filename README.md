@@ -58,7 +58,6 @@ The project root is the publishable and testable skill directory.
 
 - `docs/persona-skill-design.md`: initialization flow, boundaries, and write strategy
 - `docs/persona-generation-strategy.md`: canonical generation rules for the four persona files
-- `docs/AGENTS.fragment.md`: host-side AGENTS fragment for persona initialization constraints
 
 ## Local Testing And Publish
 

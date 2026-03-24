@@ -147,7 +147,7 @@ function printPublisherBootstrapHelp() {
 
 function runTests() {
   console.log("Running tests before publish...");
-  run(process.execPath, ["--test", "tests"]);
+  run(process.execPath, ["--test", "tests/*.test.mjs"]);
 }
 
 function publish(args) {

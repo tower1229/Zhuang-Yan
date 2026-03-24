@@ -58,7 +58,6 @@ Persona-Skill 想补上的，就是这一层长期关系价值。它不是单纯
 
 - `docs/persona-skill-design.md`：初始化流程、职责边界与写入策略
 - `docs/persona-generation-strategy.md`：四份人格文件的权威生成规则
-- `docs/AGENTS.fragment.md`：宿主侧 AGENTS 约束片段
 
 ## 本地测试与发布
 

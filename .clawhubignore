@@ -13,6 +13,7 @@
 
 # Maintainer docs and repo files
 README.md
+README_ZH.md
 .gitignore
 .clawhubignore
 docs/
@@ -37,6 +38,5 @@ pnpm-lock.yaml
 
 # Maintainer-only scripts
 scripts/release-clawhub.mjs
-
 
 

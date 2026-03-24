@@ -22,6 +22,7 @@ test("runtime files required by the skill exist", () => {
 test(".clawhubignore excludes maintainer-only files", () => {
   const ignore = fs.readFileSync(path.join(root, ".clawhubignore"), "utf8");
   assert.match(ignore, /^README\.md$/m);
+  assert.match(ignore, /^README_ZH\.md$/m);
   assert.match(ignore, /^docs\/$/m);
   assert.match(ignore, /^tests\/$/m);
   assert.match(ignore, /^scripts\/release-clawhub\.mjs$/m);
@@ -30,4 +31,9 @@ test(".clawhubignore excludes maintainer-only files", () => {
 test("SKILL.md requires the shipped persona generation strategy", () => {
   const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
   assert.match(skill, /references\/persona-generation-strategy\.md/);
+});
+
+test("package.json test script targets concrete test files", () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
+  assert.match(pkg.scripts.test, /tests\/\*\.test\.mjs/);
 });

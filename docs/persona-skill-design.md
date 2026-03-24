@@ -197,4 +197,3 @@ Step 9：提示完成
 ## 10. 文档关系
 
 - [persona-generation-strategy.md](./persona-generation-strategy.md)：四份文件的生成规范与质量门禁
-- [AGENTS.fragment.md](./AGENTS.fragment.md)：供宿主系统引用的人格初始化约束片段
