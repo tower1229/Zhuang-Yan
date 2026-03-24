@@ -1,7 +1,28 @@
 {
   "name": "persona-skill",
-  "version": "0.1.0",
+  "description": "Initialize an OpenClaw persona through an MBTI-guided interview and write SOUL.md, MEMORY.md, IDENTITY.md, and USER.md.",
+  "version": "0.1.1",
   "private": true,
+  "author": "tower1229",
+  "license": "MIT-0",
+  "homepage": "https://github.com/tower1229/Zhuang-Yan#readme",
+  "bugs": {
+    "url": "https://github.com/tower1229/Zhuang-Yan/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tower1229/Zhuang-Yan.git"
+  },
+  "keywords": [
+    "openclaw",
+    "clawhub",
+    "skill",
+    "persona",
+    "mbti"
+  ],
+  "engines": {
+    "node": ">=18.18"
+  },
   "scripts": {
     "test": "node --test tests",
     "publish:clawhub": "node ./scripts/release-clawhub.mjs"

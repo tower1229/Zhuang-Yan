@@ -66,3 +66,16 @@ Persona-Skill 想补上的，就是这一层长期关系价值。它不是单纯
 - 发布命令：`npm run publish:clawhub`
 - 发布命令会先跑测试，再读取 `package.json` 中的 `version` 进行发布
 - 发布检查清单：`docs/clawhub-publish-checklist.md`
+
+## 项目元数据
+
+- 仓库地址：`https://github.com/tower1229/Zhuang-Yan`
+- Issue 地址：`https://github.com/tower1229/Zhuang-Yan/issues`
+- Node.js 要求：`>=18.18`
+- ClawHub 已发布 skill 统一按 `MIT-0` 分发；本仓库也采用相同许可证
+
+## 仓库级文件
+
+- `CHANGELOG.md`：记录仓库级发布说明
+- `CONTRIBUTING.md`：说明本地开发、测试和发布流程
+- `LICENSE`：`MIT-0`

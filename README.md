@@ -66,3 +66,16 @@ The project root is the publishable and testable skill directory.
 - Publish: `npm run publish:clawhub`
 - The publish command runs tests first, then publishes using the `version` from `package.json`
 - Publish checklist: `docs/clawhub-publish-checklist.md`
+
+## Project Metadata
+
+- Repository: `https://github.com/tower1229/Zhuang-Yan`
+- Issue tracker: `https://github.com/tower1229/Zhuang-Yan/issues`
+- Node.js: `>=18.18`
+- Published ClawHub skills are distributed under `MIT-0`; this repository follows the same license
+
+## Repository Files
+
+- `CHANGELOG.md`: release notes for repository-level changes
+- `CONTRIBUTING.md`: local development, test, and publish workflow
+- `LICENSE`: `MIT-0`

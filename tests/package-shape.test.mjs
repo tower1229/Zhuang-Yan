@@ -10,6 +10,11 @@ function exists(relativePath) {
   return fs.existsSync(path.join(root, relativePath));
 }
 
+function readFrontmatter(text) {
+  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  return match ? match[1] : "";
+}
+
 test("runtime files required by the skill exist", () => {
   assert.equal(exists("SKILL.md"), true);
   assert.equal(exists("assets/mbti/mbti-index.json"), true);
@@ -23,6 +28,9 @@ test(".clawhubignore excludes maintainer-only files", () => {
   const ignore = fs.readFileSync(path.join(root, ".clawhubignore"), "utf8");
   assert.match(ignore, /^README\.md$/m);
   assert.match(ignore, /^README_ZH\.md$/m);
+  assert.match(ignore, /^CHANGELOG\.md$/m);
+  assert.match(ignore, /^CONTRIBUTING\.md$/m);
+  assert.match(ignore, /^LICENSE$/m);
   assert.match(ignore, /^docs\/$/m);
   assert.match(ignore, /^tests\/$/m);
   assert.match(ignore, /^scripts\/release-clawhub\.mjs$/m);
@@ -36,4 +44,30 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
 test("package.json test script uses the tests directory for cross-platform discovery", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
   assert.equal(pkg.scripts.test, "node --test tests");
+});
+
+test("repository metadata files exist", () => {
+  assert.equal(exists(".gitignore"), true);
+  assert.equal(exists("LICENSE"), true);
+  assert.equal(exists("CHANGELOG.md"), true);
+  assert.equal(exists("CONTRIBUTING.md"), true);
+});
+
+test("package.json includes professional project metadata", () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
+  assert.equal(pkg.license, "MIT-0");
+  assert.equal(pkg.homepage, "https://github.com/tower1229/Zhuang-Yan#readme");
+  assert.equal(pkg.bugs.url, "https://github.com/tower1229/Zhuang-Yan/issues");
+  assert.equal(pkg.repository.type, "git");
+  assert.equal(pkg.repository.url, "git+https://github.com/tower1229/Zhuang-Yan.git");
+  assert.match(pkg.description, /OpenClaw persona/i);
+  assert.equal(pkg.engines.node, ">=18.18");
+});
+
+test("SKILL.md frontmatter exposes version and homepage metadata", () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
+  const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
+  const frontmatter = readFrontmatter(skill);
+  assert.match(frontmatter, new RegExp(`^version: ${pkg.version}$`, "m"));
+  assert.match(frontmatter, /^    homepage: https:\/\/github\.com\/tower1229\/Zhuang-Yan$/m);
 });

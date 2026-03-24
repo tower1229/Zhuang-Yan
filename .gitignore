@@ -1,0 +1,12 @@
+node_modules/
+coverage/
+out/
+sandbox/
+.env
+.env.*
+.clawhub/
+.cursor/
+.vscode/
+.idea/
+.DS_Store
+**/.DS_Store
