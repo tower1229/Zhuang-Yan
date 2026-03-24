@@ -1,7 +1,6 @@
 ---
 name: persona-skill
 description: Initialize or reinitialize an OpenClaw persona by interactively collecting MBTI, relationship role, naming, and user preference details, then drafting and updating SOUL.md, MEMORY.md, IDENTITY.md, and USER.md. Use only when the user explicitly asks to initialize, reset, rebuild, or reshape the persona. Do not use for current-status questions, timeline recall, memory lookup, or cross-skill orchestration.
-version: 0.1.0
 allowed-tools: Bash(node:*) Read Write
 metadata:
   openclaw:

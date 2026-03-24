@@ -64,10 +64,9 @@ test("package.json includes professional project metadata", () => {
   assert.equal(pkg.engines.node, ">=18.18");
 });
 
-test("SKILL.md frontmatter exposes version and homepage metadata", () => {
-  const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
+test("SKILL.md frontmatter keeps homepage metadata and does not duplicate the package version", () => {
   const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
   const frontmatter = readFrontmatter(skill);
-  assert.match(frontmatter, new RegExp(`^version: ${pkg.version}$`, "m"));
+  assert.doesNotMatch(frontmatter, /^version:/m);
   assert.match(frontmatter, /^    homepage: https:\/\/github\.com\/tower1229\/Zhuang-Yan$/m);
 });

@@ -26,7 +26,7 @@ node ./scripts/release-clawhub.mjs
 
 ## Publishing Notes
 
-1. Update `package.json` and `SKILL.md` to the release version.
+1. Update the release version in `package.json`.
 2. Review `docs/clawhub-publish-checklist.md`.
 3. Run tests before publishing.
 4. Publish from the repository root.
