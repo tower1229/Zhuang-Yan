@@ -33,7 +33,7 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /references\/persona-generation-strategy\.md/);
 });
 
-test("package.json test script targets concrete test files", () => {
+test("package.json test script uses the tests directory for cross-platform discovery", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
-  assert.match(pkg.scripts.test, /tests\/\*\.test\.mjs/);
+  assert.equal(pkg.scripts.test, "node --test tests");
 });

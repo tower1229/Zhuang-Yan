@@ -8,7 +8,7 @@
 
 ## 发布前检查
 
-- 先运行：`npm run test`
+- 先运行：`npm run test`（若 PowerShell 执行策略拦截 `npm.ps1`，可改用 `node --test tests`）
 - 确认 `package.json` 中的 `version` 已更新为本次发布版本
 - 确认 `SKILL.md` frontmatter 可被 OpenClaw 正常识别
 - 确认 `assets/mbti/mbti-index.json` 与 `references/mbti/*.md` 完整存在

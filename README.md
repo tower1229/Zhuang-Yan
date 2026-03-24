@@ -62,7 +62,7 @@ The project root is the publishable and testable skill directory.
 ## Local Testing And Publish
 
 - Skill directory: project root
-- Run tests: `npm run test`
+- Run tests: `npm run test` (or `node --test tests` if your PowerShell policy blocks `npm.ps1`)
 - Publish: `npm run publish:clawhub`
 - The publish command runs tests first, then publishes using the `version` from `package.json`
 - Publish checklist: `docs/clawhub-publish-checklist.md`

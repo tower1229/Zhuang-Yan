@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  TEST_TARGET,
   buildCommandSpec,
   detectPublisherBootstrapBug,
   parseArgs,
@@ -24,6 +25,10 @@ test("parseArgs uses package.json version by default", () => {
   const args = parseArgs([], { defaultVersion: packageVersion });
   assert.equal(args.version, packageVersion);
   assert.equal(args.tag, "latest");
+});
+
+test("release script uses the tests directory for pre-publish validation", () => {
+  assert.equal(TEST_TARGET, "tests");
 });
 
 test("quoteWin preserves spaced arguments", () => {

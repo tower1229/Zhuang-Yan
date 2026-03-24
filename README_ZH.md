@@ -62,7 +62,7 @@ Persona-Skill 想补上的，就是这一层长期关系价值。它不是单纯
 ## 本地测试与发布
 
 - Skill 目录：项目根目录
-- 运行测试：`npm run test`
+- 运行测试：`npm run test`（如果 PowerShell 执行策略拦截 `npm.ps1`，可改用 `node --test tests`）
 - 发布命令：`npm run publish:clawhub`
 - 发布命令会先跑测试，再读取 `package.json` 中的 `version` 进行发布
 - 发布检查清单：`docs/clawhub-publish-checklist.md`

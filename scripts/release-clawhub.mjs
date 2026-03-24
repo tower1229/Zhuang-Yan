@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PACKAGE_JSON_PATH = path.join(ROOT_DIR, "package.json");
+const TEST_TARGET = "tests";
 
 function usage(exitCode = 0) {
   const msg = `
@@ -147,7 +148,7 @@ function printPublisherBootstrapHelp() {
 
 function runTests() {
   console.log("Running tests before publish...");
-  run(process.execPath, ["--test", "tests/*.test.mjs"]);
+  run(process.execPath, ["--test", TEST_TARGET]);
 }
 
 function publish(args) {
@@ -197,6 +198,7 @@ const isDirectRun =
   process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
 
 export {
+  TEST_TARGET,
   buildCommandSpec,
   detectPublisherBootstrapBug,
   parseArgs,
