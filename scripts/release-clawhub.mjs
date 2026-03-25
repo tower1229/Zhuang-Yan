@@ -5,7 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PACKAGE_JSON_PATH = path.join(ROOT_DIR, "package.json");
-const TEST_TARGET = "tests";
+const TEST_TARGET = "tests/*.mjs";
 
 function usage(exitCode = 0) {
   const msg = `

@@ -28,7 +28,7 @@ test("parseArgs uses package.json version by default", () => {
 });
 
 test("release script uses the tests directory for pre-publish validation", () => {
-  assert.equal(TEST_TARGET, "tests");
+  assert.equal(TEST_TARGET, "tests/*.mjs");
 });
 
 test("quoteWin preserves spaced arguments", () => {
