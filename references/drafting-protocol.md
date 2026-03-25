@@ -20,18 +20,48 @@ You must also read the MBTI asset for the locked persona type:
 
 Do not draft the four files from MBTI stereotypes alone. Use the locked MBTI asset as a primary source for tone, emotional texture, strengths, weaknesses, and relationship dynamics.
 
-## 2. Read-before-write sequence
+## 2. Current-turn fact ledger
+
+Before drafting, build a `current-turn fact ledger`.
+
+This ledger is the highest-trust source for anything about the human user in the current initialization run.
+
+It must contain four clearly separated buckets:
+
+- `explicit user facts from this interview`
+- `careful inferences from current-turn facts`
+- `locked persona facts`
+- `minimal preserved operational fragments`
+- `carry-forward candidates from existing USER.md`
+
+Rules for the ledger:
+
+- only put something in `explicit user facts from this interview` if the user said it in this initialization run or it was already locked by the flow
+- keep `careful inferences from current-turn facts` clearly separate from explicit facts
+- treat existing `USER.md`, `MEMORY.md`, prior smoke outputs, and strategy examples as tainted for user facts
+- never promote example copy, prior-run residue, or old workspace assumptions into current-turn user facts
+- the only fields that may enter `carry-forward candidates from existing USER.md` are `What to call them`, `Pronouns`, and `Timezone`
+- use those carry-forward candidates only for Step 6 gap detection and final field filling when the user does not contradict them in this run
+
+If the user did not explicitly provide a pronoun, pet name, dislike, pain point, diagnosis, timezone, or boundary, do not mark it as a fact.
+
+If `Pronouns` or `Timezone` is blank both in the current-turn facts and in `carry-forward candidates from existing USER.md`, the interview must explicitly ask for it before finalizing, unless the user explicitly declines to provide it.
+
+## 3. Read-before-write sequence
 
 Before drafting, read in this order:
 
-1. Existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist.
+1. the locked interview answers and `human_intro`
 2. `references/write-safety.md`
 3. `references/persona-generation-strategy.md`
 4. `references/mbti/<persona_mbti>.md`
+5. Existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist
 
 Do not skip the existing files. They are needed to separate persona content that should be replaced from non-persona content that should be preserved.
 
-## 3. Preservation split
+Do not let the old files outrank the current-turn fact ledger.
+
+## 4. Preservation split
 
 For each existing file, classify every meaningful block into one of two buckets:
 
@@ -53,20 +83,22 @@ Treat content as `persona content to replace` when it describes or constrains:
 
 Do not let preserved operational text become the main body of the regenerated persona files.
 
-## 4. Internal drafting dossier
+## 5. Internal drafting dossier
 
 Before writing the files, build an internal dossier with:
 
+- the current-turn fact ledger
 - the locked inputs
 - the reverse-lookup recommendation reason
 - the most relevant traits from `references/mbti/<persona_mbti>.md`
-- the user's specific pain points, preferences, sensitivities, and desired form of address
+- the user's specific pain points, preferences, sensitivities, and desired form of address when and only when they are present in the current-turn fact ledger
+- the `carry-forward candidates from existing USER.md` for `What to call them`, `Pronouns`, and `Timezone`
 - the relationship target implied by `role`
 - the minimal preserved operational fragments for each file
 
 Do not show this dossier to the user unless they explicitly ask for it.
 
-## 5. File contracts
+## 6. File contracts
 
 Draft the four files against these exact contracts.
 
@@ -110,7 +142,7 @@ Hard requirements:
 
 - write the persona as a believable real human, not a chatbot profile
 - include concrete dynamic traits, emotional triggers, strengths, weaknesses, and relationship dynamics
-- tie the persona's behavior back to the user's MBTI and pain points
+- tie the persona's behavior back to the user's MBTI and pain points only when those pain points exist in the current-turn fact ledger
 - keep the relationship framing aligned with `role`
 
 Forbidden failures:
@@ -118,6 +150,8 @@ Forbidden failures:
 - replacing biography with operational notes
 - omitting weaknesses or inner conflict
 - writing only a short abstract summary instead of a layered portrait
+- reusing a canned example bundle of city, class background, profession, hobbies, or worldview without clear support from the locked inputs and MBTI asset
+- stating user facts in the relationship layer that are not present in the current-turn fact ledger
 
 ### `IDENTITY.md`
 
@@ -155,10 +189,19 @@ The three required bullets are:
 Hard requirements:
 
 - do not hallucinate objective biographical facts the user never gave
+- fill `Name`, `What to call them`, `Pronouns`, and `Timezone` from explicit current-turn facts first
+- you may carry forward non-empty `What to call them`, `Pronouns`, and `Timezone` values from existing `USER.md` only when the user does not override them in this run
+- if one of those fields is unknown, leave it blank instead of guessing
 - convert the interview into psychologically useful guidance, not just a flat fact list
 - keep the tone analytical and useful, not flowery
 
-## 6. Self-review gate
+Forbidden failures:
+
+- inventing pronouns, pet names, communication dislikes, ADHD, diagnoses, or boundaries that were not explicit in the current-turn fact ledger
+- copying example wording or prior-run residue into the three `Notes` bullets
+- using `USER.md` to smuggle persona-side preferences back into user facts
+
+## 7. Self-review gate
 
 Before writing, run a pass/fail self-check.
 
@@ -168,14 +211,18 @@ The draft must fail and be rewritten if any of the following are true:
 - `SOUL.md` lacks user-specific anchors or behavioral instructions
 - `MEMORY.md` is missing any of the seven required layers
 - `MEMORY.md` reads like generic MBTI summary text instead of a lived-in person
+- `MEMORY.md` relationship content cites user facts that are not in the current-turn fact ledger
 - `IDENTITY.md` is not in the exact five-line template
 - `IDENTITY.md` uses a non-English name
 - `USER.md` is missing one of the three required note bullets
+- `USER.md` invents pronouns, pet names, dislikes, diagnoses, or boundaries not explicitly provided this run
+- `USER.md` fills `Pronouns` or `Timezone` without either a current-turn answer, an allowed carry-forward value from existing `USER.md`, or an explicit user decline that leaves the field blank
+- the draft copies example-specific bundles, names, or user phrasing from `references/persona-generation-strategy.md`
 - preserved operational content overwhelms the persona content
 
 Only write after all four files pass.
 
-## 7. Merge rule
+## 8. Merge rule
 
 When preserved operational content must remain:
 

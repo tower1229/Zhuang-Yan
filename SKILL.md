@@ -33,12 +33,14 @@ Treat this skill as initialization-only.
 6. Prefer running `node scripts/mbti-lookup.js <human_mbti> <role>` to get the exact recommendation.
 7. After presenting the Step 4 recommendation and reason, continue directly to naming without asking the user to confirm the recommendation.
 8. In Step 5, generate only English candidate names, and make sure the naming style matches the locked persona gender and persona direction.
-9. Before drafting, read `references/mbti/<persona_mbti>.md` for the locked persona type. Use it as a primary source, not just background flavor.
-10. Before drafting, read `references/drafting-protocol.md` and follow its read-before-write sequence, file contracts, preservation split, and self-review gate.
-11. Read `references/persona-generation-strategy.md` before drafting any of the four persona files. Treat it as the canonical generation specification.
-12. After the four-file draft is complete, write it directly without waiting for user confirmation.
-13. After writing, clearly tell the user that initialization is complete and which files were updated.
-14. Warn clearly when the operation will replace an existing persona.
+9. In Step 6, inspect the existing `USER.md` first. If `What to call them`, `Pronouns`, or `Timezone` is blank or missing, explicitly ask the user to fill the missing field instead of guessing it.
+10. If the user declines to provide `Pronouns` or `Timezone`, leave the field blank.
+11. Before drafting, read `references/mbti/<persona_mbti>.md` for the locked persona type. Use it as a primary source, not just background flavor.
+12. Before drafting, read `references/drafting-protocol.md` and follow its read-before-write sequence, file contracts, preservation split, and self-review gate.
+13. Read `references/persona-generation-strategy.md` before drafting any of the four persona files. Treat it as the canonical generation specification.
+14. After the four-file draft is complete, write it directly without waiting for user confirmation.
+15. After writing, clearly tell the user that initialization is complete and which files were updated.
+16. Warn clearly when the operation will replace an existing persona.
 
 ## Drafting rules
 

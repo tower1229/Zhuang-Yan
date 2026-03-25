@@ -15,11 +15,11 @@ const skillFolderName = "persona-skill";
 const defaultSessionId = `persona-smoke-${Date.now()}`;
 const defaultMessages = [
   "调用 persona 进行初始化",
-  "INTJ",
+  "ENFP",
   "B",
   "A",
-  "Stella",
-  "叫我泛舟。我的 MBTI 是 INTJ，伴有 ADHD。讨厌低效沟通、形式主义和空话。需要直接、清晰、可执行的支持，别说教。",
+  "Adrian",
+  "叫我泛舟。我的 MBTI 是 ENFP。",
 ];
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
 const personaFiles = ["SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];

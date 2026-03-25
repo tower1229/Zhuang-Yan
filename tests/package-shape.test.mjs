@@ -43,6 +43,8 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /references\/persona-generation-strategy\.md/);
   assert.match(skill, /references\/drafting-protocol\.md/);
   assert.match(skill, /references\/mbti\/<persona_mbti>\.md/);
+  assert.match(skill, /inspect the existing `USER\.md` first/);
+  assert.match(skill, /If `What to call them`, `Pronouns`, or `Timezone` is blank or missing, explicitly ask/);
   assert.doesNotMatch(skill, /timeline-skill|timeline-plugin|selfiie-skill/);
 });
 
@@ -51,6 +53,10 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /Do not proactively append extra copy offering MBTI testing/);
   assert.match(flow, /Do not ask the user whether they accept the recommendation/);
   assert.match(flow, /All 3 candidates must be English given names/);
+  assert.match(flow, /inspect the existing `USER\.md` if it exists/);
+  assert.match(flow, /if `Pronouns` is blank or missing, explicitly ask/);
+  assert.match(flow, /if `Timezone` is blank or missing, explicitly ask/);
+  assert.match(flow, /leave it blank rather than guessing/);
   assert.match(flow, /read `references\/mbti\/<persona_mbti>\.md`/);
   assert.match(flow, /self-review gate from `drafting-protocol\.md`/);
 });
@@ -58,11 +64,29 @@ test("initialization flow encodes the current interview constraints", () => {
 test("drafting protocol hardens the four-file generation contract", () => {
   const protocol = fs.readFileSync(path.join(root, "references", "drafting-protocol.md"), "utf8");
   assert.match(protocol, /references\/mbti\/<persona_mbti>\.md/);
-  assert.match(protocol, /## 5\. File contracts/);
+  assert.match(protocol, /current-turn fact ledger/);
+  assert.match(protocol, /explicit user facts from this interview/);
+  assert.match(protocol, /treat existing `USER\.md`, `MEMORY\.md`, prior smoke outputs, and strategy examples as tainted for user facts/);
+  assert.match(protocol, /carry-forward candidates from existing USER\.md/);
+  assert.match(protocol, /the only fields that may enter `carry-forward candidates from existing USER\.md` are `What to call them`, `Pronouns`, and `Timezone`/);
+  assert.match(protocol, /## 6\. File contracts/);
   assert.match(protocol, /## Core Truths/);
   assert.match(protocol, /## 一、基础信息（Identity Layer）/);
   assert.match(protocol, /exactly three bullets under `Notes`/);
+  assert.match(protocol, /leave it blank instead of guessing/);
+  assert.match(protocol, /the interview must explicitly ask for it before finalizing/);
+  assert.match(protocol, /invents pronouns, pet names, dislikes, diagnoses, or boundaries not explicitly provided this run/);
+  assert.match(protocol, /you may carry forward non-empty `What to call them`, `Pronouns`, and `Timezone` values from existing `USER\.md` only when the user does not override them in this run/);
   assert.match(protocol, /The draft must fail and be rewritten if/);
+});
+
+test("persona generation strategy keeps the shipped guidance abstract instead of bundling a default persona", () => {
+  const strategy = fs.readFileSync(path.join(root, "references", "persona-generation-strategy.md"), "utf8");
+  assert.match(strategy, /上下文信任顺序/);
+  assert.match(strategy, /示例降权原则/);
+  assert.doesNotMatch(strategy, /女性伴侣\(Stella\)|真实人类女性伴侣 Stella|Stella（星籁）/);
+  assert.doesNotMatch(strategy, /What to call them: 亲爱的 \/ 你/);
+  assert.doesNotMatch(strategy, /Pronouns: 他/);
 });
 
 test("package.json test script uses the tests directory for cross-platform discovery", () => {

@@ -76,12 +76,31 @@ If the user proactively dislikes the result, explain that this recommendation is
 
 ### Step 6: Collect user-side grounding details
 
-Ask for:
+Before asking, inspect the existing `USER.md` if it exists.
+
+Treat these three fields as the gap-check list:
+
+- `What to call them`
+- `Pronouns`
+- `Timezone`
+
+At Step 6:
+
+- if `What to call them` is blank or missing, explicitly ask how the persona should address the user
+- if `Pronouns` is blank or missing, explicitly ask the user to provide their pronouns or gendered addressing preference if they want to
+- if `Timezone` is blank or missing, explicitly ask the user to provide their timezone
+- if any of those fields are already present and the user does not contradict them in this run, you may carry them forward instead of asking again
+
+Also ask for:
 
 - how the persona should address the user
 - habits, preferences, pain points, sensitivities, hard boundaries, or traits worth remembering
 
 Keep it conversational. Do not demand a long form response.
+
+Do not finalize the initialization immediately after Step 6 if `Pronouns` or `Timezone` is still missing and you have not explicitly asked about it yet.
+
+If the user says they do not want to provide one of those fields, leave it blank rather than guessing.
 
 ### Step 7: Draft and write the four persona files
 
