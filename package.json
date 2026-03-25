@@ -24,7 +24,7 @@
     "node": ">=18.18"
   },
   "scripts": {
-    "test": "node --test tests",
+    "test": "node --test \"tests/*.mjs\"",
     "publish:clawhub": "node ./scripts/release-clawhub.mjs"
   }
 }

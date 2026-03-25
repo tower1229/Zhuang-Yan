@@ -50,7 +50,7 @@ test("initialization flow encodes the current interview constraints", () => {
 
 test("package.json test script uses the tests directory for cross-platform discovery", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
-  assert.equal(pkg.scripts.test, "node --test tests");
+  assert.equal(pkg.scripts.test, 'node --test "tests/*.mjs"');
 });
 
 test("repository metadata files exist", () => {
