@@ -30,12 +30,24 @@ Do not begin by summarizing the old persona, asking whether the old vibe is stil
 
 ### Step 2: Confirm persona gender
 
+Make it explicit that you are asking about the OpenClaw persona's gender, not the human user's gender.
+
+Preferred wording:
+
+- `你希望这个 OpenClaw 人格 / 数字人的性别是？`
+
 Offer a simple choice such as:
 
 - `A. 男性`
 - `B. 女性`
 
 ### Step 3: Confirm relationship role
+
+Make it explicit that you are asking about the relationship between the user and the OpenClaw persona.
+
+Preferred wording:
+
+- `你希望我们的关系是？`
 
 Offer a simple choice such as:
 
@@ -122,6 +134,8 @@ Before drafting:
 - read `drafting-protocol.md`
 - read `references/mbti/<persona_mbti>.md`
 - read the existing four target files if they already exist
+- when reading, always name the exact file path; do not use a vague "read existing files" action
+- if the run resumes after an interruption, redo the concrete read sequence before drafting instead of assuming the old context is still active
 
 Legacy migration rule:
 

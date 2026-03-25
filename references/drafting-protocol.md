@@ -59,6 +59,15 @@ Before drafting, read in this order:
 
 Do not skip the existing files. They are needed to separate persona content that should be replaced from non-persona content that should be preserved.
 
+Use concrete file reads only.
+
+- name the exact file each time you read
+- if a target file may not exist, say so and then read that specific file path if available
+- never issue an empty `Read` call
+- never use a vague tool action such as "read the existing files" without listing the concrete files
+
+If the run was interrupted after the interview and you are resuming near the drafting or write stage, restart this exact read sequence from the top with explicit file names instead of relying on memory of the earlier context.
+
 Do not let the old files outrank the current-turn fact ledger.
 
 Explicit initialization intent outranks all existing persona prose, placeholder cards, and legacy scaffolds.

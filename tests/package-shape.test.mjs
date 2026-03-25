@@ -45,10 +45,14 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /references\/drafting-protocol\.md/);
   assert.match(skill, /references\/mbti\/<persona_mbti>\.md/);
   assert.match(skill, /always restart the interview from Step 1/);
+  assert.match(skill, /asking for the OpenClaw persona's gender, not the human user's gender/);
+  assert.match(skill, /asking about the relationship between the user and the OpenClaw persona/);
+  assert.match(skill, /你希望我们的关系是/);
   assert.match(skill, /inspect the existing `USER\.md` first/);
   assert.match(skill, /If `What to call them`, `Pronouns`, or `Timezone` is blank or missing, explicitly ask/);
   assert.match(skill, /Missing target files and legacy placeholder files are not something to "work around"/);
   assert.match(skill, /Do not read `references\/examples\/` during normal initialization/);
+  assert.match(skill, /Never issue an empty `Read` call or a vague read request such as "read existing files"/);
   assert.match(skill, /Treat `SOUL\.md` and `MEMORY\.md` as section-owned files/);
   assert.match(skill, /Treat `IDENTITY\.md` and `USER\.md` as whole-file-owned files/);
   assert.match(skill, /Never ask to edit, delete, or clean up `BOOTSTRAP\.md`, `AGENTS\.md`/);
@@ -60,6 +64,10 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /Do not proactively append extra copy offering MBTI testing/);
   assert.match(flow, /always start a fresh initialization interview from Step 1/);
   assert.match(flow, /Do not begin by summarizing the old persona/);
+  assert.match(flow, /asking about the OpenClaw persona's gender, not the human user's gender/);
+  assert.match(flow, /你希望这个 OpenClaw 人格 \/ 数字人的性别是/);
+  assert.match(flow, /asking about the relationship between the user and the OpenClaw persona/);
+  assert.match(flow, /你希望我们的关系是/);
   assert.match(flow, /Do not ask the user whether they accept the recommendation/);
   assert.match(flow, /All 3 candidates must be English given names/);
   assert.match(flow, /inspect the existing `USER\.md` if it exists/);
@@ -69,6 +77,8 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /if any target file is missing, create it during this initialization run/);
   assert.match(flow, /do not preserve legacy template wrappers/);
   assert.match(flow, /must satisfy the current contract from its first non-empty line onward/);
+  assert.match(flow, /always name the exact file path; do not use a vague "read existing files" action/);
+  assert.match(flow, /if the run resumes after an interruption, redo the concrete read sequence before drafting/);
   assert.match(flow, /do not ask whether unrelated files such as `BOOTSTRAP\.md` should be deleted or changed/);
   assert.match(flow, /read `references\/mbti\/<persona_mbti>\.md`/);
   assert.match(flow, /self-review gate from `drafting-protocol\.md`/);
@@ -83,6 +93,9 @@ test("drafting protocol hardens the four-file generation contract", () => {
   assert.match(protocol, /carry-forward candidates from existing USER\.md/);
   assert.match(protocol, /the only fields that may enter `carry-forward candidates from existing USER\.md` are `What to call them`, `Pronouns`, and `Timezone`/);
   assert.match(protocol, /Explicit initialization intent outranks all existing persona prose, placeholder cards, and legacy scaffolds/);
+  assert.match(protocol, /Use concrete file reads only/);
+  assert.match(protocol, /never issue an empty `Read` call/);
+  assert.match(protocol, /restart this exact read sequence from the top with explicit file names/);
   assert.match(protocol, /Treat the following as legacy scaffolds to replace, not preserve/);
   assert.match(protocol, /If one of the four target files is missing, treat that as a required regeneration task/);
   assert.match(protocol, /## 6\. File contracts/);
