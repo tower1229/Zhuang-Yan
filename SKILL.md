@@ -19,9 +19,8 @@ Treat this skill as initialization-only.
 ## Hard boundaries
 
 - Proceed only after an explicit initialization request such as `初始化人格`, `重塑人格`, `重新生成人格`, or `调用 persona 进行初始化`.
-- Do not answer current-status or timeline questions.
-- Do not call `timeline-skill`, `timeline-plugin`, `selfiie-skill`, or any other skill.
-- Do not write JSON payloads or downstream prompt parameters.
+- Stay within persona initialization. If the user asks for unrelated runtime behavior, state, recall, or orchestration work, do not start this workflow.
+- Do not emit machine-oriented intermediate artifacts such as JSON payloads, downstream prompt parameters, or handoff configs unless the user explicitly asks for them.
 - Do not modify `AGENTS.md` or any file other than `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
 
 ## Required workflow

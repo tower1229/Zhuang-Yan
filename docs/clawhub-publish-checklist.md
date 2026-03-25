@@ -32,7 +32,7 @@ npm run publish:clawhub
 - 安装验证：`clawhub install persona-skill`
 - 在 OpenClaw 会话中明确输入：`调用 persona 进行初始化`
 - 验证 skill 是否按一问一答方式进入初始化流程
-- 验证其不会回答状态查询，也不会主动联动其他 skill
+- 验证其不会处理初始化以外的请求，也不会偏离四文件写入边界
 
 ## ClawHub 当前格式要点
 

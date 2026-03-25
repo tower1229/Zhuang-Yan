@@ -7,7 +7,7 @@
 
 ## 1. 设计变更
 
-`persona-skill` 不再承担“运行时人格表达层”的职责，也不再作为 `selfiie-skill`、`timeline-plugin` 或其他 skill 的中间层。
+`persona-skill` 不再承担“运行时人格表达层”的职责，也不作为其他工作流或其他 skill 的中间层。
 
 本项目现在只保留一条主线能力：
 
@@ -32,11 +32,9 @@
 `persona-skill` 不负责：
 
 1. 查询 OpenClaw 当前状态
-2. 回答“你现在在做什么”之类的时间线问题
-3. 调用 `timeline-skill`、`timeline-plugin` 或任何状态引擎
-4. 主动联动 `selfiie-skill` 或其他 skill
-5. 为下游工具输出 JSON、Prompt 或运行时上下文参数
-6. 修改 `AGENTS.md` 或任何人格资产之外的系统协议文件
+2. 处理与人格初始化无关的运行时状态、回忆、编排或其他工作流请求
+3. 为下游工具输出 JSON、Prompt 或运行时上下文参数
+4. 修改 `AGENTS.md` 或任何人格资产之外的系统协议文件
 
 ---
 
@@ -198,7 +196,7 @@ Step 9：提示完成
 | 写入对象 | 仅 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` |
 | 写入时机 | 四文件草案完成后直接写入 |
 | 运行时状态查询 | 不支持 |
-| 其他 skill 联动 | 不支持 |
+| 其他工作流联动 | 不支持 |
 
 ---
 

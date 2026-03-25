@@ -43,6 +43,7 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /references\/persona-generation-strategy\.md/);
   assert.match(skill, /references\/drafting-protocol\.md/);
   assert.match(skill, /references\/mbti\/<persona_mbti>\.md/);
+  assert.doesNotMatch(skill, /timeline-skill|timeline-plugin|selfiie-skill/);
 });
 
 test("initialization flow encodes the current interview constraints", () => {
