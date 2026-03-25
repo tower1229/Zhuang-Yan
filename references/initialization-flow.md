@@ -15,6 +15,10 @@ Accepted examples:
 
 If the request is vague, ask for a clearer initialization intent before continuing.
 
+If the request is explicit, always start a fresh initialization interview from Step 1.
+
+Do not begin by summarizing the old persona, asking whether the old vibe is still okay, or trying to "fill in" placeholder fields from an older template before the new interview is complete.
+
 ## Interview flow
 
 ### Step 1: Get the user's MBTI
@@ -119,6 +123,14 @@ Before drafting:
 - read `references/mbti/<persona_mbti>.md`
 - read the existing four target files if they already exist
 
+Legacy migration rule:
+
+- if any target file is missing, create it during this initialization run
+- if any target file is still in an older placeholder/template format, treat it as `persona content to replace`, not as the basis of the new interview
+- explicit initialization always wins over old placeholder scaffolds, old identity cards, and old persona prose
+- do not preserve legacy template wrappers such as `# SOUL.md - Who You Are`, `# IDENTITY.md - Who Am I?`, `# USER.md - About Your Human`, "Fill this in during your first conversation", `待定`, or old bold-field markdown layouts
+- the regenerated file must satisfy the current contract from its first non-empty line onward; do not leave any legacy heading, preamble, or explanatory wrapper above the contract body
+
 Then:
 
 - separate existing content into `persona content to replace` and `non-persona content to preserve`
@@ -133,3 +145,4 @@ After writing:
 - tell the user initialization is complete
 - summarize that the four persona files have been updated
 - mention if an existing persona was replaced
+- do not ask whether unrelated files such as `BOOTSTRAP.md` should be deleted or changed

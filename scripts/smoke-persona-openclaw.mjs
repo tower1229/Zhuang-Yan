@@ -226,6 +226,10 @@ function runStructuralChecks(files) {
     .filter(Boolean);
 
   const userNotes = files["USER.md"].content.match(/^\s+- (深层倾向|沟通雷区|动态留白)/gm) || [];
+  const legacyWrapperPattern =
+    /^# (SOUL\.md - Who You Are|IDENTITY\.md - Who Am I\?|USER\.md - About Your Human|MEMORY\.md - .+)$/m;
+  const legacyPlaceholderPattern =
+    /Fill this in during your first conversation|This isn't just metadata\. It's the start of figuring out who you are\.|待定/;
 
   return [
     {
@@ -260,6 +264,22 @@ function runStructuralChecks(files) {
     {
       name: "USER contains the required Notes bullets",
       pass: userNotes.length >= 3,
+    },
+    {
+      name: "Generated files do not retain legacy wrapper headings",
+      pass:
+        !legacyWrapperPattern.test(files["SOUL.md"].content) &&
+        !legacyWrapperPattern.test(files["MEMORY.md"].content) &&
+        !legacyWrapperPattern.test(files["IDENTITY.md"].content) &&
+        !legacyWrapperPattern.test(files["USER.md"].content),
+    },
+    {
+      name: "Generated files do not retain legacy placeholder copy",
+      pass:
+        !legacyPlaceholderPattern.test(files["SOUL.md"].content) &&
+        !legacyPlaceholderPattern.test(files["MEMORY.md"].content) &&
+        !legacyPlaceholderPattern.test(files["IDENTITY.md"].content) &&
+        !legacyPlaceholderPattern.test(files["USER.md"].content),
     },
   ];
 }

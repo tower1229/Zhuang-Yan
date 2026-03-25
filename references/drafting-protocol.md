@@ -61,6 +61,8 @@ Do not skip the existing files. They are needed to separate persona content that
 
 Do not let the old files outrank the current-turn fact ledger.
 
+Explicit initialization intent outranks all existing persona prose, placeholder cards, and legacy scaffolds.
+
 ## 4. Preservation split
 
 For each existing file, classify every meaningful block into one of two buckets:
@@ -80,8 +82,21 @@ Treat content as `persona content to replace` when it describes or constrains:
 - the assistant's identity, personality, values, tone, vibe, biography, relationship style, or emotional tendencies
 - the human user's profile, preferences, boundaries, or how the assistant should relate to them
 - old names, old MBTI-aligned behaviors, old backstory, or old relationship framing
+- placeholder identity cards, unfinished setup notes, or legacy onboarding scaffolds from older workspace formats
+
+Treat the following as legacy scaffolds to replace, not preserve:
+
+- `# SOUL.md - Who You Are`
+- `# IDENTITY.md - Who Am I?`
+- `# USER.md - About Your Human`
+- `Fill this in during your first conversation`
+- `This isn't just metadata. It's the start of figuring out who you are.`
+- `待定` placeholder values
+- bold-field list formats like `- **Name:** ...`
 
 Do not let preserved operational text become the main body of the regenerated persona files.
+
+If one of the four target files is missing, treat that as a required regeneration task, not as permission to skip the file.
 
 ## 5. Internal drafting dossier
 
@@ -106,6 +121,7 @@ Draft the four files against these exact contracts.
 
 Required shape:
 
+- first non-empty line must be `## Core Truths`
 - `## Core Truths`
 - 5-7 high-density persona axioms
 - each axiom must explain both identity and behavioral implication
@@ -125,11 +141,13 @@ Forbidden failures:
 - runtime tool policies as the main content
 - low-information one-paragraph summaries
 - first-person diary-style self-description as the dominant mode
+- retaining a legacy wrapper or placeholder setup text as the main structure of the regenerated file
 
 ### `MEMORY.md`
 
 Required shape:
 
+- first non-empty line must be `## 一、基础信息（Identity Layer）`
 - `## 一、基础信息（Identity Layer）`
 - `## 二、外在特征（Physical Layer）`
 - `## 三、心理结构（Psychological Layer）`
@@ -152,11 +170,13 @@ Forbidden failures:
 - writing only a short abstract summary instead of a layered portrait
 - reusing a canned example bundle of city, class background, profession, hobbies, or worldview without clear support from the locked inputs and MBTI asset
 - stating user facts in the relationship layer that are not present in the current-turn fact ledger
+- failing to generate `MEMORY.md` because an older workspace did not already have one
 
 ### `IDENTITY.md`
 
 Required shape:
 
+- first non-empty line must be `- Name: {English given name}`
 - `- Name: {English given name}`
 - `- Creature: ...`
 - `- Vibe: ...`
@@ -168,11 +188,14 @@ Hard requirements:
 - the name must be the final locked English name
 - `Creature` must not mention AI, assistant, digital human, model, or system role
 - `Vibe` must describe aura, not appearance details
+- do not preserve a legacy heading, explanatory wrapper, or bold-field placeholder card around the five-line template
+- the file must begin directly with the five-line template, with no heading or preamble above it
 
 ### `USER.md`
 
 Required shape:
 
+- first non-empty line must be `- Name: ...`
 - `- Name: ...`
 - `- What to call them: ...`
 - `- Pronouns: ...`
@@ -194,12 +217,14 @@ Hard requirements:
 - if one of those fields is unknown, leave it blank instead of guessing
 - convert the interview into psychologically useful guidance, not just a flat fact list
 - keep the tone analytical and useful, not flowery
+- the file must begin directly with the contract fields, with no legacy heading or preamble above them
 
 Forbidden failures:
 
 - inventing pronouns, pet names, communication dislikes, ADHD, diagnoses, or boundaries that were not explicit in the current-turn fact ledger
 - copying example wording or prior-run residue into the three `Notes` bullets
 - using `USER.md` to smuggle persona-side preferences back into user facts
+- preserving a legacy heading, old markdown template wrapper, or six-plus-bullet profile from an older workspace format
 
 ## 7. Self-review gate
 
@@ -208,13 +233,19 @@ Before writing, run a pass/fail self-check.
 The draft must fail and be rewritten if any of the following are true:
 
 - `SOUL.md` does not contain both `Core Truths` and `Vibe`
+- `SOUL.md` does not start with `## Core Truths`
 - `SOUL.md` lacks user-specific anchors or behavioral instructions
+- `SOUL.md`, `IDENTITY.md`, or `USER.md` still keeps a legacy heading or placeholder wrapper as the dominant structure
 - `MEMORY.md` is missing any of the seven required layers
+- `MEMORY.md` does not start with `## 一、基础信息（Identity Layer）`
 - `MEMORY.md` reads like generic MBTI summary text instead of a lived-in person
 - `MEMORY.md` relationship content cites user facts that are not in the current-turn fact ledger
+- one of the four required files is missing or empty after drafting
 - `IDENTITY.md` is not in the exact five-line template
+- `IDENTITY.md` does not start with `- Name:`
 - `IDENTITY.md` uses a non-English name
 - `USER.md` is missing one of the three required note bullets
+- `USER.md` does not start with `- Name:`
 - `USER.md` invents pronouns, pet names, dislikes, diagnoses, or boundaries not explicitly provided this run
 - `USER.md` fills `Pronouns` or `Timezone` without either a current-turn answer, an allowed carry-forward value from existing `USER.md`, or an explicit user decline that leaves the field blank
 - the draft copies example-specific bundles, names, or user phrasing from `references/persona-generation-strategy.md`
@@ -233,3 +264,5 @@ When preserved operational content must remain:
 If relocation is safe, place preserved operational fragments after the regenerated persona content in a clearly separated appendix section.
 
 If relocation may break another workflow, keep the preserved fragment in place and regenerate the persona content around it.
+
+Never preserve or discuss edits to files outside the four target persona files as part of this initialization workflow.
