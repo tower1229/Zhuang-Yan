@@ -49,7 +49,8 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /If `What to call them`, `Pronouns`, or `Timezone` is blank or missing, explicitly ask/);
   assert.match(skill, /Missing target files and legacy placeholder files are not something to "work around"/);
   assert.match(skill, /Do not read `references\/examples\/` during normal initialization/);
-  assert.match(skill, /Generated files must satisfy the current contract from the first non-empty line/);
+  assert.match(skill, /Treat `SOUL\.md` and `MEMORY\.md` as section-owned files/);
+  assert.match(skill, /Treat `IDENTITY\.md` and `USER\.md` as whole-file-owned files/);
   assert.match(skill, /Never ask to edit, delete, or clean up `BOOTSTRAP\.md`, `AGENTS\.md`/);
   assert.doesNotMatch(skill, /timeline-skill|timeline-plugin|selfiie-skill/);
 });
@@ -85,8 +86,10 @@ test("drafting protocol hardens the four-file generation contract", () => {
   assert.match(protocol, /Treat the following as legacy scaffolds to replace, not preserve/);
   assert.match(protocol, /If one of the four target files is missing, treat that as a required regeneration task/);
   assert.match(protocol, /## 6\. File contracts/);
-  assert.match(protocol, /first non-empty line must be `## Core Truths`/);
-  assert.match(protocol, /first non-empty line must be `## 一、基础信息（Identity Layer）`/);
+  assert.match(protocol, /PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN/);
+  assert.match(protocol, /PERSONA-SKILL:MEMORY:BEGIN/);
+  assert.match(protocol, /the managed `Core Truths` block must live inside the `## Core Truths` section/);
+  assert.match(protocol, /insert the managed `MEMORY` block at the very top of the file/);
   assert.match(protocol, /first non-empty line must be `- Name: \{English given name\}`/);
   assert.match(protocol, /first non-empty line must be `- Name: \.\.\.`/);
   assert.match(protocol, /## Core Truths/);
@@ -127,8 +130,12 @@ test("package.json test script uses the tests directory for cross-platform disco
 
 test("smoke runner guards against legacy wrapper leakage", () => {
   const smoke = fs.readFileSync(path.join(root, "scripts", "smoke-persona-openclaw.mjs"), "utf8");
-  assert.match(smoke, /Generated files do not retain legacy wrapper headings/);
-  assert.match(smoke, /Generated files do not retain legacy placeholder copy/);
+  assert.match(smoke, /SOUL contains managed Core Truths block/);
+  assert.match(smoke, /MEMORY contains managed top block and all seven required layers/);
+  assert.match(smoke, /IDENTITY and USER do not retain legacy wrapper headings/);
+  assert.match(smoke, /IDENTITY and USER do not retain legacy placeholder copy/);
+  assert.match(smoke, /PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN/);
+  assert.match(smoke, /PERSONA-SKILL:MEMORY:BEGIN/);
   assert.match(smoke, /legacyWrapperPattern/);
   assert.match(smoke, /Fill this in during your first conversation/);
   assert.match(smoke, /About Your Human/);

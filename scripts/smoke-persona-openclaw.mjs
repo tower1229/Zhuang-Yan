@@ -220,29 +220,49 @@ function readGeneratedFiles(workspaceDir) {
 }
 
 function runStructuralChecks(files) {
+  const soulLines = files["SOUL.md"].content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const memoryLines = files["MEMORY.md"].content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
   const identityLines = files["IDENTITY.md"].content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const userLines = files["USER.md"].content
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean);
 
   const userNotes = files["USER.md"].content.match(/^\s+- (深层倾向|沟通雷区|动态留白)/gm) || [];
+  const soulManagedBlockPattern =
+    /<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->[\s\S]*?<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->/;
+  const memoryManagedBlockPattern =
+    /<!-- PERSONA-SKILL:MEMORY:BEGIN -->[\s\S]*?<!-- PERSONA-SKILL:MEMORY:END -->/;
   const legacyWrapperPattern =
-    /^# (SOUL\.md - Who You Are|IDENTITY\.md - Who Am I\?|USER\.md - About Your Human|MEMORY\.md - .+)$/m;
+    /^# (IDENTITY\.md - Who Am I\?|USER\.md - About Your Human)$/m;
   const legacyPlaceholderPattern =
     /Fill this in during your first conversation|This isn't just metadata\. It's the start of figuring out who you are\.|待定/;
 
   return [
     {
-      name: "SOUL contains Core Truths",
-      pass: /## Core Truths/.test(files["SOUL.md"].content),
+      name: "SOUL contains managed Core Truths block",
+      pass:
+        /## Core Truths/.test(files["SOUL.md"].content) &&
+        soulManagedBlockPattern.test(files["SOUL.md"].content),
     },
     {
       name: "SOUL contains Vibe",
       pass: /## Vibe/.test(files["SOUL.md"].content),
     },
     {
-      name: "MEMORY contains all seven required layers",
+      name: "MEMORY contains managed top block and all seven required layers",
       pass:
+        memoryLines[0] === "<!-- PERSONA-SKILL:MEMORY:BEGIN -->" &&
+        memoryManagedBlockPattern.test(files["MEMORY.md"].content) &&
         /## 一、基础信息（Identity Layer）/.test(files["MEMORY.md"].content) &&
         /## 二、外在特征（Physical Layer）/.test(files["MEMORY.md"].content) &&
         /## 三、心理结构（Psychological Layer）/.test(files["MEMORY.md"].content) &&
@@ -262,22 +282,25 @@ function runStructuralChecks(files) {
         /^- Avatar: /.test(identityLines[4]),
     },
     {
-      name: "USER contains the required Notes bullets",
-      pass: userNotes.length >= 3,
+      name: "USER uses the contract template",
+      pass:
+        userLines.length >= 5 &&
+        /^- Name: /.test(userLines[0]) &&
+        /^- What to call them: /.test(userLines[1]) &&
+        /^- Pronouns: /.test(userLines[2]) &&
+        /^- Timezone: /.test(userLines[3]) &&
+        /^- Notes:/.test(userLines[4]) &&
+        userNotes.length >= 3,
     },
     {
-      name: "Generated files do not retain legacy wrapper headings",
+      name: "IDENTITY and USER do not retain legacy wrapper headings",
       pass:
-        !legacyWrapperPattern.test(files["SOUL.md"].content) &&
-        !legacyWrapperPattern.test(files["MEMORY.md"].content) &&
         !legacyWrapperPattern.test(files["IDENTITY.md"].content) &&
         !legacyWrapperPattern.test(files["USER.md"].content),
     },
     {
-      name: "Generated files do not retain legacy placeholder copy",
+      name: "IDENTITY and USER do not retain legacy placeholder copy",
       pass:
-        !legacyPlaceholderPattern.test(files["SOUL.md"].content) &&
-        !legacyPlaceholderPattern.test(files["MEMORY.md"].content) &&
         !legacyPlaceholderPattern.test(files["IDENTITY.md"].content) &&
         !legacyPlaceholderPattern.test(files["USER.md"].content),
     },

@@ -129,7 +129,14 @@ Legacy migration rule:
 - if any target file is still in an older placeholder/template format, treat it as `persona content to replace`, not as the basis of the new interview
 - explicit initialization always wins over old placeholder scaffolds, old identity cards, and old persona prose
 - do not preserve legacy template wrappers such as `# SOUL.md - Who You Are`, `# IDENTITY.md - Who Am I?`, `# USER.md - About Your Human`, "Fill this in during your first conversation", `待定`, or old bold-field markdown layouts
-- the regenerated file must satisfy the current contract from its first non-empty line onward; do not leave any legacy heading, preamble, or explanatory wrapper above the contract body
+- for `SOUL.md`, manage only the `Core Truths` section and the `Vibe` section:
+  - if `## Vibe` exists, replace that whole section
+  - if `## Vibe` does not exist, append a new `## Vibe` section
+  - inside `## Core Truths`, maintain a single skill-owned block wrapped with clear begin/end markers
+  - if an older skill-owned `Core Truths` block exists, delete it before inserting the new one
+- for `MEMORY.md`, maintain a single skill-owned block wrapped with clear begin/end markers and insert it at the very top of the file
+  - if an older skill-owned `MEMORY` block exists, delete it first, then prepend the new block
+- for `IDENTITY.md` and `USER.md`, the regenerated file must satisfy the current contract from its first non-empty line onward; do not leave any legacy heading, preamble, or explanatory wrapper above the contract body
 
 Then:
 

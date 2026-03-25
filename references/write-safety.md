@@ -29,6 +29,8 @@ Before writing:
 5. Write the finalized four-file draft directly once it is ready.
 6. If preserved content and regenerated persona content conflict, keep the preserved fragment only when it is truly non-persona and operationally required.
 7. Do not allow preserved content to replace the required persona structure defined by the drafting protocol.
+8. For `SOUL.md` and `MEMORY.md`, update only the skill-owned sections or blocks defined by the drafting protocol rather than assuming full-file ownership.
+9. For `IDENTITY.md` and `USER.md`, regenerate the whole file against the current contract.
 
 ## Completion rule
 

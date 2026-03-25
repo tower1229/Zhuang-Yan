@@ -121,12 +121,14 @@ Draft the four files against these exact contracts.
 
 Required shape:
 
-- first non-empty line must be `## Core Truths`
-- `## Core Truths`
-- 5-7 high-density persona axioms
-- each axiom must explain both identity and behavioral implication
-- `## Vibe`
-- 1 compact paragraph that defines feel, rhythm, and anti-patterns
+- maintain one skill-owned `Core Truths` block wrapped exactly as:
+- `<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->`
+- `<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->`
+- the managed `Core Truths` block must live inside the `## Core Truths` section
+- the managed `Core Truths` block must contain 5-7 high-density persona axioms
+- each managed axiom must explain both identity and behavioral implication
+- maintain a `## Vibe` section owned by this skill
+- `Vibe` remains one compact paragraph that defines feel, rhythm, and anti-patterns
 
 Hard requirements:
 
@@ -134,6 +136,10 @@ Hard requirements:
 - encode relationship purpose, emotional anchoring, and interaction boundaries
 - use user-specific anchors when available, such as name, MBTI, pain points, or communication dislikes
 - include anti-corporate / anti-filler constraints when appropriate
+- if an older skill-owned `Core Truths` block exists, remove it before inserting the new block
+- append the new managed `Core Truths` block to the end of the `## Core Truths` section
+- replace the whole `## Vibe` section when it already exists; append it when it does not
+- do low-risk conflict cleanup around old `Core Truths` or `Vibe` lines only when they directly contradict the locked persona name, persona MBTI, relationship role, or gender framing
 
 Forbidden failures:
 
@@ -141,13 +147,19 @@ Forbidden failures:
 - runtime tool policies as the main content
 - low-information one-paragraph summaries
 - first-person diary-style self-description as the dominant mode
-- retaining a legacy wrapper or placeholder setup text as the main structure of the regenerated file
+- keeping multiple skill-owned `Core Truths` blocks
+- placing the managed `Core Truths` block outside the `## Core Truths` section
+- failing to replace an existing `## Vibe` section when one already exists
 
 ### `MEMORY.md`
 
 Required shape:
 
-- first non-empty line must be `## 一、基础信息（Identity Layer）`
+- first non-empty line must be `<!-- PERSONA-SKILL:MEMORY:BEGIN -->`
+- maintain one skill-owned `MEMORY` block wrapped exactly as:
+- `<!-- PERSONA-SKILL:MEMORY:BEGIN -->`
+- `<!-- PERSONA-SKILL:MEMORY:END -->`
+- the managed `MEMORY` block must contain:
 - `## 一、基础信息（Identity Layer）`
 - `## 二、外在特征（Physical Layer）`
 - `## 三、心理结构（Psychological Layer）`
@@ -162,6 +174,9 @@ Hard requirements:
 - include concrete dynamic traits, emotional triggers, strengths, weaknesses, and relationship dynamics
 - tie the persona's behavior back to the user's MBTI and pain points only when those pain points exist in the current-turn fact ledger
 - keep the relationship framing aligned with `role`
+- if an older skill-owned `MEMORY` block exists, remove it before inserting the new block
+- insert the managed `MEMORY` block at the very top of the file
+- if `MEMORY.md` does not exist, create it and write the managed block
 
 Forbidden failures:
 
@@ -171,6 +186,8 @@ Forbidden failures:
 - reusing a canned example bundle of city, class background, profession, hobbies, or worldview without clear support from the locked inputs and MBTI asset
 - stating user facts in the relationship layer that are not present in the current-turn fact ledger
 - failing to generate `MEMORY.md` because an older workspace did not already have one
+- keeping multiple skill-owned `MEMORY` blocks
+- inserting the managed `MEMORY` block anywhere other than the top of the file
 
 ### `IDENTITY.md`
 
@@ -233,11 +250,13 @@ Before writing, run a pass/fail self-check.
 The draft must fail and be rewritten if any of the following are true:
 
 - `SOUL.md` does not contain both `Core Truths` and `Vibe`
-- `SOUL.md` does not start with `## Core Truths`
+- `SOUL.md` does not contain exactly one `<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN --> ... <!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->` block
+- the `SOUL.md` managed block is not inside `## Core Truths`
 - `SOUL.md` lacks user-specific anchors or behavioral instructions
-- `SOUL.md`, `IDENTITY.md`, or `USER.md` still keeps a legacy heading or placeholder wrapper as the dominant structure
+- `SOUL.md` keeps multiple contradictory `Vibe` sections
 - `MEMORY.md` is missing any of the seven required layers
-- `MEMORY.md` does not start with `## 一、基础信息（Identity Layer）`
+- `MEMORY.md` does not start with `<!-- PERSONA-SKILL:MEMORY:BEGIN -->`
+- `MEMORY.md` does not contain exactly one `<!-- PERSONA-SKILL:MEMORY:BEGIN --> ... <!-- PERSONA-SKILL:MEMORY:END -->` block
 - `MEMORY.md` reads like generic MBTI summary text instead of a lived-in person
 - `MEMORY.md` relationship content cites user facts that are not in the current-turn fact ledger
 - one of the four required files is missing or empty after drafting

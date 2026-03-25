@@ -41,10 +41,11 @@ Treat this skill as initialization-only.
 14. Before drafting, read `references/drafting-protocol.md` and follow its read-before-write sequence, file contracts, preservation split, and self-review gate.
 15. Read `references/persona-generation-strategy.md` before drafting any of the four persona files. Treat it as the canonical generation specification.
 16. Do not read `references/examples/` during normal initialization unless the user explicitly asks for examples or you are doing a targeted maintainer debugging pass.
-17. Generated files must satisfy the current contract from the first non-empty line. Do not leave any legacy heading, wrapper, or onboarding preamble above the contract body.
-18. After the four-file draft is complete, write it directly without waiting for user confirmation.
-19. After writing, clearly tell the user that initialization is complete and which files were updated.
-20. Warn clearly when the operation will replace an existing persona.
+17. Treat `SOUL.md` and `MEMORY.md` as section-owned files: update the managed `Core Truths` / `Vibe` regions in `SOUL.md` and the managed top block in `MEMORY.md` exactly as defined by `drafting-protocol.md`.
+18. Treat `IDENTITY.md` and `USER.md` as whole-file-owned files: they must satisfy the current contract from the first non-empty line with no legacy heading or preamble.
+19. After the four-file draft is complete, write it directly without waiting for user confirmation.
+20. After writing, clearly tell the user that initialization is complete and which files were updated.
+21. Warn clearly when the operation will replace an existing persona.
 
 ## Drafting rules
 
