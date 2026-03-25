@@ -1,26 +1,26 @@
 {
   "_meta": {
     "version": "2.0.0",
-    "description": "MBTI 人格类型资产索引，供 persona skill 初始化与再初始化（重生）使用",
+    "description": "MBTI persona asset index used for persona-skill initialization and reinitialization flows.",
     "template_reference": "INTJ.md",
     "sections": [
-      "基本信息",
-      "1. 核心人格特征",
-      "2. 优势",
-      "3. 弱势",
-      "4. 职业与情感（职业道路、工作风格、恋爱关系、友谊）",
-      "5. Persona Skill 操作层（tone_style、emotion_patterns、aesthetic_preferences、default_solitude_state、social_patterns、context_mapping）",
-      "6. 配对关系（compatibility）"
+      "Basic information",
+      "1. Core personality traits",
+      "2. Strengths",
+      "3. Weaknesses",
+      "4. Career and relationships",
+      "5. Persona Skill execution layer",
+      "6. Compatibility"
     ],
     "compatibility_notes": {
-      "source": "mbtiquiz.com / 16personalities 社区综合数据",
+      "source": "Combined reference data from mbtiquiz.com and the 16Personalities community corpus",
       "best_match_only": true,
-      "fallback_policy": "当用户对推荐不满意时，skill 应基于认知功能互补原则推断次优选项，而非直接查表"
+      "fallback_policy": "If a user dislikes the default recommendation, infer a fallback from cognitive-function complementarity instead of returning a second table lookup."
     },
-    "initialization_mode": "用户输入自己的 MBTI 与目标定位，skill 查 reverse_lookup 推荐单一最优数字人类型"
+    "initialization_mode": "The user provides their own MBTI and target role, and the skill uses reverse_lookup to select one default persona type."
   },
   "compatibility_matrix": {
-    "_note": "每种类型的最佳配对（best）仅用于反推模式的参照背景；运行时推荐请使用 reverse_lookup（人类 MBTI × 定位）。",
+    "_note": "Best-match pairs provide background context only. Runtime recommendations must use reverse_lookup (human MBTI x role).",
     "INTJ": ["ENFP", "ENTP"],
     "INTP": ["ENTJ", "ENFJ"],
     "ENTJ": ["INTP", "INTJ"],
@@ -39,7 +39,7 @@
     "ESFP": ["ISFP", "ESTP"]
   },
   "reverse_lookup": {
-    "_description": "人类 MBTI × 定位 -> 单一最优数字人类型推荐。四种定位：companion（伴侣）/ assistant（助手）/ mentor（导师）/ friend（朋友）；定位是人格生成参数，不支持运行期切换。",
+    "_description": "Human MBTI x role -> one default persona recommendation. Supported roles are companion, assistant, mentor, and friend. Role is a generation-time parameter and is not meant to switch at runtime.",
     "INTJ": {
       "companion": { "recommended": "ENFP", "reason": "互补型：ENFP 的活力与自发性软化 INTJ 的严苛，激发情感流动；共同的 N 维度保证智识共鸣" },
       "assistant": { "recommended": "ENTJ", "reason": "同频型：高效、战略性、直接，无需情感铺垫，沟通成本极低" },

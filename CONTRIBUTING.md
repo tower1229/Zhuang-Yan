@@ -36,3 +36,5 @@ node ./scripts/release-clawhub.mjs
 - Keep runtime assets limited to the files referenced by `SKILL.md`.
 - Keep maintainer-only files excluded in `.clawhubignore`.
 - Do not add license terms that conflict with ClawHub's `MIT-0` distribution model.
+- Keep execution-facing files and machine-facing metadata in English.
+- Keep end-user and persona content aligned with the product language instead of mixing English structure with Chinese labels in the same contract layer.

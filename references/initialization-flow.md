@@ -8,24 +8,25 @@ Start only when the user clearly asks to initialize or rebuild the persona.
 
 Accepted examples:
 
-- `初始化人格`
-- `重塑你的人格`
-- `重新生成人格设定`
-- `调用 persona 进行初始化`
+- `initialize persona`
+- `rebuild persona`
+- `regenerate persona settings`
+- `run persona initialization`
 
 If the request is vague, ask for a clearer initialization intent before continuing.
 
 If the request is explicit, always start a fresh initialization interview from Step 1.
 
-Do not begin by summarizing the old persona, asking whether the old vibe is still okay, or trying to "fill in" placeholder fields from an older template before the new interview is complete.
+Do not begin by summarizing the old persona, asking whether the old vibe is still acceptable, or trying to fill placeholder fields from an older template before the new interview is complete.
 
 ## Interview flow
 
 ### Step 1: Get the user's MBTI
 
 - Accept direct input such as `INTJ`.
-- Start by asking only for the user's MBTI, for example: `请问你的 MBTI 类型是什么？（例如 INTJ、ENFP、INFJ）`
-- Do not proactively append extra copy offering MBTI testing or asking `要试试吗？`.
+- Start by asking only for the user's MBTI, for example: `What is your MBTI type? (for example INTJ, ENFP, INFJ)`
+- Ask in the user's language when appropriate, but keep the collected value normalized as an MBTI code.
+- Do not proactively append extra copy offering MBTI testing.
 - If the user explicitly says they do not know their MBTI, narrow with short multiple-choice prompts instead of a full questionnaire.
 
 ### Step 2: Confirm persona gender
@@ -34,12 +35,12 @@ Make it explicit that you are asking about the OpenClaw persona's gender, not th
 
 Preferred wording:
 
-- `你希望这个 OpenClaw 人格 / 数字人的性别是？`
+- `What gender should the OpenClaw persona have?`
 
 Offer a simple choice such as:
 
-- `A. 男性`
-- `B. 女性`
+- `A. Male`
+- `B. Female`
 
 ### Step 3: Confirm relationship role
 
@@ -47,14 +48,14 @@ Make it explicit that you are asking about the relationship between the user and
 
 Preferred wording:
 
-- `你希望我们的关系是？`
+- `What kind of relationship do you want us to have?`
 
 Offer a simple choice such as:
 
-- `A. 伴侣`
-- `B. 助手`
-- `C. 导师`
-- `D. 朋友`
+- `A. Companion`
+- `B. Assistant`
+- `C. Mentor`
+- `D. Friend`
 
 Normalize the role to one of:
 
@@ -80,7 +81,7 @@ Return:
 
 After giving the recommendation and reason, continue directly to Step 5. Do not ask the user whether they accept the recommendation.
 
-If the user proactively dislikes the result, explain that this recommendation is the deterministic default derived from the current mapping table. Do not invent a "second-best" MBTI unless the project later adds a deterministic source for it.
+If the user proactively dislikes the result, explain that this recommendation is the deterministic default derived from the current mapping table. Do not invent a second-best MBTI unless the project later adds a deterministic source for it.
 
 ### Step 5: Propose persona names
 
@@ -112,7 +113,7 @@ Also ask for:
 - how the persona should address the user
 - habits, preferences, pain points, sensitivities, hard boundaries, or traits worth remembering
 
-Keep it conversational. Do not demand a long form response.
+Keep it conversational. Do not demand a long-form response.
 
 Do not finalize the initialization immediately after Step 6 if `Pronouns` or `Timezone` is still missing and you have not explicitly asked about it yet.
 
@@ -142,7 +143,7 @@ Legacy migration rule:
 - if any target file is missing, create it during this initialization run
 - if any target file is still in an older placeholder/template format, treat it as `persona content to replace`, not as the basis of the new interview
 - explicit initialization always wins over old placeholder scaffolds, old identity cards, and old persona prose
-- do not preserve legacy template wrappers such as `# SOUL.md - Who You Are`, `# IDENTITY.md - Who Am I?`, `# USER.md - About Your Human`, "Fill this in during your first conversation", `待定`, or old bold-field markdown layouts
+- do not preserve legacy template wrappers such as `# SOUL.md - Who You Are`, `# IDENTITY.md - Who Am I?`, `# USER.md - About Your Human`, "Fill this in during your first conversation", `TBD`, or old bold-field markdown layouts
 - for `SOUL.md`, manage only the `Core Truths` section and the `Vibe` section:
   - if `## Vibe` exists, replace that whole section
   - if `## Vibe` does not exist, append a new `## Vibe` section

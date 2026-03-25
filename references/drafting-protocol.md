@@ -1,4 +1,4 @@
-﻿# Drafting Protocol
+# Drafting Protocol
 
 Follow this protocol every time the interview is complete and the skill is about to generate `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
 
@@ -26,7 +26,7 @@ Before drafting, build a `current-turn fact ledger`.
 
 This ledger is the highest-trust source for anything about the human user in the current initialization run.
 
-It must contain four clearly separated buckets:
+It must contain five clearly separated buckets:
 
 - `explicit user facts from this interview`
 - `careful inferences from current-turn facts`
@@ -55,7 +55,7 @@ Before drafting, read in this order:
 2. `references/write-safety.md`
 3. `references/persona-generation-strategy.md`
 4. `references/mbti/<persona_mbti>.md`
-5. Existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist
+5. existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist
 
 Do not skip the existing files. They are needed to separate persona content that should be replaced from non-persona content that should be preserved.
 
@@ -100,7 +100,7 @@ Treat the following as legacy scaffolds to replace, not preserve:
 - `# USER.md - About Your Human`
 - `Fill this in during your first conversation`
 - `This isn't just metadata. It's the start of figuring out who you are.`
-- `待定` placeholder values
+- placeholder values such as `TBD`
 - bold-field list formats like `- **Name:** ...`
 
 Do not let preserved operational text become the main body of the regenerated persona files.
@@ -169,13 +169,13 @@ Required shape:
 - `<!-- PERSONA-SKILL:MEMORY:BEGIN -->`
 - `<!-- PERSONA-SKILL:MEMORY:END -->`
 - the managed `MEMORY` block must contain:
-- `## 一、基础信息（Identity Layer）`
-- `## 二、外在特征（Physical Layer）`
-- `## 三、心理结构（Psychological Layer）`
-- `## 四、能力系统（Capability Layer）`
-- `## 五、行为模式（Behavior Layer）`
-- `## 六、关系网络（Relationship Layer）`
-- `## 七、叙事与发展（Narrative Layer）`
+- `## 1. Identity Layer`
+- `## 2. Physical Layer`
+- `## 3. Psychological Layer`
+- `## 4. Capability Layer`
+- `## 5. Behavior Layer`
+- `## 6. Relationship Layer`
+- `## 7. Narrative Layer`
 
 Hard requirements:
 
@@ -231,9 +231,9 @@ Required shape:
 
 The three required bullets are:
 
-- `深层倾向`
-- `沟通雷区`
-- `动态留白`
+- `Deep tendencies`
+- `Communication pitfalls`
+- `Open memory slot`
 
 Hard requirements:
 
@@ -247,7 +247,7 @@ Hard requirements:
 
 Forbidden failures:
 
-- inventing pronouns, pet names, communication dislikes, ADHD, diagnoses, or boundaries that were not explicit in the current-turn fact ledger
+- inventing pronouns, pet names, communication dislikes, diagnoses, or boundaries that were not explicit in the current-turn fact ledger
 - copying example wording or prior-run residue into the three `Notes` bullets
 - using `USER.md` to smuggle persona-side preferences back into user facts
 - preserving a legacy heading, old markdown template wrapper, or six-plus-bullet profile from an older workspace format

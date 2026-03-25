@@ -18,17 +18,17 @@ Treat this skill as initialization-only.
 
 ## Hard boundaries
 
-- Proceed only after an explicit initialization request such as `初始化人格`, `重塑人格`, `重新生成人格`, or `调用 persona 进行初始化`.
+- Proceed only after an explicit initialization request such as `initialize persona`, `rebuild persona`, `regenerate persona`, or `run persona initialization`.
 - Stay within persona initialization. If the user asks for unrelated runtime behavior, state, recall, or orchestration work, do not start this workflow.
 - Do not emit machine-oriented intermediate artifacts such as JSON payloads, downstream prompt parameters, or handoff configs unless the user explicitly asks for them.
 - Do not modify `AGENTS.md` or any file other than `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
 
 ## Non-Negotiables
 
-- When the user makes an explicit initialization request, always restart the interview from Step 1. Do not open by reviewing the old persona, tuning old placeholder fields, or asking whether the old setup is still okay.
+- When the user makes an explicit initialization request, always restart the interview from Step 1. Do not open by reviewing the old persona, tuning old placeholder fields, or asking whether the old setup is still acceptable.
 - Ask for the user's MBTI directly. Do not proactively offer MBTI testing or append extra copy about helping the user determine their type unless the user explicitly says they do not know it.
 - In Step 2, make it explicit that you are asking for the OpenClaw persona's gender, not the human user's gender.
-- In Step 3, make it explicit that you are asking about the relationship between the user and the OpenClaw persona. Prefer wording like `你希望我们的关系是？`.
+- In Step 3, make it explicit that you are asking about the relationship between the user and the OpenClaw persona. Preferred wording: `What kind of relationship do you want us to have?`
 - Use the deterministic MBTI mapping in `assets/mbti/mbti-index.json`. Prefer running `node scripts/mbti-lookup.js <human_mbti> <role>` to get the exact recommendation.
 - After presenting the Step 4 recommendation and reason, continue directly to naming without asking the user to confirm the recommendation.
 - In Step 5, generate only English candidate names, and make sure the naming style matches the locked persona gender and persona direction.

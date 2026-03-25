@@ -237,7 +237,10 @@ function runStructuralChecks(files) {
     .map((line) => line.trim())
     .filter(Boolean);
 
-  const userNotes = files["USER.md"].content.match(/^\s+- (深层倾向|沟通雷区|动态留白)/gm) || [];
+  const userNotes =
+    files["USER.md"].content.match(
+      /^\s+- (Deep tendencies|Communication pitfalls|Open memory slot):/gm,
+    ) || [];
   const soulManagedBlockPattern =
     /<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->[\s\S]*?<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->/;
   const memoryManagedBlockPattern =
@@ -263,13 +266,13 @@ function runStructuralChecks(files) {
       pass:
         memoryLines[0] === "<!-- PERSONA-SKILL:MEMORY:BEGIN -->" &&
         memoryManagedBlockPattern.test(files["MEMORY.md"].content) &&
-        /## 一、基础信息（Identity Layer）/.test(files["MEMORY.md"].content) &&
-        /## 二、外在特征（Physical Layer）/.test(files["MEMORY.md"].content) &&
-        /## 三、心理结构（Psychological Layer）/.test(files["MEMORY.md"].content) &&
-        /## 四、能力系统（Capability Layer）/.test(files["MEMORY.md"].content) &&
-        /## 五、行为模式（Behavior Layer）/.test(files["MEMORY.md"].content) &&
-        /## 六、关系网络（Relationship Layer）/.test(files["MEMORY.md"].content) &&
-        /## 七、叙事与发展（Narrative Layer）/.test(files["MEMORY.md"].content),
+        /## 1\. Identity Layer/.test(files["MEMORY.md"].content) &&
+        /## 2\. Physical Layer/.test(files["MEMORY.md"].content) &&
+        /## 3\. Psychological Layer/.test(files["MEMORY.md"].content) &&
+        /## 4\. Capability Layer/.test(files["MEMORY.md"].content) &&
+        /## 5\. Behavior Layer/.test(files["MEMORY.md"].content) &&
+        /## 6\. Relationship Layer/.test(files["MEMORY.md"].content) &&
+        /## 7\. Narrative Layer/.test(files["MEMORY.md"].content),
     },
     {
       name: "IDENTITY uses the five-line template",

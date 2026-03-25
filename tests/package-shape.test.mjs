@@ -15,6 +15,10 @@ function readFrontmatter(text) {
   return match ? match[1] : "";
 }
 
+function containsHan(value) {
+  return /[\p{Script=Han}]/u.test(value);
+}
+
 test("runtime files required by the skill exist", () => {
   assert.equal(exists("SKILL.md"), true);
   assert.equal(exists("assets/mbti/mbti-index.json"), true);
@@ -47,7 +51,7 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /always restart the interview from Step 1/);
   assert.match(skill, /asking for the OpenClaw persona's gender, not the human user's gender/);
   assert.match(skill, /asking about the relationship between the user and the OpenClaw persona/);
-  assert.match(skill, /你希望我们的关系是/);
+  assert.match(skill, /What kind of relationship do you want us to have/);
   assert.match(skill, /inspect the existing `USER\.md` first/);
   assert.match(skill, /If `What to call them`, `Pronouns`, or `Timezone` is blank or missing, explicitly ask/);
   assert.match(skill, /Missing target files and legacy placeholder files are not something to "work around"/);
@@ -65,9 +69,9 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /always start a fresh initialization interview from Step 1/);
   assert.match(flow, /Do not begin by summarizing the old persona/);
   assert.match(flow, /asking about the OpenClaw persona's gender, not the human user's gender/);
-  assert.match(flow, /你希望这个 OpenClaw 人格 \/ 数字人的性别是/);
+  assert.match(flow, /What gender should the OpenClaw persona have/);
   assert.match(flow, /asking about the relationship between the user and the OpenClaw persona/);
-  assert.match(flow, /你希望我们的关系是/);
+  assert.match(flow, /What kind of relationship do you want us to have/);
   assert.match(flow, /Do not ask the user whether they accept the recommendation/);
   assert.match(flow, /All 3 candidates must be English given names/);
   assert.match(flow, /inspect the existing `USER\.md` if it exists/);
@@ -106,7 +110,7 @@ test("drafting protocol hardens the four-file generation contract", () => {
   assert.match(protocol, /first non-empty line must be `- Name: \{English given name\}`/);
   assert.match(protocol, /first non-empty line must be `- Name: \.\.\.`/);
   assert.match(protocol, /## Core Truths/);
-  assert.match(protocol, /## 一、基础信息（Identity Layer）/);
+  assert.match(protocol, /## 1\. Identity Layer/);
   assert.match(protocol, /exactly three bullets under `Notes`/);
   assert.match(protocol, /leave it blank instead of guessing/);
   assert.match(protocol, /the interview must explicitly ask for it before finalizing/);
@@ -124,15 +128,48 @@ test("persona generation strategy keeps the shipped guidance abstract instead of
     path.join(root, "references", "examples", "persona-drafting-examples.md"),
     "utf8",
   );
-  assert.match(strategy, /上下文信任顺序/);
-  assert.match(strategy, /示例隔离原则/);
+  assert.match(strategy, /Context trust order/);
+  assert.match(strategy, /Example isolation/);
+  assert.match(strategy, /Language layering/);
   assert.match(strategy, /examples\/persona-drafting-examples\.md/);
-  assert.doesNotMatch(strategy, /高浓度指令片段示意|骨架片段示意|^\*\*示例：\*\*$/m);
-  assert.doesNotMatch(strategy, /女性伴侣\(Stella\)|真实人类女性伴侣 Stella|Stella（星籁）/);
-  assert.doesNotMatch(strategy, /What to call them: 亲爱的 \/ 你/);
-  assert.doesNotMatch(strategy, /Pronouns: 他/);
-  assert.match(examples, /SOUL 片段示意/);
-  assert.match(examples, /MEMORY 骨架示意/);
+  assert.doesNotMatch(strategy, /Stella|real human female companion/);
+  assert.doesNotMatch(strategy, /What to call them: dear/);
+  assert.match(examples, /SOUL excerpt sketch/);
+  assert.match(examples, /MEMORY skeleton sketch/);
+});
+
+test("execution-facing guidance files stay English-first", () => {
+  const files = [
+    "SKILL.md",
+    "references/initialization-flow.md",
+    "references/write-safety.md",
+    "references/drafting-protocol.md",
+    "references/persona-generation-strategy.md",
+    "references/examples/persona-drafting-examples.md",
+    "CONTRIBUTING.md",
+  ];
+
+  for (const relativePath of files) {
+    const text = fs.readFileSync(path.join(root, relativePath), "utf8");
+    assert.equal(containsHan(text), false, `${relativePath} should stay English-first`);
+  }
+});
+
+test("machine-facing MBTI metadata stays English-first", () => {
+  const index = JSON.parse(fs.readFileSync(path.join(root, "assets/mbti/mbti-index.json"), "utf8"));
+  const machineFacingValues = [
+    index._meta.description,
+    ...index._meta.sections,
+    index._meta.compatibility_notes.source,
+    index._meta.compatibility_notes.fallback_policy,
+    index._meta.initialization_mode,
+    index.compatibility_matrix._note,
+    index.reverse_lookup._description,
+  ];
+
+  for (const value of machineFacingValues) {
+    assert.equal(containsHan(value), false, `machine-facing metadata should stay English-first: ${value}`);
+  }
 });
 
 test("package.json test script uses the tests directory for cross-platform discovery", () => {
@@ -152,6 +189,8 @@ test("smoke runner guards against legacy wrapper leakage", () => {
   assert.match(smoke, /legacyWrapperPattern/);
   assert.match(smoke, /Fill this in during your first conversation/);
   assert.match(smoke, /About Your Human/);
+  assert.match(smoke, /Deep tendencies|Communication pitfalls|Open memory slot/);
+  assert.match(smoke, /## 1\\\. Identity Layer/);
 });
 
 test("repository metadata files exist", () => {

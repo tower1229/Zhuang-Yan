@@ -1,4 +1,4 @@
-﻿# Write Safety
+# Write Safety
 
 Follow these rules every time this skill reaches the drafting or writing stage.
 
@@ -22,8 +22,7 @@ Do not edit:
 
 Before writing:
 
-1. Read the existing target files if they already exist.
-   Name the concrete file path for each read. Never issue an empty `Read` call or a vague action like "read existing files".
+1. Read the existing target files if they already exist. Name the concrete file path for each read. Never issue an empty `Read` call or a vague action like "read existing files".
 2. Detect whether a prior persona already exists.
 3. Be aware that this is a reinitialization if existing persona content will be replaced.
 4. Preserve non-persona operational content that must remain in those files.
