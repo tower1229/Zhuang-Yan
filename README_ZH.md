@@ -12,12 +12,13 @@ clawhub install persona-skill
 
 ## 使用方式
 
-安装完成后，用明确口令触发初始化：
+安装完成后，用明确口令触发初始化。语言不限，只要意图清晰即可：
 
 - `调用 persona 进行初始化`
 - `初始化人格`
 - `重塑你的人格`
-- `重新生成人格设定`
+- `initialize persona`
+- `rebuild the persona`
 
 Skill 会引导你完成一问一答式的访谈，然后将结果直接写入 OpenClaw 的人格文件。
 

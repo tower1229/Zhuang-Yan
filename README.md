@@ -12,12 +12,13 @@ No API keys or environment variables required. The skill runs entirely with tool
 
 ## How to Use
 
-Once installed, trigger initialization with an explicit phrase:
+Once installed, trigger initialization with an explicit phrase. Any language works — what matters is a clear intent to initialize:
 
+- `initialize persona`
+- `rebuild the persona`
+- `reset persona from scratch`
 - `调用 persona 进行初始化`
 - `初始化人格`
-- `重塑你的人格`
-- `重新生成人格设定`
 
 The skill will guide you through a short one-question-at-a-time interview, then write the result directly into OpenClaw's persona files.
 
