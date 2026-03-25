@@ -19,7 +19,9 @@ test("runtime files required by the skill exist", () => {
   assert.equal(exists("SKILL.md"), true);
   assert.equal(exists("assets/mbti/mbti-index.json"), true);
   assert.equal(exists("references/initialization-flow.md"), true);
+  assert.equal(exists("references/drafting-protocol.md"), true);
   assert.equal(exists("references/write-safety.md"), true);
+  assert.equal(exists("scripts/smoke-persona-openclaw.mjs"), true);
   assert.equal(exists("references/persona-generation-strategy.md"), true);
   assert.equal(exists("scripts/mbti-lookup.js"), true);
 });
@@ -39,6 +41,8 @@ test(".clawhubignore excludes maintainer-only files", () => {
 test("SKILL.md requires the shipped persona generation strategy", () => {
   const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
   assert.match(skill, /references\/persona-generation-strategy\.md/);
+  assert.match(skill, /references\/drafting-protocol\.md/);
+  assert.match(skill, /references\/mbti\/<persona_mbti>\.md/);
 });
 
 test("initialization flow encodes the current interview constraints", () => {
@@ -46,11 +50,24 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /Do not proactively append extra copy offering MBTI testing/);
   assert.match(flow, /Do not ask the user whether they accept the recommendation/);
   assert.match(flow, /All 3 candidates must be English given names/);
+  assert.match(flow, /read `references\/mbti\/<persona_mbti>\.md`/);
+  assert.match(flow, /self-review gate from `drafting-protocol\.md`/);
+});
+
+test("drafting protocol hardens the four-file generation contract", () => {
+  const protocol = fs.readFileSync(path.join(root, "references", "drafting-protocol.md"), "utf8");
+  assert.match(protocol, /references\/mbti\/<persona_mbti>\.md/);
+  assert.match(protocol, /## 5\. File contracts/);
+  assert.match(protocol, /## Core Truths/);
+  assert.match(protocol, /## 一、基础信息（Identity Layer）/);
+  assert.match(protocol, /exactly three bullets under `Notes`/);
+  assert.match(protocol, /The draft must fail and be rewritten if/);
 });
 
 test("package.json test script uses the tests directory for cross-platform discovery", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
   assert.equal(pkg.scripts.test, 'node --test "tests/*.mjs"');
+  assert.equal(pkg.scripts["smoke:persona"], "node ./scripts/smoke-persona-openclaw.mjs");
 });
 
 test("repository metadata files exist", () => {

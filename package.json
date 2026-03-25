@@ -25,6 +25,7 @@
   },
   "scripts": {
     "test": "node --test \"tests/*.mjs\"",
+    "smoke:persona": "node ./scripts/smoke-persona-openclaw.mjs",
     "publish:clawhub": "node ./scripts/release-clawhub.mjs"
   }
 }

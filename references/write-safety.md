@@ -27,6 +27,8 @@ Before writing:
 3. Be aware that this is a reinitialization if existing persona content will be replaced.
 4. Preserve non-persona operational content that must remain in those files.
 5. Write the finalized four-file draft directly once it is ready.
+6. If preserved content and regenerated persona content conflict, keep the preserved fragment only when it is truly non-persona and operationally required.
+7. Do not allow preserved content to replace the required persona structure defined by the drafting protocol.
 
 ## Completion rule
 
@@ -45,3 +47,5 @@ Preserve content only when it is operationally necessary and not part of the per
 - required non-persona configuration fragments already living in one of the four files
 
 If a section is part of the old persona identity, replace it with the new draft.
+
+If preserved content is freeform and relocation is safe, place it in a clearly separated appendix section after the regenerated persona content.

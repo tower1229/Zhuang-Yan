@@ -146,6 +146,7 @@ Step 9：提示完成
 
 - `assets/mbti/mbti-index.json`
 - `references/mbti/*.md`
+- `references/drafting-protocol.md`
 
 其中 `reverse_lookup` 是确定性映射，必须以资产文件内容为准，不应凭模型印象自由发挥。
 
@@ -171,6 +172,9 @@ Step 9：提示完成
 - 采用**全量覆写人格内容**的方式生成四份文件
 - 覆写前先读取现有内容
 - 与人格无关的必要配置内容应保留
+- 生成前必须先把旧内容分成“人格相关待覆盖”与“非人格相关待保留”
+- 必须读取锁定后的 `references/mbti/<persona_mbti>.md`，不能只靠泛化的 MBTI 印象写稿
+- 必须按固定文件骨架起草，并在写入前做一次自检回炉
 - 草案完成后直接执行写盘
 
 ### 8.2 安全边界

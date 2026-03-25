@@ -34,18 +34,23 @@ Treat this skill as initialization-only.
 6. Prefer running `node scripts/mbti-lookup.js <human_mbti> <role>` to get the exact recommendation.
 7. After presenting the Step 4 recommendation and reason, continue directly to naming without asking the user to confirm the recommendation.
 8. In Step 5, generate only English candidate names, and make sure the naming style matches the locked persona gender and persona direction.
-9. Read `references/persona-generation-strategy.md` before drafting any of the four persona files. Treat it as the canonical generation specification.
-10. After the four-file draft is complete, write it directly without waiting for user confirmation.
-11. After writing, clearly tell the user that initialization is complete and which files were updated.
-12. Warn clearly when the operation will replace an existing persona.
+9. Before drafting, read `references/mbti/<persona_mbti>.md` for the locked persona type. Use it as a primary source, not just background flavor.
+10. Before drafting, read `references/drafting-protocol.md` and follow its read-before-write sequence, file contracts, preservation split, and self-review gate.
+11. Read `references/persona-generation-strategy.md` before drafting any of the four persona files. Treat it as the canonical generation specification.
+12. After the four-file draft is complete, write it directly without waiting for user confirmation.
+13. After writing, clearly tell the user that initialization is complete and which files were updated.
+14. Warn clearly when the operation will replace an existing persona.
 
 ## Drafting rules
 
-- Treat `references/persona-generation-strategy.md` as the only generation contract for the four persona files.
+- Treat `references/persona-generation-strategy.md` as the canonical quality target for the four persona files.
+- Treat `references/drafting-protocol.md` as the operational execution contract for turning interview inputs into the four-file draft.
 - Keep `SOUL.md` focused on personality core, values, tone boundaries, and interaction principles.
 - Keep `MEMORY.md` focused on biography, relationship background, and long-term behavioral context.
 - Keep `IDENTITY.md` short and template-shaped.
 - Keep `USER.md` limited to known user-facing facts, preferences, boundaries, and timezone.
+- Read and preserve non-persona operational content, but never let it replace the persona body.
+- Rewrite failed drafts before writing if they do not satisfy the required file shapes.
 - Preserve any non-persona operational content that must remain in the four target files.
 
 ## Fallback behavior

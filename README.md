@@ -24,6 +24,8 @@ The skill will guide you through a short one-question-at-a-time interview, then 
 
 The skill only starts on an explicit initialization request — normal conversations are not affected.
 
+During drafting, the skill reads the locked MBTI asset, applies a fixed four-file contract, preserves only non-persona operational fragments when needed, and rewrites failed drafts before writing.
+
 ## What Happens During Initialization
 
 The interview collects five things:

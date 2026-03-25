@@ -92,7 +92,20 @@ Draft and then directly write:
 - `IDENTITY.md`
 - `USER.md`
 
-Read `persona-generation-strategy.md` as the canonical drafting specification and `write-safety.md` before writing.
+Before drafting:
+
+- read `write-safety.md`
+- read `persona-generation-strategy.md`
+- read `drafting-protocol.md`
+- read `references/mbti/<persona_mbti>.md`
+- read the existing four target files if they already exist
+
+Then:
+
+- separate existing content into `persona content to replace` and `non-persona content to preserve`
+- draft all four files against the required file contracts
+- run the self-review gate from `drafting-protocol.md`
+- rewrite any failed file before writing
 
 ### Step 8: Completion notice
 
