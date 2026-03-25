@@ -20,7 +20,9 @@ If the request is vague, ask for a clearer initialization intent before continui
 ### Step 1: Get the user's MBTI
 
 - Accept direct input such as `INTJ`.
-- If the user does not know their MBTI, narrow with short multiple-choice prompts instead of a full questionnaire.
+- Start by asking only for the user's MBTI, for example: `请问你的 MBTI 类型是什么？（例如 INTJ、ENFP、INFJ）`
+- Do not proactively append extra copy offering MBTI testing or asking `要试试吗？`.
+- If the user explicitly says they do not know their MBTI, narrow with short multiple-choice prompts instead of a full questionnaire.
 
 ### Step 2: Confirm persona gender
 
@@ -60,11 +62,15 @@ Return:
 - the single best recommended persona MBTI
 - the exact reason from the asset file
 
-If the user dislikes the result, explain that this recommendation is the deterministic default derived from the current mapping table. Do not invent a "second-best" MBTI unless the project later adds a deterministic source for it.
+After giving the recommendation and reason, continue directly to Step 5. Do not ask the user whether they accept the recommendation.
+
+If the user proactively dislikes the result, explain that this recommendation is the deterministic default derived from the current mapping table. Do not invent a "second-best" MBTI unless the project later adds a deterministic source for it.
 
 ### Step 5: Propose persona names
 
 - Generate 3 candidate names that fit the locked persona direction.
+- All 3 candidates must be English given names.
+- The naming style must fit the locked persona gender, MBTI direction, and relationship vibe so the names feel culturally coherent in an English-language context.
 - Present them as A/B/C choices.
 - If all are rejected, regenerate 3 new names.
 

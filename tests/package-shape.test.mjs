@@ -41,6 +41,13 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /references\/persona-generation-strategy\.md/);
 });
 
+test("initialization flow encodes the current interview constraints", () => {
+  const flow = fs.readFileSync(path.join(root, "references/initialization-flow.md"), "utf8");
+  assert.match(flow, /Do not proactively append extra copy offering MBTI testing/);
+  assert.match(flow, /Do not ask the user whether they accept the recommendation/);
+  assert.match(flow, /All 3 candidates must be English given names/);
+});
+
 test("package.json test script uses the tests directory for cross-platform discovery", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
   assert.equal(pkg.scripts.test, "node --test tests");

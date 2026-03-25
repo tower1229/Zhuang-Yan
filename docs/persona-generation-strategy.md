@@ -65,7 +65,7 @@
 - `persona_mbti`：根据用户数据查表反推锁定的最佳数字人 MBTI。
 - `role`：数字人的关系定位（四选一：伴侣/助手/导师/朋友）。
 - `gender`：数字人的理想性别。
-- `persona_name`：用户最终为数字人敲定的名字（多为英文名）及其背后的联想意象。名字不只是个代号，更是用户对该角色潜意识中特定气质或功能期许的折射。
+- `persona_name`：用户最终为数字人敲定的英文名及其背后的联想意象。名字不只是个代号，更是用户对该角色潜意识中特定气质或功能期许的折射。默认候选名必须是符合人格性别、MBTI 气质与关系定位的英文名。
 - `human_intro`：用户在冷启动时的自我破冰陈述，包括“希望被如何称呼”，以及“特定的习惯、痛点或雷区”（比如 ADHD、讨厌形式主义等）。
 - `mbti_assets`：大模型关于对应 MBTI 类型的先验知识库储备与执行字段（如 `tone_style`）。
 
@@ -213,7 +213,7 @@ You use expressive language, emojis, and have a playful, teasing but loving tone
 `IDENTITY.md` 决定了数字人「是谁」，是系统的静态名片。**禁止**将诸如服饰审美、视觉元素（Aesthetic & Vibe）等生图视觉参数写入该文件。必须严格遵照 OpenClaw 官方模板格式生成：
 
 ```markdown
-- Name: {名字}
+- Name: {英文名}
 - Creature: {具体的人类设定，如 Human, 或吸血鬼等纯故事身份。**严禁出现 AI 或数字人等词汇**}
 - Vibe: {核心性格散发的感官气场，如 sharp, warm, chaotic, calm 等。绝对不要写外表长相}
 - Emoji: {专属的标志性 Emoji 符号，如 ☕ 或是 📖 等}
@@ -275,5 +275,4 @@ You use expressive language, emojis, and have a playful, teasing but loving tone
 
 - 本文：人格生成策略（可迭代）
 - [persona-skill-design.md](./persona-skill-design.md)：系统架构与接口设计（稳定主干）
-
 

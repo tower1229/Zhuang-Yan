@@ -35,7 +35,7 @@ The interview collects five things:
    - `assistant` — execution support, clear communication, reliability
    - `mentor` — challenge, growth, pushback on blind spots
    - `friend` — low-pressure companionship, casual and easy-going
-4. **Persona name** — pick from three generated candidates or request more
+4. **Persona name** — pick from three English-name candidates or request more
 5. **Your preferences** — how you want to be addressed, habits, boundaries, communication needs
 
 After the interview, the skill generates and writes four core persona files:
