@@ -54,7 +54,7 @@ clawhub install persona-skill
 ## 这个 Skill 优化什么
 
 - 所有角色都先服务情绪价值
-- 生成主轴是 `human_mbti × role -> human_need_profile -> target_persona_spec -> 五文件投影`
+- 生成主轴是 `human_mbti × role -> pair_core_value / pair_contrast_axis / desired_emotional_impact -> human_need_profile / target_persona_spec -> 五文件投影`
 - 运行时文件保持精炼，`persona/CANON.md` 作为完整上游真相源
 - 初始化是彻底重建，不是对旧人格轻改
 

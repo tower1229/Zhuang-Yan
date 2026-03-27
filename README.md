@@ -52,7 +52,7 @@ Progressive disclosure is intentional:
 ## What the Skill Optimizes For
 
 - emotional value first across all roles
-- `human_mbti × role -> human_need_profile -> target_persona_spec -> file projection`
+- `human_mbti × role -> pair_core_value / pair_contrast_axis / desired_emotional_impact -> human_need_profile / target_persona_spec -> file projection`
 - runtime persona files kept lean, with `persona/CANON.md` as the full upstream truth source
 - rebuilds from scratch instead of lightly patching the old persona
 

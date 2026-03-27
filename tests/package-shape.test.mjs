@@ -220,6 +220,14 @@ test("machine-facing MBTI metadata stays English-first", () => {
   }
 });
 
+test("template-pack contrast example stays aligned with the recommendation matrix", () => {
+  const index = JSON.parse(fs.readFileSync(path.join(root, "assets/mbti/mbti-index.json"), "utf8"));
+  const pack = fs.readFileSync(path.join(root, "references/runtime-context/template-pack.md"), "utf8");
+  assert.match(pack, /示例 B：`ENFP` 人类 × `assistant` × `INTJ` 人格/);
+  assert.equal(index.reverse_lookup.ENFP.assistant.recommended, "INTJ");
+  assert.match(index.reverse_lookup.ENFP.assistant.reason, /结构感|长线判断|稳定性/);
+});
+
 test("MBTI reference assets align with the canon-plus-runtime model", () => {
   const mbtiDir = path.join(root, "references", "mbti");
   const files = fs.readdirSync(mbtiDir).filter((name) => name.endsWith(".md"));
