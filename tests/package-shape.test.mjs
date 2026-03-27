@@ -178,6 +178,25 @@ test("machine-facing MBTI metadata stays English-first", () => {
   }
 });
 
+test("MBTI reference assets align with the canon-plus-runtime model", () => {
+  const mbtiDir = path.join(root, "references", "mbti");
+  const files = fs.readdirSync(mbtiDir).filter((name) => name.endsWith(".md"));
+
+  for (const fileName of files) {
+    const text = fs.readFileSync(path.join(mbtiDir, fileName), "utf8");
+    assert.doesNotMatch(
+      text,
+      /情景感知和 prompt 组装消费|人物小传生成时的气质锚定|人物小传生成和价值主张描述的背景语料/,
+      `${fileName} should not describe the old runtime or biography model`,
+    );
+    assert.match(
+      text,
+      /生成辅助层|角色档案与运行时人格文件生成/,
+      `${fileName} should describe the current canon-plus-runtime usage`,
+    );
+  }
+});
+
 test("package.json test script uses the tests directory for cross-platform discovery", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
   assert.equal(pkg.scripts.test, 'node --test "tests/*.mjs"');
