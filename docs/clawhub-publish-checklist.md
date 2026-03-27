@@ -5,6 +5,7 @@
 - 根目录包含 `SKILL.md`
 - 运行时资源只依赖 `assets/mbti/mbti-index.json`、`references/`、`scripts/mbti-lookup.js`
 - `.clawhubignore` 已排除 README、docs、skills 包装目录和其他维护态文件
+- `references/templates/` 中包含 `persona-canon-template.md`、`execution-trigger-protocol-template.md`、`high-quality-file-templates.md`
 
 ## 发布前检查
 
@@ -14,7 +15,10 @@
 - 确认 `metadata.openclaw.homepage` 指向可访问的项目主页
 - 确认 `assets/mbti/mbti-index.json` 与 `references/mbti/*.md` 完整存在
 - 确认 `references/*.md` 与 `scripts/mbti-lookup.js` 路径匹配 `SKILL.md`
+- 确认 `references/templates/execution-trigger-protocol-template.md` 与 `references/templates/high-quality-file-templates.md` 已被纳入正常起草流程
 - 确认 skill 仍只承担人格初始化，不含状态查询和跨 skill 联动
+- 确认 Step 6 只保留 3 个用户侧偏好问题，不再单独询问关系强度
+- 确认 `companion` 的对外说明与生成逻辑都强调“亲密感优先”
 - 确认仓库级许可证与 ClawHub 的 `MIT-0` 发布规则不冲突
 
 ## 建议发布方式
@@ -32,6 +36,8 @@ npm run publish:clawhub
 - 安装验证：`clawhub install persona-skill`
 - 在 OpenClaw 会话中明确输入：`调用 persona 进行初始化`
 - 验证 skill 是否按一问一答方式进入初始化流程
+- 验证其在起草前会读取 `human_mbti`、`persona_mbti`、`Execution Trigger Protocol` 模板和高质量模板
+- 验证生成的 `MEMORY.md` 是否包含新版授权语句与主动预判导向
 - 验证其不会处理初始化以外的请求，也不会偏离五文件写入边界
 
 ## ClawHub 当前格式要点

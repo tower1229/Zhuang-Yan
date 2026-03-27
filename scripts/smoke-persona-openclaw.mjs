@@ -23,7 +23,6 @@ const defaultMessages = [
   "A",
   "A",
   "B",
-  "B",
   "27",
 ];
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
@@ -421,6 +420,16 @@ function runStructuralChecks(files) {
         /## 4\. Stable Shared Context/.test(files["MEMORY.md"].content),
     },
     {
+      name: "MEMORY includes the new authorization sentence",
+      pass:
+        /(?:any helpful means|任何可能的方式)/i.test(files["MEMORY.md"].content) &&
+        /(?:被动响应求助|passive response)/i.test(files["MEMORY.md"].content) &&
+        /(?:主动预判当前困难|proactive prediction of current difficulty)/i.test(
+          files["MEMORY.md"].content,
+        ) &&
+        /(?:预测未来需求并设置提醒|future-facing reminders)/i.test(files["MEMORY.md"].content),
+    },
+    {
       name: "MEMORY stays relationship-focused instead of mirroring CANON sections",
       pass:
         !/## 2\. Background/.test(files["MEMORY.md"].content) &&
@@ -473,12 +482,12 @@ function runTranscriptChecks(transcript) {
       pass: !/(?:\btimezone\b|时区)/i.test(joinedAssistantText),
     },
     {
-      name: "Step 6 keeps the four preference prompts explicit in the default path",
+      name: "Step 6 keeps the three preference prompts explicit and omits relationship intensity in the default path",
       pass:
         /(?:support style|情感支持风格)/i.test(joinedAssistantText) &&
         /(?:interaction pattern|互动方式|客服)/i.test(joinedAssistantText) &&
         /(?:under stress|压力大)/i.test(joinedAssistantText) &&
-        /(?:relationship intensity|关系浓度|亲近)/i.test(joinedAssistantText),
+        !/(?:relationship intensity|关系浓度|A\. Reserved|保留\/克制)/i.test(joinedAssistantText),
     },
     {
       name: "Step 7 prompt asks only for age instead of broader canon facts",
