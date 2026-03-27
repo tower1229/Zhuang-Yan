@@ -26,6 +26,7 @@ test("runtime files required by the skill exist", () => {
   assert.equal(exists("references/drafting-protocol.md"), true);
   assert.equal(exists("references/write-safety.md"), true);
   assert.equal(exists("references/examples/persona-drafting-examples.md"), true);
+  assert.equal(exists("references/templates/persona-canon-template.md"), true);
   assert.equal(exists("scripts/smoke-persona-openclaw.mjs"), true);
   assert.equal(exists("references/persona-generation-strategy.md"), true);
   assert.equal(exists("scripts/mbti-lookup.js"), true);
@@ -47,6 +48,7 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
   assert.match(skill, /references\/persona-generation-strategy\.md/);
   assert.match(skill, /references\/drafting-protocol\.md/);
+  assert.match(skill, /references\/templates\/persona-canon-template\.md/);
   assert.match(skill, /references\/mbti\/<persona_mbti>\.md/);
   assert.match(skill, /always restart the interview from Step 1/);
   assert.match(skill, /asking for the OpenClaw persona's gender, not the human user's gender/);
@@ -86,11 +88,13 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /do not ask whether unrelated files such as `BOOTSTRAP\.md` should be deleted or changed/);
   assert.match(flow, /read `references\/mbti\/<persona_mbti>\.md`/);
   assert.match(flow, /self-review gate from `drafting-protocol\.md`/);
+  assert.match(flow, /read `templates\/persona-canon-template\.md`/);
 });
 
 test("drafting protocol hardens the five-file generation contract", () => {
   const protocol = fs.readFileSync(path.join(root, "references", "drafting-protocol.md"), "utf8");
   assert.match(protocol, /references\/mbti\/<persona_mbti>\.md/);
+  assert.match(protocol, /references\/templates\/persona-canon-template\.md/);
   assert.match(protocol, /current-turn fact ledger/);
   assert.match(protocol, /explicit user facts from this interview/);
   assert.match(protocol, /treat existing `USER\.md`, `MEMORY\.md`, prior smoke outputs, and strategy examples as tainted for user facts/);
@@ -182,8 +186,9 @@ test("package.json test script uses the tests directory for cross-platform disco
 
 test("smoke runner guards against legacy wrapper leakage", () => {
   const smoke = fs.readFileSync(path.join(root, "scripts", "smoke-persona-openclaw.mjs"), "utf8");
+  assert.match(smoke, /CANON uses the full persona canon contract/);
   assert.match(smoke, /SOUL contains managed Core Truths block/);
-  assert.match(smoke, /MEMORY contains managed top block and all seven required layers/);
+  assert.match(smoke, /MEMORY contains managed top block and all four required sections/);
   assert.match(smoke, /IDENTITY and USER do not retain legacy wrapper headings/);
   assert.match(smoke, /IDENTITY and USER do not retain legacy placeholder copy/);
   assert.match(smoke, /PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN/);
@@ -192,7 +197,8 @@ test("smoke runner guards against legacy wrapper leakage", () => {
   assert.match(smoke, /Fill this in during your first conversation/);
   assert.match(smoke, /About Your Human/);
   assert.match(smoke, /Deep tendencies|Communication pitfalls|Open memory slot/);
-  assert.match(smoke, /## 1\\\. Identity Layer/);
+  assert.match(smoke, /## 1\\\. Core Identity/);
+  assert.match(smoke, /## 1\\\. Relationship State/);
 });
 
 test("repository metadata files exist", () => {

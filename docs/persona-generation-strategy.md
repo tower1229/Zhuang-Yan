@@ -9,7 +9,7 @@
 
 本文档定义 `persona` skill 的人格生成策略，覆盖：
 
-- `persona/CANON.md`（人物圣经）生成规则
+- `persona/CANON.md`（角色档案）生成规则
 - `SOUL.md`（运行时互动协议）生成规则
 - `MEMORY.md`（长期关系沉淀）生成规则
 - `IDENTITY.md` / `USER.md` 生成边界
@@ -25,7 +25,7 @@
 
 ### 2.1 Canon 与 Runtime Persona 强分层
 
-- `persona/CANON.md`：完整人物圣经，是稳定人物事实的唯一权威来源
+- `persona/CANON.md`：完整角色档案，是稳定人物事实的唯一权威来源
 - `SOUL.md`：高度精炼、用于高频上下文注入的互动协议
 - `MEMORY.md`：长期关系沉淀与已验证有效的互动知识
 
@@ -45,7 +45,7 @@
 - **初始化**：首次或重新创建人格资产（`SOUL/IDENTITY/MEMORY/USER/persona/CANON`）
 - **人格资产草案**：写入前生成的五文件候选内容，形成后直接写入
 - **全量覆写**：写入时以新内容替换人格相关旧内容，并保留与人格无关配置
-- **Persona Canon**：完整人物圣经，供人工审阅与下游系统消费
+- **Persona Canon**：完整角色档案，供人工审阅与下游系统消费
 
 ---
 
@@ -87,7 +87,7 @@
 
 ## 5. 文案生成规范
 
-### 5.1 persona/CANON.md（人物圣经）
+### 5.1 persona/CANON.md（角色档案）
 
 `persona/CANON.md` 必须记录完整、稳定、可长期复用的人物事实。
 

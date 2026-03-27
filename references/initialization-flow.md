@@ -155,6 +155,7 @@ Before drafting:
 - read `write-safety.md`
 - read `persona-generation-strategy.md`
 - read `drafting-protocol.md`
+- read `templates/persona-canon-template.md`
 - read `references/mbti/<persona_mbti>.md`
 - read the existing five target files if they already exist
 - when reading, always name the exact file path; do not use a vague "read existing files" action

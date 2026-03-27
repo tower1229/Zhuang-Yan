@@ -47,7 +47,7 @@ Preserve content only when it is operationally necessary and not part of the per
 
 - stable macros
 - harmless operational notes
-- required non-persona configuration fragments already living in one of the four files
+- required non-persona configuration fragments already living in one of the five files
 
 If a section is part of the old persona identity, replace it with the new draft.
 

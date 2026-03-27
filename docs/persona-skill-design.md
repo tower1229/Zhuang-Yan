@@ -11,7 +11,7 @@
 
 本项目现在只保留一条主线能力：
 
-**用户通过明确关键词触发人格初始化，skill 以交互式流程收集信息，并最终修改 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`，同时生成 `persona/CANON.md` 作为完整人物圣经。**
+**用户通过明确关键词触发人格初始化，skill 以交互式流程收集信息，并最终修改 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`，同时生成 `persona/CANON.md` 作为完整角色档案。**
 
 ---
 
@@ -56,7 +56,7 @@
 
 层3：Persona Canon 层
   生成 persona/CANON.md
-  作为完整人物圣经供人工审阅与下游系统消费
+  作为完整角色档案供人工审阅与下游系统消费
   与运行时人格层一起写入并提示完成
 ```
 
@@ -166,7 +166,7 @@ Step 10：提示完成
 同时必须遵守以下分层原则：
 
 - MBTI 只提供人格骨架，不是完整人物事实来源
-- `persona/CANON.md` 是人物圣经与上游真相源
+- `persona/CANON.md` 是角色档案与上游真相源
 - `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 都是从 Canon 与用户输入压缩出的运行时投影
 
 ---
@@ -179,7 +179,7 @@ Step 10：提示完成
 | `MEMORY.md` | 长期关系沉淀：已验证有效的互动经验、共享语境、稳定关系记忆 |
 | `IDENTITY.md` | 名字、身份、Vibe、头像等静态名片 |
 | `USER.md` | 对用户的称呼、情绪支持偏好、沟通雷区、时区等用户侧稳定约束 |
-| `persona/CANON.md` | 完整人物圣经：稳定、可长期复用、供人工审阅与下游系统消费的人物事实 |
+| `persona/CANON.md` | 完整角色档案：稳定、可长期复用、供人工审阅与下游系统消费的人物事实 |
 
 其中前四份是运行时人格层，`persona/CANON.md` 是上游真相源。
 

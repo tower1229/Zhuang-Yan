@@ -18,11 +18,12 @@ const defaultMessages = [
   "ENFP",
   "B",
   "A",
-  "Adrian",
-  "叫我泛舟。我的 MBTI 是 ENFP。",
+  "A",
+  "叫我泛舟，代词用他，时区 Asia/Shanghai。希望先理解再建议，别太像客服，压力大时先帮我减法，关系保持温柔亲近但别太黏。",
+  "她 27 岁，住在上海，是品牌策略顾问，成长于江南城市家庭，长期爱好是胶片摄影、手冲咖啡和夜跑。",
 ];
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
-const personaFiles = ["SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];
+const personaFiles = ["persona/CANON.md", "SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];
 
 function parseArgs(argv) {
   const options = {
@@ -114,6 +115,7 @@ function writePersonaSeed(workspaceDir, seedLiveWorkspace) {
 
   for (const fileName of personaFiles) {
     const destination = path.join(workspaceDir, fileName);
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
     if (seedLiveWorkspace) {
       copyIfPresent(path.join(sourceWorkspace, fileName), destination);
       continue;
@@ -220,6 +222,10 @@ function readGeneratedFiles(workspaceDir) {
 }
 
 function runStructuralChecks(files) {
+  const canonLines = files["persona/CANON.md"].content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
   const soulLines = files["SOUL.md"].content
     .split(/\r?\n/)
     .map((line) => line.trim())
@@ -252,6 +258,19 @@ function runStructuralChecks(files) {
 
   return [
     {
+      name: "CANON uses the full persona canon contract",
+      pass:
+        canonLines[0] === "# Persona Canon" &&
+        /## 1\. Core Identity/.test(files["persona/CANON.md"].content) &&
+        /## 2\. Background/.test(files["persona/CANON.md"].content) &&
+        /## 3\. Daily Life/.test(files["persona/CANON.md"].content) &&
+        /## 4\. Language And Expression/.test(files["persona/CANON.md"].content) &&
+        /## 5\. Psychology And Values/.test(files["persona/CANON.md"].content) &&
+        /## 6\. Relationship Model/.test(files["persona/CANON.md"].content) &&
+        /## 7\. Interaction Character/.test(files["persona/CANON.md"].content) &&
+        /## 8\. Memory Weaving Anchors/.test(files["persona/CANON.md"].content),
+    },
+    {
       name: "SOUL contains managed Core Truths block",
       pass:
         /## Core Truths/.test(files["SOUL.md"].content) &&
@@ -262,17 +281,14 @@ function runStructuralChecks(files) {
       pass: /## Vibe/.test(files["SOUL.md"].content),
     },
     {
-      name: "MEMORY contains managed top block and all seven required layers",
+      name: "MEMORY contains managed top block and all four required sections",
       pass:
         memoryLines[0] === "<!-- PERSONA-SKILL:MEMORY:BEGIN -->" &&
         memoryManagedBlockPattern.test(files["MEMORY.md"].content) &&
-        /## 1\. Identity Layer/.test(files["MEMORY.md"].content) &&
-        /## 2\. Physical Layer/.test(files["MEMORY.md"].content) &&
-        /## 3\. Psychological Layer/.test(files["MEMORY.md"].content) &&
-        /## 4\. Capability Layer/.test(files["MEMORY.md"].content) &&
-        /## 5\. Behavior Layer/.test(files["MEMORY.md"].content) &&
-        /## 6\. Relationship Layer/.test(files["MEMORY.md"].content) &&
-        /## 7\. Narrative Layer/.test(files["MEMORY.md"].content),
+        /## 1\. Relationship State/.test(files["MEMORY.md"].content) &&
+        /## 2\. Effective Support Patterns/.test(files["MEMORY.md"].content) &&
+        /## 3\. Failed Or Avoided Patterns/.test(files["MEMORY.md"].content) &&
+        /## 4\. Stable Shared Context/.test(files["MEMORY.md"].content),
     },
     {
       name: "IDENTITY uses the five-line template",

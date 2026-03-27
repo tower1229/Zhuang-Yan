@@ -48,20 +48,21 @@ Treat this skill as initialization-only.
 3. Complete the interview in order: MBTI, persona gender, relationship role, recommended persona MBTI, persona naming, user-side grounding details.
 4. Read `references/write-safety.md` before drafting or writing any file.
 5. Before drafting, read `references/mbti/<persona_mbti>.md` for the locked persona type. Use it as a primary source, not just background flavor.
-6. Before drafting, read `references/drafting-protocol.md` and follow its read-before-write sequence, file contracts, preservation split, and self-review gate.
-7. Read `references/persona-generation-strategy.md` before drafting any of the four persona files. Treat it as the canonical generation specification.
-8. If the run was interrupted and you are resuming near the write stage, rebuild context by rereading the exact required files and target files by name. Do not improvise a generic "read the current files" action.
-9. After the five-file draft is complete, write it directly without waiting for user confirmation.
-10. After writing, clearly tell the user that initialization is complete and which files were updated.
-11. Warn clearly when the operation will replace an existing persona.
+6. Before drafting, read `references/templates/persona-canon-template.md` as the exact shape for `persona/CANON.md`.
+7. Before drafting, read `references/drafting-protocol.md` and follow its read-before-write sequence, file contracts, preservation split, and self-review gate.
+8. Read `references/persona-generation-strategy.md` before drafting any of the five target files. Treat it as the canonical generation specification.
+9. If the run was interrupted and you are resuming near the write stage, rebuild context by rereading the exact required files and target files by name. Do not improvise a generic "read the current files" action.
+10. After the five-file draft is complete, write it directly without waiting for user confirmation.
+11. After writing, clearly tell the user that initialization is complete and which files were updated.
+12. Warn clearly when the operation will replace an existing persona.
 
 ## Validation
 
 - Rewrite failed drafts before writing if they do not satisfy the required file shapes.
 - Read and preserve non-persona operational content, but never let it replace the persona body.
-- Preserve only non-persona operational content that must remain in the four target files.
+- Preserve only non-persona operational content that must remain in the five target files.
 - Treat `references/drafting-protocol.md` as the operational execution contract for turning interview inputs into the five-file draft.
-- Treat `references/persona-generation-strategy.md` as the canonical quality target for the four persona files.
+- Treat `references/persona-generation-strategy.md` as the canonical quality target for the five target files.
 
 ## Drafting rules
 

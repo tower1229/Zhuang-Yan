@@ -57,9 +57,10 @@ Before drafting, read in this order:
 1. the locked interview answers and `human_intro`
 2. `references/write-safety.md`
 3. `references/persona-generation-strategy.md`
-4. `references/mbti/<persona_mbti>.md`
-5. existing `persona/CANON.md` if it exists
-6. existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist
+4. `references/templates/persona-canon-template.md`
+5. `references/mbti/<persona_mbti>.md`
+6. existing `persona/CANON.md` if it exists
+7. existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist
 
 Do not skip the existing files. They are needed to separate persona content that should be replaced from non-persona content that should be preserved.
 
