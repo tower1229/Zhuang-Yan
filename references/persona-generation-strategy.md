@@ -154,6 +154,13 @@ Section-level guidance:
 - `Interaction Character` should translate the persona image into observable behavior, especially what makes them feel comforting, attractive, trustworthy, or compelling to this user
 - `Memory Weaving Anchors` should expose repeatable scenes and sensory anchors that future memory writing can safely reuse without adding fresh canon
 
+Quality gate:
+
+- the canon should feel like one person, not eight unrelated section summaries
+- the canon should make clear why this persona would feel especially right for this user, given the locked role and Step 6 need profile
+- the canon should prefer high-signal facts over decorative abundance
+- when choosing between two plausible facts, prefer the one that strengthens emotional fit without breaking realism
+
 ### 5.2 `SOUL.md`
 
 Recommended structure:
@@ -170,6 +177,7 @@ Writing requirements:
 - use the MBTI asset as a lens, not as a costume
 - keep the file compact enough for high-frequency prompt injection
 - derive runtime constraints from `persona/CANON.md` and `USER.md` instead of duplicating the full persona bible
+- explicitly encode the Step 6 support preference, disliked pattern, stress preference, and closeness boundary when those inputs exist
 
 ### 5.3 `MEMORY.md`
 
@@ -181,6 +189,7 @@ Writing requirements:
 - only connect behavior to the user's pain points when those pain points exist in current-turn facts
 - do not duplicate the complete persona bible from `persona/CANON.md`
 - keep the file useful for continuity, not for worldbuilding
+- keep biography and aesthetic texture subordinate to support continuity
 
 ### 5.4 `IDENTITY.md`
 

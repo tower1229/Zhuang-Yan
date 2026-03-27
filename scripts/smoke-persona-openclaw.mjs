@@ -256,6 +256,8 @@ function runStructuralChecks(files) {
     /^# (IDENTITY\.md - Who Am I\?|USER\.md - About Your Human)$/m;
   const legacyPlaceholderPattern =
     /Fill this in during your first conversation|This isn't just metadata\. It's the start of figuring out who you are\.|待定/;
+  const canonAgeLine = files["persona/CANON.md"].content.match(/^- Age:\s*(.+)$/m);
+  const canonCityLine = files["persona/CANON.md"].content.match(/^- Current City:\s*(.+)$/m);
 
   return [
     {
@@ -270,6 +272,12 @@ function runStructuralChecks(files) {
         /## 6\. Relationship Model/.test(files["persona/CANON.md"].content) &&
         /## 7\. Interaction Character/.test(files["persona/CANON.md"].content) &&
         /## 8\. Memory Weaving Anchors/.test(files["persona/CANON.md"].content),
+    },
+    {
+      name: "CANON locks mandatory age and generated city",
+      pass:
+        Boolean(canonAgeLine?.[1]?.trim()) &&
+        Boolean(canonCityLine?.[1]?.trim()),
     },
     {
       name: "SOUL contains managed Core Truths block",
@@ -290,6 +298,12 @@ function runStructuralChecks(files) {
         /## 2\. Effective Support Patterns/.test(files["MEMORY.md"].content) &&
         /## 3\. Failed Or Avoided Patterns/.test(files["MEMORY.md"].content) &&
         /## 4\. Stable Shared Context/.test(files["MEMORY.md"].content),
+    },
+    {
+      name: "MEMORY stays relationship-focused instead of mirroring CANON sections",
+      pass:
+        !/## 2\. Background/.test(files["MEMORY.md"].content) &&
+        !/## 5\. Psychology And Values/.test(files["MEMORY.md"].content),
     },
     {
       name: "IDENTITY uses the five-line template",

@@ -139,6 +139,9 @@ test("drafting protocol hardens the five-file generation contract", () => {
   assert.match(protocol, /the persona image the user is most likely longing for/);
   assert.match(protocol, /Section drafting rules/);
   assert.match(protocol, /every line should help explain why this person would feel right to the user/);
+  assert.match(protocol, /leaves the age blank or non-specific after Step 7 locked it as mandatory/);
+  assert.match(protocol, /fails to encode the user's support preference, disliked interaction pattern, stress preference, or closeness boundary/);
+  assert.match(protocol, /spends more effort on biography, worldbuilding, or aesthetic detail than on support patterns/);
   assert.match(protocol, /failing to generate `MEMORY\.md` because an older workspace did not already have one/);
   assert.match(protocol, /one of the five required files is missing or empty after drafting/);
   assert.match(protocol, /Never preserve or discuss edits to files outside the five target persona files/);
@@ -156,6 +159,8 @@ test("persona generation strategy keeps the shipped guidance abstract instead of
   assert.match(strategy, /Language layering/);
   assert.match(strategy, /Section-level guidance/);
   assert.match(strategy, /create a believable lived rhythm that reinforces the desired persona image/);
+  assert.match(strategy, /the canon should feel like one person, not eight unrelated section summaries/);
+  assert.match(strategy, /explicitly encode the Step 6 support preference, disliked pattern, stress preference, and closeness boundary/);
   assert.match(strategy, /examples\/persona-drafting-examples\.md/);
   assert.doesNotMatch(strategy, /Stella|real human female companion/);
   assert.doesNotMatch(strategy, /What to call them: dear/);
@@ -225,8 +230,10 @@ test("package.json test script uses the tests directory for cross-platform disco
 test("smoke runner guards against legacy wrapper leakage", () => {
   const smoke = fs.readFileSync(path.join(root, "scripts", "smoke-persona-openclaw.mjs"), "utf8");
   assert.match(smoke, /CANON uses the full persona canon contract/);
+  assert.match(smoke, /CANON locks mandatory age and generated city/);
   assert.match(smoke, /SOUL contains managed Core Truths block/);
   assert.match(smoke, /MEMORY contains managed top block and all four required sections/);
+  assert.match(smoke, /MEMORY stays relationship-focused instead of mirroring CANON sections/);
   assert.match(smoke, /IDENTITY and USER do not retain legacy wrapper headings/);
   assert.match(smoke, /IDENTITY and USER do not retain legacy placeholder copy/);
   assert.match(smoke, /PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN/);

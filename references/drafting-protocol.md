@@ -310,16 +310,22 @@ The draft must fail and be rewritten if any of the following are true:
 - `persona/CANON.md` is missing one of the required sections
 - `persona/CANON.md` mixes prompt instructions with persona facts
 - `persona/CANON.md` introduces new facts only inside `Memory Weaving Anchors`
+- `persona/CANON.md` leaves the age blank or non-specific after Step 7 locked it as mandatory
+- `persona/CANON.md` leaves the current city blank instead of generating one from system country/timezone context
+- `persona/CANON.md` reads like a disconnected stack of profile labels instead of one coherent persona image
+- `persona/CANON.md` fails to make the target persona feel meaningfully desirable, trustworthy, or emotionally fitting for the locked user need profile
 - `SOUL.md` does not contain both `Core Truths` and `Vibe`
 - `SOUL.md` does not contain exactly one `<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN --> ... <!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->` block
 - the `SOUL.md` managed block is not inside `## Core Truths`
 - `SOUL.md` lacks user-specific anchors or behavioral instructions
+- `SOUL.md` fails to encode the user's support preference, disliked interaction pattern, stress preference, or closeness boundary when those inputs were locked in Step 6
 - `SOUL.md` keeps multiple contradictory `Vibe` sections
 - `MEMORY.md` is missing any of the four required sections
 - `MEMORY.md` does not start with `<!-- PERSONA-SKILL:MEMORY:BEGIN -->`
 - `MEMORY.md` does not contain exactly one `<!-- PERSONA-SKILL:MEMORY:BEGIN --> ... <!-- PERSONA-SKILL:MEMORY:END -->` block
 - `MEMORY.md` duplicates the full persona bible instead of storing relationship memory
 - `MEMORY.md` relationship content cites user facts that are not in the current-turn fact ledger
+- `MEMORY.md` spends more effort on biography, worldbuilding, or aesthetic detail than on support patterns, avoided patterns, and relationship continuity
 - one of the five required files is missing or empty after drafting
 - `IDENTITY.md` is not in the exact five-line template
 - `IDENTITY.md` does not start with `- Name:`
