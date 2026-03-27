@@ -40,7 +40,7 @@ Rules for the ledger:
 
 - only put something in `explicit user facts from this interview` if the user said it in this initialization run or it was already locked by the flow
 - keep `careful inferences from current-turn facts` clearly separate from explicit facts
-- keep `locked persona canon facts` limited to age plus any other persona facts that were actually confirmed during this run or preserved from an existing canon file without contradiction
+- keep `locked persona canon facts` limited to the explicit age value locked during this run
 - treat existing `USER.md`, `MEMORY.md`, prior smoke outputs, and strategy examples as tainted for user facts
 - never promote example copy, prior-run residue, or old workspace assumptions into current-turn user facts
 - the only fields that may enter `carry-forward candidates from existing USER.md` are `What to call them`, `Pronouns`, and `Timezone`
@@ -153,9 +153,9 @@ Hard requirements:
 
 - write persona facts only
 - do not write prompt instructions, tool notes, or downstream usage guidance
-- age must be explicit if present as a hard canon fact
-- city must be randomly selected from the current system country or, if unavailable, from the current system timezone context unless the user explicitly supplied a city
-- other canon facts may be generated from age, gender, persona MBTI, relationship role, and the user's need profile
+- age must be explicit as a hard canon fact
+- city must be randomly selected from the current system country or, if unavailable, from the current system timezone context
+- all other canon facts should be inferred from the persona image the user is most likely longing for, while staying consistent with age, gender, persona MBTI, relationship role, and the user's need profile
 - do not write lazy stereotype bundles as hard facts
 - `Memory Weaving Anchors` may summarize earlier facts but may not introduce new canon facts
 - if `persona/CANON.md` does not exist, create it and write the full contract

@@ -147,28 +147,18 @@ Do not finalize the initialization immediately after Step 6 if `Pronouns` is sti
 
 If the user says they do not want to provide one of those fields, leave it blank rather than guessing.
 
-### Step 7: Lock persona canon facts
+### Step 7: Lock persona age only
 
-Before drafting, proactively collect only the persona's age for `persona/CANON.md`.
+Before drafting, explicitly ask for the persona's age for `persona/CANON.md`.
 
-Start with a short gating question such as:
-
-- `Do you want to lock the persona's age now, or let the system infer everything except age?`
-- `A. Leave age blank for now`
-- `B. Lock the age`
-- `C. Lock the age and volunteer extra canon facts`
-
-If the user chooses to lock the age, ask only for age by default.
-
-If the user voluntarily gives extra canon facts, you may lock them too, but do not proactively turn Step 7 into a full canon questionnaire.
+Ask only for age. Do not offer a blank/skip branch for Step 7.
 
 Rules:
 
-- age must be explicitly locked if it is present as a hard canon fact
+- age must be explicitly locked as a hard canon fact before drafting
 - city must be randomly selected from the current system country or, if that is unavailable, from the current system timezone context
-- other canon facts may be generated from age, gender, persona MBTI, relationship role, and the user's need profile
-- generated canon facts must stay coherent and specific, but must not read like lazy MBTI stereotypes
-- if the user gives extra canon facts voluntarily, those explicit facts override the generated defaults
+- all other canon facts should be inferred from the persona image the user is most likely longing for, as constrained by age, gender, persona MBTI, relationship role, and the user's need profile
+- generated canon facts must stay coherent, specific, and emotionally targeted, but must not read like lazy MBTI stereotypes
 - `persona/CANON.md` stores persona facts only; do not treat it as a prompt scratchpad
 
 ### Step 8: Draft and write the five persona files

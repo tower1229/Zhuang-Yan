@@ -58,6 +58,7 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /If `What to call them` or `Pronouns` is blank or missing, explicitly ask/);
   assert.match(skill, /Do not block initialization on a missing `Timezone`/);
   assert.match(skill, /prefer short A\/B\/C\/D questions before asking for freeform detail/);
+  assert.match(skill, /Do not ask for any other canon fact/);
   assert.match(skill, /Missing target files and legacy placeholder files are not something to "work around"/);
   assert.match(skill, /Do not read `references\/examples\/` during normal initialization/);
   assert.match(skill, /Never issue an empty `Read` call or a vague read request such as "read existing files"/);
@@ -86,9 +87,10 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /A\. Stay with me quietly/);
   assert.match(flow, /A\. Reserved/);
   assert.match(flow, /Do not dump all four preference prompts in one message/);
-  assert.match(flow, /A\. Leave age blank for now/);
-  assert.match(flow, /ask only for age by default/);
+  assert.match(flow, /explicitly ask for the persona's age/);
+  assert.match(flow, /Ask only for age\. Do not offer a blank\/skip branch for Step 7/);
   assert.match(flow, /city must be randomly selected from the current system country or, if that is unavailable, from the current system timezone context/);
+  assert.match(flow, /the persona image the user is most likely longing for/);
   assert.match(flow, /leave it blank rather than guessing/);
   assert.match(flow, /if any target file is missing, create it during this initialization run/);
   assert.match(flow, /do not preserve legacy template wrappers/);
@@ -132,7 +134,9 @@ test("drafting protocol hardens the five-file generation contract", () => {
   assert.match(protocol, /If `Pronouns` is blank both in the current-turn facts and in `carry-forward candidates from existing USER\.md`, the interview must explicitly ask for it before finalizing/);
   assert.match(protocol, /invents pronouns, pet names, dislikes, diagnoses, or boundaries not explicitly provided this run/);
   assert.match(protocol, /you may carry forward non-empty `What to call them`, `Pronouns`, and `Timezone` values from existing `USER\.md` only when the user does not override them in this run/);
-  assert.match(protocol, /city must be randomly selected from the current system country or, if unavailable, from the current system timezone context unless the user explicitly supplied a city/);
+  assert.match(protocol, /age must be explicit as a hard canon fact/);
+  assert.match(protocol, /city must be randomly selected from the current system country or, if unavailable, from the current system timezone context/);
+  assert.match(protocol, /the persona image the user is most likely longing for/);
   assert.match(protocol, /failing to generate `MEMORY\.md` because an older workspace did not already have one/);
   assert.match(protocol, /one of the five required files is missing or empty after drafting/);
   assert.match(protocol, /Never preserve or discuss edits to files outside the five target persona files/);

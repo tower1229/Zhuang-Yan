@@ -96,7 +96,7 @@ Each generation pass should optimize all four targets at once:
 - `gender`: the target persona gender
 - `persona_name`: the final English name selected by the user
 - `human_intro`: the user's grounding details, including how they want to be addressed and any habits, pain points, or boundaries worth remembering
-- `persona_canon_facts`: an explicitly locked age plus any extra canon facts the user voluntarily provided during initialization
+- `persona_canon_facts`: the explicitly locked age
 - `mbti_assets`: the relevant MBTI source material and structured traits such as `tone_style`
 
 Additional constraints:
@@ -137,9 +137,9 @@ Writing requirements:
 - store persona facts only
 - do not write prompt instructions, system behavior, tool guidance, or workflow notes
 - do not write MBTI reasoning; write only the final locked scaffold fields
-- age must be explicit if present as a hard canon fact
-- city may be randomly selected from the current system country or, if unavailable, from the current system timezone context unless the user explicitly supplied a city
-- other canon facts may be generated from age, gender, persona MBTI, relationship role, and the user's need profile
+- age must be explicit as a hard canon fact
+- city may be randomly selected from the current system country or, if unavailable, from the current system timezone context
+- all other canon facts should be inferred from the persona image the user is most likely longing for, while staying consistent with age, gender, persona MBTI, relationship role, and the user's need profile
 - do not turn those inputs into shallow stereotype-driven "facts"
 - `Memory Weaving Anchors` may summarize or reorganize earlier facts, but may not introduce new canon facts
 
