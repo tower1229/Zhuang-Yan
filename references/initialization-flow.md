@@ -111,6 +111,10 @@ At Step 6:
 Also ask for:
 
 - how the persona should address the user
+- preferred emotional support style
+- disliked interaction patterns
+- what helps most under stress
+- relationship intensity or closeness limit
 - habits, preferences, pain points, sensitivities, hard boundaries, or traits worth remembering
 
 Keep it conversational. Do not demand a long-form response.
@@ -119,10 +123,28 @@ Do not finalize the initialization immediately after Step 6 if `Pronouns` or `Ti
 
 If the user says they do not want to provide one of those fields, leave it blank rather than guessing.
 
-### Step 7: Draft and write the four persona files
+### Step 7: Lock persona canon facts
+
+Before drafting, collect or confirm stable persona facts for `persona/CANON.md` such as:
+
+- age
+- current city
+- occupation
+- cultural context
+- family context
+- stable interests or habits
+
+Rules:
+
+- write these only when they are actually locked by the interview
+- leaving a field blank is better than filling it with MBTI stereotypes or city-based guesses
+- `persona/CANON.md` stores persona facts only; do not treat it as a prompt scratchpad
+
+### Step 8: Draft and write the five persona files
 
 Draft and then directly write:
 
+- `persona/CANON.md`
 - `SOUL.md`
 - `MEMORY.md`
 - `IDENTITY.md`
@@ -134,7 +156,7 @@ Before drafting:
 - read `persona-generation-strategy.md`
 - read `drafting-protocol.md`
 - read `references/mbti/<persona_mbti>.md`
-- read the existing four target files if they already exist
+- read the existing five target files if they already exist
 - when reading, always name the exact file path; do not use a vague "read existing files" action
 - if the run resumes after an interruption, redo the concrete read sequence before drafting instead of assuming the old context is still active
 
@@ -144,6 +166,7 @@ Legacy migration rule:
 - if any target file is still in an older placeholder/template format, treat it as `persona content to replace`, not as the basis of the new interview
 - explicit initialization always wins over old placeholder scaffolds, old identity cards, and old persona prose
 - do not preserve legacy template wrappers such as `# SOUL.md - Who You Are`, `# IDENTITY.md - Who Am I?`, `# USER.md - About Your Human`, "Fill this in during your first conversation", `TBD`, or old bold-field markdown layouts
+- for `persona/CANON.md`, the regenerated file must satisfy the current contract from the first non-empty line onward and begin directly with `# Persona Canon`
 - for `SOUL.md`, manage only the `Core Truths` section and the `Vibe` section:
   - if `## Vibe` exists, replace that whole section
   - if `## Vibe` does not exist, append a new `## Vibe` section
@@ -156,15 +179,15 @@ Legacy migration rule:
 Then:
 
 - separate existing content into `persona content to replace` and `non-persona content to preserve`
-- draft all four files against the required file contracts
+- draft all five files against the required file contracts
 - run the self-review gate from `drafting-protocol.md`
 - rewrite any failed file before writing
 
-### Step 8: Completion notice
+### Step 9: Completion notice
 
 After writing:
 
 - tell the user initialization is complete
-- summarize that the four persona files have been updated
+- summarize that `persona/CANON.md`, `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` have been updated
 - mention if an existing persona was replaced
 - do not ask whether unrelated files such as `BOOTSTRAP.md` should be deleted or changed

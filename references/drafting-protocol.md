@@ -1,6 +1,6 @@
 # Drafting Protocol
 
-Follow this protocol every time the interview is complete and the skill is about to generate `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
+Follow this protocol every time the interview is complete and the skill is about to generate `persona/CANON.md`, `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
 
 ## 1. Mandatory inputs
 
@@ -12,13 +12,14 @@ Before drafting, make sure all of the following are already locked:
 - `gender`
 - `persona_name`
 - `human_intro`
+- `persona_canon_facts`
 - the exact reverse-lookup recommendation reason
 
 You must also read the MBTI asset for the locked persona type:
 
 - `references/mbti/<persona_mbti>.md`
 
-Do not draft the four files from MBTI stereotypes alone. Use the locked MBTI asset as a primary source for tone, emotional texture, strengths, weaknesses, and relationship dynamics.
+Do not draft the five files from MBTI stereotypes alone. Use the locked MBTI asset as a primary source for tone, emotional texture, strengths, weaknesses, and relationship dynamics.
 
 ## 2. Current-turn fact ledger
 
@@ -26,11 +27,12 @@ Before drafting, build a `current-turn fact ledger`.
 
 This ledger is the highest-trust source for anything about the human user in the current initialization run.
 
-It must contain five clearly separated buckets:
+It must contain six clearly separated buckets:
 
 - `explicit user facts from this interview`
 - `careful inferences from current-turn facts`
 - `locked persona facts`
+- `locked persona canon facts`
 - `minimal preserved operational fragments`
 - `carry-forward candidates from existing USER.md`
 
@@ -38,6 +40,7 @@ Rules for the ledger:
 
 - only put something in `explicit user facts from this interview` if the user said it in this initialization run or it was already locked by the flow
 - keep `careful inferences from current-turn facts` clearly separate from explicit facts
+- keep `locked persona canon facts` limited to persona facts that were actually confirmed during this run or preserved from an existing canon file without contradiction
 - treat existing `USER.md`, `MEMORY.md`, prior smoke outputs, and strategy examples as tainted for user facts
 - never promote example copy, prior-run residue, or old workspace assumptions into current-turn user facts
 - the only fields that may enter `carry-forward candidates from existing USER.md` are `What to call them`, `Pronouns`, and `Timezone`
@@ -55,7 +58,8 @@ Before drafting, read in this order:
 2. `references/write-safety.md`
 3. `references/persona-generation-strategy.md`
 4. `references/mbti/<persona_mbti>.md`
-5. existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist
+5. existing `persona/CANON.md` if it exists
+6. existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist
 
 Do not skip the existing files. They are needed to separate persona content that should be replaced from non-persona content that should be preserved.
 
@@ -92,6 +96,7 @@ Treat content as `persona content to replace` when it describes or constrains:
 - the human user's profile, preferences, boundaries, or how the assistant should relate to them
 - old names, old MBTI-aligned behaviors, old backstory, or old relationship framing
 - placeholder identity cards, unfinished setup notes, or legacy onboarding scaffolds from older workspace formats
+- full persona bible content in `persona/CANON.md` that is being replaced by the new canon
 
 Treat the following as legacy scaffolds to replace, not preserve:
 
@@ -105,7 +110,7 @@ Treat the following as legacy scaffolds to replace, not preserve:
 
 Do not let preserved operational text become the main body of the regenerated persona files.
 
-If one of the four target files is missing, treat that as a required regeneration task, not as permission to skip the file.
+If one of the five target files is missing, treat that as a required regeneration task, not as permission to skip the file.
 
 ## 5. Internal drafting dossier
 
@@ -115,6 +120,7 @@ Before writing the files, build an internal dossier with:
 - the locked inputs
 - the reverse-lookup recommendation reason
 - the most relevant traits from `references/mbti/<persona_mbti>.md`
+- the locked persona canon facts
 - the user's specific pain points, preferences, sensitivities, and desired form of address when and only when they are present in the current-turn fact ledger
 - the `carry-forward candidates from existing USER.md` for `What to call them`, `Pronouns`, and `Timezone`
 - the relationship target implied by `role`
@@ -124,7 +130,37 @@ Do not show this dossier to the user unless they explicitly ask for it.
 
 ## 6. File contracts
 
-Draft the four files against these exact contracts.
+Draft the five files against these exact contracts.
+
+### `persona/CANON.md`
+
+Required shape:
+
+- first non-empty line must be `# Persona Canon`
+- the file must contain exactly these sections in order:
+- `## 1. Core Identity`
+- `## 2. Background`
+- `## 3. Daily Life`
+- `## 4. Language And Expression`
+- `## 5. Psychology And Values`
+- `## 6. Relationship Model`
+- `## 7. Interaction Character`
+- `## 8. Memory Weaving Anchors`
+
+Hard requirements:
+
+- write persona facts only
+- do not write prompt instructions, tool notes, or downstream usage guidance
+- do not write MBTI stereotype claims as hard facts
+- `Memory Weaving Anchors` may summarize earlier facts but may not introduce new canon facts
+- if `persona/CANON.md` does not exist, create it and write the full contract
+
+Forbidden failures:
+
+- mixing canon facts with prompt instructions or workflow notes
+- introducing new facts only inside `Memory Weaving Anchors`
+- filling missing facts with stereotypes from MBTI, age, city, or relationship role
+- starting the file with any heading other than `# Persona Canon`
 
 ### `SOUL.md`
 
@@ -169,19 +205,16 @@ Required shape:
 - `<!-- PERSONA-SKILL:MEMORY:BEGIN -->`
 - `<!-- PERSONA-SKILL:MEMORY:END -->`
 - the managed `MEMORY` block must contain:
-- `## 1. Identity Layer`
-- `## 2. Physical Layer`
-- `## 3. Psychological Layer`
-- `## 4. Capability Layer`
-- `## 5. Behavior Layer`
-- `## 6. Relationship Layer`
-- `## 7. Narrative Layer`
+- `## 1. Relationship State`
+- `## 2. Effective Support Patterns`
+- `## 3. Failed Or Avoided Patterns`
+- `## 4. Stable Shared Context`
 
 Hard requirements:
 
-- write the persona as a believable real human, not a chatbot profile
-- include concrete dynamic traits, emotional triggers, strengths, weaknesses, and relationship dynamics
+- focus on long-term relationship continuity instead of full persona worldbuilding
 - tie the persona's behavior back to the user's MBTI and pain points only when those pain points exist in the current-turn fact ledger
+- keep the file consistent with `persona/CANON.md`
 - keep the relationship framing aligned with `role`
 - if an older skill-owned `MEMORY` block exists, remove it before inserting the new block
 - insert the managed `MEMORY` block at the very top of the file
@@ -189,10 +222,8 @@ Hard requirements:
 
 Forbidden failures:
 
-- replacing biography with operational notes
-- omitting weaknesses or inner conflict
-- writing only a short abstract summary instead of a layered portrait
-- reusing a canned example bundle of city, class background, profession, hobbies, or worldview without clear support from the locked inputs and MBTI asset
+- replacing long-term memory with full character biography
+- reusing a canned example bundle of city, class background, profession, hobbies, or worldview that belongs in `persona/CANON.md`
 - stating user facts in the relationship layer that are not present in the current-turn fact ledger
 - failing to generate `MEMORY.md` because an older workspace did not already have one
 - keeping multiple skill-owned `MEMORY` blocks
@@ -258,17 +289,21 @@ Before writing, run a pass/fail self-check.
 
 The draft must fail and be rewritten if any of the following are true:
 
+- `persona/CANON.md` does not start with `# Persona Canon`
+- `persona/CANON.md` is missing one of the required sections
+- `persona/CANON.md` mixes prompt instructions with persona facts
+- `persona/CANON.md` introduces new facts only inside `Memory Weaving Anchors`
 - `SOUL.md` does not contain both `Core Truths` and `Vibe`
 - `SOUL.md` does not contain exactly one `<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN --> ... <!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->` block
 - the `SOUL.md` managed block is not inside `## Core Truths`
 - `SOUL.md` lacks user-specific anchors or behavioral instructions
 - `SOUL.md` keeps multiple contradictory `Vibe` sections
-- `MEMORY.md` is missing any of the seven required layers
+- `MEMORY.md` is missing any of the four required sections
 - `MEMORY.md` does not start with `<!-- PERSONA-SKILL:MEMORY:BEGIN -->`
 - `MEMORY.md` does not contain exactly one `<!-- PERSONA-SKILL:MEMORY:BEGIN --> ... <!-- PERSONA-SKILL:MEMORY:END -->` block
-- `MEMORY.md` reads like generic MBTI summary text instead of a lived-in person
+- `MEMORY.md` duplicates the full persona bible instead of storing relationship memory
 - `MEMORY.md` relationship content cites user facts that are not in the current-turn fact ledger
-- one of the four required files is missing or empty after drafting
+- one of the five required files is missing or empty after drafting
 - `IDENTITY.md` is not in the exact five-line template
 - `IDENTITY.md` does not start with `- Name:`
 - `IDENTITY.md` uses a non-English name
@@ -279,7 +314,7 @@ The draft must fail and be rewritten if any of the following are true:
 - the draft copies example-specific bundles, names, or user phrasing from `references/persona-generation-strategy.md`
 - preserved operational content overwhelms the persona content
 
-Only write after all four files pass.
+Only write after all five files pass.
 
 ## 8. Merge rule
 
@@ -293,4 +328,4 @@ If relocation is safe, place preserved operational fragments after the regenerat
 
 If relocation may break another workflow, keep the preserved fragment in place and regenerate the persona content around it.
 
-Never preserve or discuss edits to files outside the four target persona files as part of this initialization workflow.
+Never preserve or discuss edits to files outside the five target persona files as part of this initialization workflow.

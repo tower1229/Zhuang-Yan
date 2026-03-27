@@ -58,7 +58,7 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /Do not read `references\/examples\/` during normal initialization/);
   assert.match(skill, /Never issue an empty `Read` call or a vague read request such as "read existing files"/);
   assert.match(skill, /Treat `SOUL\.md` and `MEMORY\.md` as section-owned files/);
-  assert.match(skill, /Treat `IDENTITY\.md` and `USER\.md` as whole-file-owned files/);
+  assert.match(skill, /Treat `IDENTITY\.md`, `USER\.md`, and `persona\/CANON\.md` as whole-file-owned files/);
   assert.match(skill, /Never ask to edit, delete, or clean up `BOOTSTRAP\.md`, `AGENTS\.md`/);
   assert.doesNotMatch(skill, /timeline-skill|timeline-plugin|selfiie-skill/);
 });
@@ -88,7 +88,7 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /self-review gate from `drafting-protocol\.md`/);
 });
 
-test("drafting protocol hardens the four-file generation contract", () => {
+test("drafting protocol hardens the five-file generation contract", () => {
   const protocol = fs.readFileSync(path.join(root, "references", "drafting-protocol.md"), "utf8");
   assert.match(protocol, /references\/mbti\/<persona_mbti>\.md/);
   assert.match(protocol, /current-turn fact ledger/);
@@ -101,8 +101,10 @@ test("drafting protocol hardens the four-file generation contract", () => {
   assert.match(protocol, /never issue an empty `Read` call/);
   assert.match(protocol, /restart this exact read sequence from the top with explicit file names/);
   assert.match(protocol, /Treat the following as legacy scaffolds to replace, not preserve/);
-  assert.match(protocol, /If one of the four target files is missing, treat that as a required regeneration task/);
+  assert.match(protocol, /If one of the five target files is missing, treat that as a required regeneration task/);
   assert.match(protocol, /## 6\. File contracts/);
+  assert.match(protocol, /# Persona Canon/);
+  assert.match(protocol, /## 1\. Core Identity/);
   assert.match(protocol, /PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN/);
   assert.match(protocol, /PERSONA-SKILL:MEMORY:BEGIN/);
   assert.match(protocol, /the managed `Core Truths` block must live inside the `## Core Truths` section/);
@@ -110,15 +112,15 @@ test("drafting protocol hardens the four-file generation contract", () => {
   assert.match(protocol, /first non-empty line must be `- Name: \{English given name\}`/);
   assert.match(protocol, /first non-empty line must be `- Name: \.\.\.`/);
   assert.match(protocol, /## Core Truths/);
-  assert.match(protocol, /## 1\. Identity Layer/);
+  assert.match(protocol, /## 1\. Relationship State/);
   assert.match(protocol, /exactly three bullets under `Notes`/);
   assert.match(protocol, /leave it blank instead of guessing/);
   assert.match(protocol, /the interview must explicitly ask for it before finalizing/);
   assert.match(protocol, /invents pronouns, pet names, dislikes, diagnoses, or boundaries not explicitly provided this run/);
   assert.match(protocol, /you may carry forward non-empty `What to call them`, `Pronouns`, and `Timezone` values from existing `USER\.md` only when the user does not override them in this run/);
   assert.match(protocol, /failing to generate `MEMORY\.md` because an older workspace did not already have one/);
-  assert.match(protocol, /one of the four required files is missing or empty after drafting/);
-  assert.match(protocol, /Never preserve or discuss edits to files outside the four target persona files/);
+  assert.match(protocol, /one of the five required files is missing or empty after drafting/);
+  assert.match(protocol, /Never preserve or discuss edits to files outside the five target persona files/);
   assert.match(protocol, /The draft must fail and be rewritten if/);
 });
 

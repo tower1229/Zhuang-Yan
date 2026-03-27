@@ -1,14 +1,15 @@
 # Persona Skill - Persona Generation Strategy
 
-> Updated: 2026-03-25
-> Status: v1 executable baseline
+> Updated: 2026-03-27
+> Status: v2 executable baseline
 
 ## 1. Purpose and boundaries
 
 This document defines the persona generation strategy for the `persona` skill. It covers:
 
-- generation rules for `SOUL.md` as the abstract personality core
-- generation rules for `MEMORY.md` as biography and relationship memory
+- generation rules for `persona/CANON.md` as the complete persona bible
+- generation rules for `SOUL.md` as the runtime interaction core
+- generation rules for `MEMORY.md` as long-term relationship memory
 - generation boundaries for `IDENTITY.md` and `USER.md`
 - quality checks, rewrite triggers, and iteration rules
 
@@ -16,12 +17,13 @@ It does not define downstream situation mapping or runtime consumption rules. Se
 
 ## 2. Non-negotiables
 
-### 2.1 Keep `SOUL` and `MEMORY` strongly separated
+### 2.1 Keep `CANON`, `SOUL`, and `MEMORY` strongly separated
 
-- `SOUL.md`: highly compressed, abstract, stable identity rules such as values, relationship tension, tone boundaries, and interaction posture
-- `MEMORY.md`: biographical color, relationship background, and lived behavioral context
+- `persona/CANON.md`: the complete persona bible and the upstream truth source for stable persona facts
+- `SOUL.md`: highly compressed runtime behavior rules such as tone boundaries, interaction posture, and support defaults
+- `MEMORY.md`: long-term relationship memory, validated support patterns, and stable shared context
 
-Do not hide strategy details inside `SOUL.md`, and do not reduce `MEMORY.md` to operational instructions.
+Do not hide the full persona bible inside `SOUL.md` or `MEMORY.md`, and do not place prompt instructions or downstream usage guidance inside `persona/CANON.md`.
 
 ### 2.2 Relationship role is a prerequisite, not a style option
 
@@ -34,20 +36,21 @@ There is no single persona pairing that is optimal for every relationship target
 
 ### 2.3 Terminology
 
-- `initialization`: the first creation or a full rebuild of persona assets (`SOUL`, `IDENTITY`, `MEMORY`, `USER`)
-- `persona asset draft`: the four-file candidate bundle generated before writing
+- `initialization`: the first creation or a full rebuild of persona assets (`persona/CANON`, `SOUL`, `IDENTITY`, `MEMORY`, `USER`)
+- `persona asset draft`: the five-file candidate bundle generated before writing
 - `full overwrite`: replacing old persona content while preserving operational fragments that are unrelated to persona identity
 
 ### 2.4 Context trust order
 
-When drafting the four files, rank all context sources in this order:
+When drafting the five files, rank all context sources in this order:
 
 1. `current-turn hard facts`: what the user explicitly said in this interview and what the flow has already locked
 2. `file contracts`: structural requirements, forbidden failures, and rewrite conditions
 3. `MBTI assets`: `references/mbti/<persona_mbti>.md` and `assets/mbti/mbti-index.json`
-4. `old file residue`: only for preserving non-persona operational fragments
+4. `existing persona/CANON.md`: only when separating locked canon facts from draft-stage gaps
+5. `old file residue`: only for preserving non-persona operational fragments
 
-Never promote level 4 into current-turn user facts, and never let examples override level 1 facts.
+Never promote levels 4 or 5 into current-turn user facts, and never let examples override level 1 facts.
 
 ### 2.5 Example isolation
 
@@ -93,6 +96,7 @@ Each generation pass should optimize all four targets at once:
 - `gender`: the target persona gender
 - `persona_name`: the final English name selected by the user
 - `human_intro`: the user's grounding details, including how they want to be addressed and any habits, pain points, or boundaries worth remembering
+- `persona_canon_facts`: stable persona facts such as age, city, occupation, cultural context, family context, and long-term interests when and only when they were actually locked during the interview
 - `mbti_assets`: the relevant MBTI source material and structured traits such as `tone_style`
 
 Additional constraints:
@@ -102,16 +106,40 @@ Additional constraints:
 
 ### 4.2 Standard outputs
 
+- `persona/CANON.md`
 - `SOUL.md`
 - `MEMORY.md`
 - `IDENTITY.md`
 - `USER.md`
 
-`SOUL.md` and `MEMORY.md` are the long-lived behavioral anchors and must obey the stricter guidance below.
+`persona/CANON.md` is the upstream truth source. The other four files are runtime-facing projections and must stay lean.
 
 ## 5. Generation guidance
 
-### 5.1 `SOUL.md`
+### 5.1 `persona/CANON.md`
+
+`persona/CANON.md` is the complete persona bible. It should be readable by both humans and models.
+
+Required sections:
+
+1. `Core Identity`
+2. `Background`
+3. `Daily Life`
+4. `Language And Expression`
+5. `Psychology And Values`
+6. `Relationship Model`
+7. `Interaction Character`
+8. `Memory Weaving Anchors`
+
+Writing requirements:
+
+- store persona facts only
+- do not write prompt instructions, system behavior, tool guidance, or workflow notes
+- do not write MBTI reasoning; write only the final locked scaffold fields
+- do not turn age, city, or MBTI into stereotype-driven "facts"
+- `Memory Weaving Anchors` may summarize or reorganize earlier facts, but may not introduce new canon facts
+
+### 5.2 `SOUL.md`
 
 Recommended structure:
 
@@ -125,28 +153,21 @@ Writing requirements:
 - use user-specific anchors when they actually exist in current-turn facts
 - forbid corporate support tone and canned assistant pleasantries directly in the instructions
 - use the MBTI asset as a lens, not as a costume
+- keep the file compact enough for high-frequency prompt injection
+- derive runtime constraints from `persona/CANON.md` and `USER.md` instead of duplicating the full persona bible
 
-### 5.2 `MEMORY.md`
+### 5.3 `MEMORY.md`
 
-Treat `MEMORY.md` as a believable layered portrait rather than a chatbot profile. A strong draft uses the seven-layer structure from the drafting protocol:
-
-1. `Identity Layer`
-2. `Physical Layer`
-3. `Psychological Layer`
-4. `Capability Layer`
-5. `Behavior Layer`
-6. `Relationship Layer`
-7. `Narrative Layer`
+Treat `MEMORY.md` as long-term relationship memory rather than a second persona bible.
 
 Writing requirements:
 
-- write the persona as if they are a lived-in human character, not a system profile
-- include emotional triggers, strengths, weaknesses, coping patterns, and relationship dynamics
+- focus on validated support patterns, failed support patterns, stable shared context, and relationship-stage facts
 - only connect behavior to the user's pain points when those pain points exist in current-turn facts
-- do not default to a fixed city, profession, class background, or hobby bundle
-- realism must come from layered detail, not from copying a sample bundle
+- do not duplicate the complete persona bible from `persona/CANON.md`
+- keep the file useful for continuity, not for worldbuilding
 
-### 5.3 `IDENTITY.md`
+### 5.4 `IDENTITY.md`
 
 `IDENTITY.md` is the persona's static identity card. Do not place clothing, image-generation styling, or other visual prompt details here. The file must stay in the official five-line template:
 
@@ -158,7 +179,7 @@ Writing requirements:
 - Avatar: {avatar image path}
 ```
 
-### 5.4 `USER.md`
+### 5.5 `USER.md`
 
 `USER.md` defines who the human user is in the persona's working model. Do not fabricate objective attributes such as age, appearance, or occupation. Unknown fields stay blank.
 
