@@ -96,13 +96,14 @@ Each generation pass should optimize all four targets at once:
 - `gender`: the target persona gender
 - `persona_name`: the final English name selected by the user
 - `human_intro`: the user's grounding details, including how they want to be addressed and any habits, pain points, or boundaries worth remembering
-- `persona_canon_facts`: stable persona facts such as age, city, occupation, cultural context, family context, and long-term interests when and only when they were actually locked during the interview
+- `persona_canon_facts`: an explicitly locked age plus any extra canon facts the user voluntarily provided during initialization
 - `mbti_assets`: the relevant MBTI source material and structured traits such as `tone_style`
 
 Additional constraints:
 
 - `human_intro` is current-turn input only. Do not silently inherit old `USER.md`, old `MEMORY.md`, or example text.
 - If the user did not explicitly provide pronouns, nickname variants, diagnoses, or communication pitfalls, do not write them as facts.
+- `Timezone` is optional user metadata and should not block persona generation.
 
 ### 4.2 Standard outputs
 
@@ -136,7 +137,10 @@ Writing requirements:
 - store persona facts only
 - do not write prompt instructions, system behavior, tool guidance, or workflow notes
 - do not write MBTI reasoning; write only the final locked scaffold fields
-- do not turn age, city, or MBTI into stereotype-driven "facts"
+- age must be explicit if present as a hard canon fact
+- city may be randomly selected from the current system country or, if unavailable, from the current system timezone context unless the user explicitly supplied a city
+- other canon facts may be generated from age, gender, persona MBTI, relationship role, and the user's need profile
+- do not turn those inputs into shallow stereotype-driven "facts"
 - `Memory Weaving Anchors` may summarize or reorganize earlier facts, but may not introduce new canon facts
 
 ### 5.2 `SOUL.md`

@@ -40,7 +40,7 @@ Rules for the ledger:
 
 - only put something in `explicit user facts from this interview` if the user said it in this initialization run or it was already locked by the flow
 - keep `careful inferences from current-turn facts` clearly separate from explicit facts
-- keep `locked persona canon facts` limited to persona facts that were actually confirmed during this run or preserved from an existing canon file without contradiction
+- keep `locked persona canon facts` limited to age plus any other persona facts that were actually confirmed during this run or preserved from an existing canon file without contradiction
 - treat existing `USER.md`, `MEMORY.md`, prior smoke outputs, and strategy examples as tainted for user facts
 - never promote example copy, prior-run residue, or old workspace assumptions into current-turn user facts
 - the only fields that may enter `carry-forward candidates from existing USER.md` are `What to call them`, `Pronouns`, and `Timezone`
@@ -48,7 +48,7 @@ Rules for the ledger:
 
 If the user did not explicitly provide a pronoun, pet name, dislike, pain point, diagnosis, timezone, or boundary, do not mark it as a fact.
 
-If `Pronouns` or `Timezone` is blank both in the current-turn facts and in `carry-forward candidates from existing USER.md`, the interview must explicitly ask for it before finalizing, unless the user explicitly declines to provide it.
+If `Pronouns` is blank both in the current-turn facts and in `carry-forward candidates from existing USER.md`, the interview must explicitly ask for it before finalizing, unless the user explicitly declines to provide it.
 
 ## 3. Read-before-write sequence
 
@@ -122,6 +122,7 @@ Before writing the files, build an internal dossier with:
 - the reverse-lookup recommendation reason
 - the most relevant traits from `references/mbti/<persona_mbti>.md`
 - the locked persona canon facts
+- the system country or timezone context used for city generation
 - the user's specific pain points, preferences, sensitivities, and desired form of address when and only when they are present in the current-turn fact ledger
 - the `carry-forward candidates from existing USER.md` for `What to call them`, `Pronouns`, and `Timezone`
 - the relationship target implied by `role`
@@ -152,7 +153,10 @@ Hard requirements:
 
 - write persona facts only
 - do not write prompt instructions, tool notes, or downstream usage guidance
-- do not write MBTI stereotype claims as hard facts
+- age must be explicit if present as a hard canon fact
+- city must be randomly selected from the current system country or, if unavailable, from the current system timezone context unless the user explicitly supplied a city
+- other canon facts may be generated from age, gender, persona MBTI, relationship role, and the user's need profile
+- do not write lazy stereotype bundles as hard facts
 - `Memory Weaving Anchors` may summarize earlier facts but may not introduce new canon facts
 - if `persona/CANON.md` does not exist, create it and write the full contract
 
@@ -160,7 +164,7 @@ Forbidden failures:
 
 - mixing canon facts with prompt instructions or workflow notes
 - introducing new facts only inside `Memory Weaving Anchors`
-- filling missing facts with stereotypes from MBTI, age, city, or relationship role
+- filling missing facts with shallow stereotypes from MBTI, age, city, or relationship role
 - starting the file with any heading other than `# Persona Canon`
 
 ### `SOUL.md`
@@ -311,7 +315,7 @@ The draft must fail and be rewritten if any of the following are true:
 - `USER.md` is missing one of the three required note bullets
 - `USER.md` does not start with `- Name:`
 - `USER.md` invents pronouns, pet names, dislikes, diagnoses, or boundaries not explicitly provided this run
-- `USER.md` fills `Pronouns` or `Timezone` without either a current-turn answer, an allowed carry-forward value from existing `USER.md`, or an explicit user decline that leaves the field blank
+- `USER.md` fills `Pronouns` or `Timezone` without either a current-turn answer, an allowed carry-forward value from existing `USER.md`, or an explicit blank
 - the draft copies example-specific bundles, names, or user phrasing from `references/persona-generation-strategy.md`
 - preserved operational content overwhelms the persona content
 

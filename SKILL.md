@@ -32,8 +32,10 @@ Treat this skill as initialization-only.
 - Use the deterministic MBTI mapping in `assets/mbti/mbti-index.json`. Prefer running `node scripts/mbti-lookup.js <human_mbti> <role>` to get the exact recommendation.
 - After presenting the Step 4 recommendation and reason, continue directly to naming without asking the user to confirm the recommendation.
 - In Step 5, generate only English candidate names, and make sure the naming style matches the locked persona gender and persona direction.
-- In Step 6, inspect the existing `USER.md` first. If `What to call them`, `Pronouns`, or `Timezone` is blank or missing, explicitly ask the user to fill the missing field instead of guessing it.
-- If the user declines to provide `Pronouns` or `Timezone`, leave the field blank.
+- In Step 6, inspect the existing `USER.md` first. If `What to call them` or `Pronouns` is blank or missing, explicitly ask the user to fill the missing field instead of guessing it. Do not block initialization on a missing `Timezone`.
+- If the user declines to provide `Pronouns`, leave the field blank.
+- In Step 6 and Step 7, prefer short A/B/C/D questions before asking for freeform detail. Use freeform follow-ups only when a stable fact or preference still needs to be locked.
+- In Step 7, proactively lock only the persona's age. Other canon facts may be generated from age, gender, persona MBTI, relationship role, and the user's need profile. If the user voluntarily supplies more canon facts, those explicit facts override the generated defaults.
 - Missing target files and legacy placeholder files are not something to "work around". Regenerate all five target files into the current contract during this run.
 - Do not read `references/examples/` during normal initialization unless the user explicitly asks for examples or you are doing a targeted maintainer debugging pass.
 - When you need to read context for drafting or resume after an interruption, name the concrete file path you are reading. Never issue an empty `Read` call or a vague read request such as "read existing files".

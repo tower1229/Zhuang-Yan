@@ -19,8 +19,9 @@ const defaultMessages = [
   "B",
   "A",
   "A",
-  "叫我泛舟，代词用他，时区 Asia/Shanghai。希望先理解再建议，别太像客服，压力大时先帮我减法，关系保持温柔亲近但别太黏。",
-  "她 27 岁，住在上海，是品牌策略顾问，成长于江南城市家庭，长期爱好是胶片摄影、手冲咖啡和夜跑。",
+  "叫我泛舟，代词用他。希望先理解再建议，别太像客服，压力大时先帮我减法，关系保持温柔亲近但别太黏。",
+  "B",
+  "27",
 ];
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
 const personaFiles = ["persona/CANON.md", "SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];
