@@ -182,7 +182,8 @@ Before drafting:
 - derive a `human need profile` from `human_mbti × role`
 - derive an internal `execution_trigger_protocol` from the fixed template and the user's weak spots, contradictions, and likely failure modes
 - derive a `target persona spec` from that need profile before writing any prose
-- read the existing five target files if they already exist
+- do not open the existing five target files until the `human need profile`, `execution_trigger_protocol`, and `target persona spec` are already locked
+- after the spec is locked, read the existing five target files if they already exist, but only for preservation extraction and freshness comparison
 - when reading, always name the exact file path; do not use a vague "read existing files" action
 - if the run resumes after an interruption, redo the concrete read sequence before drafting instead of assuming the old context is still active
 
@@ -204,7 +205,11 @@ Legacy migration rule:
 
 Then:
 
-- separate existing content into `persona content to replace` and `non-persona content to preserve`
+- execute the internal four-stage pipeline in order: `preserve extract -> persona spec -> projection -> freshness audit`
+- during `preserve extract`, separate existing content into `persona content to replace` and `non-persona content to preserve`
+- during `persona spec`, lock the `current-turn fact ledger`, `human need profile`, `execution_trigger_protocol`, `target persona spec`, and `forbidden carryovers`
+- during `projection`, write fresh persona prose from the locked spec, not by editing old paragraphs
+- during `freshness audit`, fail the draft if it still reads like the previous persona with only key facts swapped, if old city/job/family bundles survive, or if legacy wrappers remain
 - draft all five files against the required file contracts
 - run the self-review gate from `drafting-protocol.md`
 - rewrite any failed file before writing

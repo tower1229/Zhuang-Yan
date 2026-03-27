@@ -436,6 +436,13 @@ function runStructuralChecks(files) {
         !/## 5\. Psychology And Values/.test(files["MEMORY.md"].content),
     },
     {
+      name: "SOUL and MEMORY avoid old-persona patching failures",
+      pass:
+        !/^# SOUL\.md - Who You Are$/m.test(files["SOUL.md"].content) &&
+        !/You're not a chatbot\. You're becoming someone\./.test(files["SOUL.md"].content) &&
+        !/This is a fresh initialization — no accumulated history yet\./.test(files["MEMORY.md"].content),
+    },
+    {
       name: "IDENTITY uses the five-line template",
       pass:
         identityLines.length >= 5 &&

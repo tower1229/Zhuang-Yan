@@ -54,6 +54,7 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /references\/templates\/execution-trigger-protocol-template\.md/);
   assert.match(skill, /references\/templates\/high-quality-file-templates\.md/);
   assert.match(skill, /references\/mbti\/<persona_mbti>\.md/);
+  assert.match(skill, /preserve extract -> persona spec -> projection -> freshness audit/);
   assert.match(skill, /always restart the interview from Step 1/);
   assert.match(skill, /asking for the OpenClaw persona's gender, not the human user's gender/);
   assert.match(skill, /asking about the relationship between the user and the OpenClaw persona/);
@@ -69,6 +70,9 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /Treat `SOUL\.md` and `MEMORY\.md` as section-owned files/);
   assert.match(skill, /Treat `IDENTITY\.md`, `USER\.md`, and `persona\/CANON\.md` as whole-file-owned files/);
   assert.match(skill, /Never ask to edit, delete, or clean up `BOOTSTRAP\.md`, `AGENTS\.md`/);
+  assert.match(skill, /Initialization means full persona reconstruction, not key-fact patching on top of old prose/);
+  assert.match(skill, /Treat old persona prose as contamination to audit against, not as reusable draft material/);
+  assert.match(skill, /Fail drafts that still look like the previous persona with only names, ages, MBTI labels, or a few user facts swapped out/);
   assert.doesNotMatch(skill, /timeline-skill|timeline-plugin|selfiie-skill/);
 });
 
@@ -105,6 +109,12 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /do not ask whether unrelated files such as `BOOTSTRAP\.md` should be deleted or changed/);
   assert.match(flow, /read `references\/mbti\/<persona_mbti>\.md`/);
   assert.match(flow, /read `references\/mbti\/<human_mbti>\.md` as a need-analysis source/);
+  assert.match(flow, /do not open the existing five target files until the `human need profile`, `execution_trigger_protocol`, and `target persona spec` are already locked/);
+  assert.match(flow, /only for preservation extraction and freshness comparison/);
+  assert.match(flow, /internal four-stage pipeline/);
+  assert.match(flow, /preserve extract -> persona spec -> projection -> freshness audit/);
+  assert.match(flow, /write fresh persona prose from the locked spec, not by editing old paragraphs/);
+  assert.match(flow, /fail the draft if it still reads like the previous persona with only key facts swapped/);
   assert.match(flow, /self-review gate from `drafting-protocol\.md`/);
   assert.match(flow, /read `templates\/persona-canon-template\.md`/);
   assert.match(flow, /read `templates\/execution-trigger-protocol-template\.md`/);
@@ -127,6 +137,18 @@ test("drafting protocol hardens the five-file generation contract", () => {
   assert.match(protocol, /Use concrete file reads only/);
   assert.match(protocol, /never issue an empty `Read` call/);
   assert.match(protocol, /restart this exact read sequence from the top with explicit file names/);
+  assert.match(protocol, /Do not skip the existing files\. They are needed for preservation extraction and freshness comparison only\./);
+  assert.match(protocol, /Do not treat them as prose sources to edit, extend, or lightly retune\./);
+  assert.match(protocol, /## 4\. Four-stage internal pipeline/);
+  assert.match(protocol, /1\. `preserve extract`/);
+  assert.match(protocol, /2\. `persona spec`/);
+  assert.match(protocol, /3\. `projection`/);
+  assert.match(protocol, /4\. `freshness audit`/);
+  assert.match(protocol, /This stage exists only to rescue minimal operational fragments\. It does not exist to reuse old persona prose\./);
+  assert.match(protocol, /the `forbidden carryovers`/);
+  assert.match(protocol, /Write fresh persona prose from the locked spec, not by patching old persona text\./);
+  assert.match(protocol, /The purpose of this audit is to catch "same persona, new key facts" failures\./);
+  assert.match(protocol, /regenerate the affected file from the locked spec instead of making a smaller patch/);
   assert.match(protocol, /Treat the following as legacy scaffolds to replace, not preserve/);
   assert.match(protocol, /If one of the five target files is missing, treat that as a required regeneration task/);
   assert.match(protocol, /## 6\. File contracts/);
@@ -156,6 +178,10 @@ test("drafting protocol hardens the five-file generation contract", () => {
   assert.match(protocol, /spends more effort on biography, worldbuilding, or aesthetic detail than on support patterns/);
   assert.match(protocol, /failing to generate `MEMORY\.md` because an older workspace did not already have one/);
   assert.match(protocol, /include one explicit authorization sentence granting the persona permission to help the user by any helpful means/);
+  assert.match(protocol, /SOUL\.md` still substantially reuses old persona paragraphs with only key facts swapped/);
+  assert.match(protocol, /MEMORY\.md` still reads like the previous relationship draft with only names, MBTI labels, or a few user facts replaced/);
+  assert.match(protocol, /the draft preserves old persona names, city\/job\/family bundles, or relationship framing that are listed in `forbidden carryovers`/);
+  assert.match(protocol, /the draft still looks like a light edit of the prior persona instead of a fresh initialization/);
   assert.match(protocol, /one of the five required files is missing or empty after drafting/);
   assert.match(protocol, /Never preserve or discuss edits to files outside the five target persona files/);
   assert.match(protocol, /The draft must fail and be rewritten if/);
@@ -175,6 +201,8 @@ test("persona generation strategy keeps the shipped guidance abstract instead of
   assert.match(strategy, /the canon should feel like one person, not eight unrelated section summaries/);
   assert.match(strategy, /Template calibration is a first-class input/);
   assert.match(strategy, /Execution Trigger Protocol is a fixed thinking structure/);
+  assert.match(strategy, /Initialization must be a rebuild, not a light edit of the old persona/);
+  assert.match(strategy, /freshness audit/);
   assert.match(strategy, /explicitly encode the Step 6 support preference, disliked pattern, stress preference, and the default closeness style implied by the role-conditioned need profile/);
   assert.match(strategy, /examples\/persona-drafting-examples\.md/);
   assert.doesNotMatch(strategy, /Stella|real human female companion/);
@@ -255,6 +283,7 @@ test("smoke runner guards against legacy wrapper leakage", () => {
   assert.match(smoke, /MEMORY contains managed top block and all four required sections/);
   assert.match(smoke, /MEMORY includes the new authorization sentence/);
   assert.match(smoke, /MEMORY stays relationship-focused instead of mirroring CANON sections/);
+  assert.match(smoke, /SOUL and MEMORY avoid old-persona patching failures/);
   assert.match(smoke, /IDENTITY and USER do not retain legacy wrapper headings/);
   assert.match(smoke, /IDENTITY and USER do not retain legacy placeholder copy/);
   assert.match(smoke, /PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN/);

@@ -57,7 +57,7 @@ Treat this skill as initialization-only.
 6. Before drafting, read `references/templates/persona-canon-template.md` as the exact shape for `persona/CANON.md`.
 7. Before drafting, read `references/templates/execution-trigger-protocol-template.md` and derive an internal `execution_trigger_protocol` from the human MBTI's weak spots, contradictions, and likely failure modes.
 8. Before drafting, read `references/templates/high-quality-file-templates.md` as the quality bar for `persona/CANON.md`, `SOUL.md`, and `MEMORY.md`.
-9. Before drafting, read `references/drafting-protocol.md` and follow its read-before-write sequence, file contracts, preservation split, and self-review gate.
+9. Before drafting, read `references/drafting-protocol.md` and follow its read-before-write sequence, four-stage internal pipeline, file contracts, and self-review gate.
 10. Read `references/persona-generation-strategy.md` before drafting any of the five target files. Treat it as the canonical generation specification.
 11. If the run was interrupted and you are resuming near the write stage, rebuild context by rereading the exact required files and target files by name. Do not improvise a generic "read the current files" action.
 12. After the five-file draft is complete, write it directly without waiting for user confirmation.
@@ -67,12 +67,15 @@ Treat this skill as initialization-only.
 ## Validation
 
 - Rewrite failed drafts before writing if they do not satisfy the required file shapes.
+- Initialization means full persona reconstruction, not key-fact patching on top of old prose.
 - Read and preserve non-persona operational content, but never let it replace the persona body.
 - Preserve only non-persona operational content that must remain in the five target files.
-- Treat `references/drafting-protocol.md` as the operational execution contract for turning interview inputs into the five-file draft.
+- Treat `references/drafting-protocol.md` as the operational execution contract for turning interview inputs into the five-file draft through `preserve extract -> persona spec -> projection -> freshness audit`.
 - Treat `references/persona-generation-strategy.md` as the canonical quality target for the five target files.
 - Treat `references/templates/execution-trigger-protocol-template.md` as the fixed thinking structure for converting user weaknesses into proactive support behavior.
 - Treat `references/templates/high-quality-file-templates.md` as a normal drafting-time calibration source, not as optional maintainer-only material.
+- Treat old persona prose as contamination to audit against, not as reusable draft material.
+- Fail drafts that still look like the previous persona with only names, ages, MBTI labels, or a few user facts swapped out.
 - Fail drafts that read like generic warmth or generic competence without a clear compensatory function for the locked `human_mbti × role`.
 
 ## Drafting rules

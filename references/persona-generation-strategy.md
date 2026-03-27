@@ -96,13 +96,29 @@ This protocol should answer:
 
 It is an internal drafting-time protocol, not a sixth output file. Its function is to sharpen what later appears inside `SOUL.md` and `MEMORY.md`.
 
-### 2.7 Terminology
+### 2.7 Initialization must be a rebuild, not a light edit of the old persona
+
+When the model is asked to generate five files at once, it may try to conserve effort by keeping the old persona body and swapping only names, ages, MBTI labels, or a few user facts.
+
+That behavior is a hard failure.
+
+The internal execution path must therefore be split into four stages:
+
+- `preserve extract`: rescue only non-persona operational fragments
+- `persona spec`: lock the current-turn facts, need profile, execution trigger protocol, target persona spec, and forbidden carryovers
+- `projection`: regenerate the five target files from the locked spec
+- `freshness audit`: compare against the old files and fail if the new persona still reads like a light edit of the previous one
+
+Old persona prose is contamination to audit against, not reusable draft material.
+
+### 2.8 Terminology
 
 - `initialization`: the first creation or a full rebuild of persona assets (`persona/CANON`, `SOUL`, `IDENTITY`, `MEMORY`, `USER`)
 - `persona asset draft`: the five-file candidate bundle generated before writing
 - `full overwrite`: replacing old persona content while preserving operational fragments that are unrelated to persona identity
+- `freshness audit`: the anti-contamination check that rejects "same persona, new key facts" drafts
 
-### 2.8 Context trust order
+### 2.9 Context trust order
 
 When drafting the five files, rank all context sources in this order:
 
@@ -115,7 +131,7 @@ When drafting the five files, rank all context sources in this order:
 
 Never promote levels 5 or 6 into current-turn user facts, and never let examples or templates override level 1 facts.
 
-### 2.9 Example isolation
+### 2.10 Example isolation
 
 Real examples live in [examples/persona-drafting-examples.md](./examples/persona-drafting-examples.md).
 
@@ -129,7 +145,7 @@ The strategy file should contain rules, contracts, skeletons, and prohibitions i
 
 Even inside `examples/`, examples are not default personas, not default user profiles, and not reusable canned copy. Specific names, cities, jobs, family backgrounds, interests, nicknames, pronouns, or trigger points are demonstration material only.
 
-### 2.10 Language layering
+### 2.11 Language layering
 
 Keep execution-facing material in English:
 

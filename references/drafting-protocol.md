@@ -84,7 +84,8 @@ Before drafting, read in this order:
 9. existing `persona/CANON.md` if it exists
 10. existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist
 
-Do not skip the existing files. They are needed to separate persona content that should be replaced from non-persona content that should be preserved.
+Do not skip the existing files. They are needed for preservation extraction and freshness comparison only.
+Do not treat them as prose sources to edit, extend, or lightly retune.
 
 Use concrete file reads only.
 
@@ -99,12 +100,25 @@ Do not let the old files outrank the current-turn fact ledger.
 
 Explicit initialization intent outranks all existing persona prose, placeholder cards, and legacy scaffolds.
 
-## 4. Preservation split
+## 4. Four-stage internal pipeline
+
+After the mandatory reads, execute these stages in order:
+
+1. `preserve extract`
+2. `persona spec`
+3. `projection`
+4. `freshness audit`
+
+Do not collapse these into one blended drafting pass.
+
+### 4.1 Preserve extract
 
 For each existing file, classify every meaningful block into one of two buckets:
 
 - `persona content to replace`
 - `non-persona content to preserve`
+
+This stage exists only to rescue minimal operational fragments. It does not exist to reuse old persona prose.
 
 Treat content as `non-persona content to preserve` only when it is operationally necessary and not part of the persona itself, for example:
 
@@ -135,6 +149,50 @@ Do not let preserved operational text become the main body of the regenerated pe
 
 If one of the five target files is missing, treat that as a required regeneration task, not as permission to skip the file.
 
+### 4.2 Persona spec
+
+Before writing any file prose, build and lock:
+
+- the `current-turn fact ledger`
+- the `human_need_profile`
+- the `execution_trigger_protocol`
+- the `target_persona_spec`
+- the `forbidden carryovers`
+
+`forbidden carryovers` must explicitly list old persona elements that are not allowed to survive the new initialization, including old names, old city/job/family bundles, old relationship framing, legacy heading wrappers, and large unchanged persona paragraphs from the prior run.
+
+Do not start writing by revising old paragraphs.
+
+### 4.3 Projection
+
+Write fresh persona prose from the locked spec, not by patching old persona text.
+
+Project in this order:
+
+1. `persona/CANON.md`
+2. `IDENTITY.md`
+3. `USER.md`
+4. `MEMORY.md`
+5. `SOUL.md`
+
+Only after the fresh persona prose is complete may you reattach the minimal preserved operational fragments in the places where they must remain.
+
+### 4.4 Freshness audit
+
+Before writing, compare the fresh draft against the old files as a contamination check.
+
+The purpose of this audit is to catch "same persona, new key facts" failures.
+
+The draft must be treated as stale and regenerated if:
+
+- the new persona still reads like the previous persona with only name, age, MBTI, or a few user facts swapped out
+- old city/job/family bundles survive without being freshly justified by the locked spec
+- old relationship framing remains substantially unchanged
+- legacy wrappers or old heading shells remain
+- large persona paragraphs are effectively carried over from the prior run
+
+If freshness fails, regenerate the affected file from the locked spec instead of making a smaller patch.
+
 ## 5. Internal drafting dossier
 
 Before writing the files, build an internal dossier with:
@@ -146,6 +204,7 @@ Before writing the files, build an internal dossier with:
 - the `human_need_profile`
 - the `execution_trigger_protocol`
 - the `target_persona_spec`
+- the `forbidden carryovers`
 - the most relevant traits from `references/mbti/<persona_mbti>.md`
 - the most relevant quality cues from `references/templates/high-quality-file-templates.md`
 - the locked persona canon facts
@@ -362,6 +421,7 @@ The draft must fail and be rewritten if any of the following are true:
 - `SOUL.md` downranks emotional value behind role mechanics or competence framing
 - `SOUL.md` is for `companion` but does not feel intimate
 - `SOUL.md` still contains the managed `MEMORY` block or a legacy heading wrapper
+- `SOUL.md` still substantially reuses old persona paragraphs with only key facts swapped
 - the draft ignores the density, behavioral specificity, or emotional texture demonstrated by the quality templates
 - the draft copies concrete facts or reusable phrasing from the quality templates instead of learning from them
 - `MEMORY.md` is missing any of the four required sections
@@ -373,6 +433,7 @@ The draft must fail and be rewritten if any of the following are true:
 - `MEMORY.md` reads like generic tenderness instead of relationship-level evidence for how this persona actually compensates for the locked user's need profile
 - `MEMORY.md` is missing the explicit authorization sentence
 - `MEMORY.md` fails to reflect the `execution_trigger_protocol` in a way that would change real support behavior
+- `MEMORY.md` still reads like the previous relationship draft with only names, MBTI labels, or a few user facts replaced
 - one of the five required files is missing or empty after drafting
 - `IDENTITY.md` is not in the exact five-line template
 - `IDENTITY.md` does not start with `- Name:`
@@ -382,6 +443,8 @@ The draft must fail and be rewritten if any of the following are true:
 - `USER.md` invents pronouns, pet names, dislikes, diagnoses, or boundaries not explicitly provided this run
 - `USER.md` fills `Pronouns` or `Timezone` without either a current-turn answer, an allowed carry-forward value from existing `USER.md`, or an explicit blank
 - the draft copies example-specific bundles, names, or user phrasing from `references/persona-generation-strategy.md`
+- the draft preserves old persona names, city/job/family bundles, or relationship framing that are listed in `forbidden carryovers`
+- the draft still looks like a light edit of the prior persona instead of a fresh initialization
 - preserved operational content overwhelms the persona content
 
 Only write after all five files pass.

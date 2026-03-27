@@ -25,7 +25,7 @@
 2. 逐步收集人格生成所需信息
 3. 基于 MBTI 资产完成数字人人格骨架反推
 4. 基于 `human_mbti × role` 完成深度需求分析与目标人格规格推导
-5. 生成运行时人格资产与 Persona Canon 草案
+5. 通过“抽取 -> 规格 -> 投影 -> 审计”的内部流水线生成运行时人格资产与 Persona Canon 草案
 6. 草案完成后直接一次性写入五份目标文件
 
 ### 2.2 不负责什么
@@ -133,15 +133,14 @@ Step 7：锁定 Persona Canon 所需的人物事实
   - 生成的人物事实必须具体、连贯、能服务关系目标，但不能写成偷懒的 MBTI 刻板印象
   - `persona/CANON.md` 只记录稳定人物事实，不记录 Prompt 指令
 
-Step 8：生成人格资产草案
-  - 生成 SOUL.md
-  - 生成 MEMORY.md
-  - 生成 IDENTITY.md
-  - 生成 USER.md
-  - 生成 persona/CANON.md
+Step 8：进入四段式内部流水线
+  - Preserve Extract：只从旧文件抽取与人格无关的必要运行片段
+  - Persona Spec：基于本轮输入、双 MBTI、模板和 trigger protocol 锁定内部人格规格
+  - Projection：按新规格从头生成 persona/CANON.md、IDENTITY.md、USER.md、MEMORY.md、SOUL.md
+  - Freshness Audit：检查是否仍然像“旧稿轻改”，命中则回炉重写
 
 Step 9：直接写入
-  - 读取现有五份文件
+  - 只在 freshness audit 通过后写入
   - 保留与人格无关的必要配置内容
   - 一次性写入五份新内容
 
@@ -227,7 +226,7 @@ Step 10：提示完成
 ### 8.1 写入原则
 
 - 采用**全量覆写人格内容**的方式生成五份目标文件
-- 覆写前先读取现有内容
+- 覆写前可以读取现有内容，但旧 persona prose 只能作为“待替换污染源”和 freshness audit 对照物，不能作为起草素材
 - 与人格无关的必要配置内容应保留
 - 生成前必须先把旧内容分成“人格相关待覆盖”与“非人格相关待保留”
 - 必须读取锁定后的 `references/mbti/<persona_mbti>.md`，不能只靠泛化的 MBTI 印象写稿
@@ -235,6 +234,7 @@ Step 10：提示完成
 - 草案完成后直接执行写盘
 - `persona/CANON.md` 必须只写稳定人物事实，不得写 Prompt 指令、工具说明、下游使用说明
 - 若目标角色应承担高情绪补足、高主动性或高亮度补位，必须在 `persona/CANON.md`、`SOUL.md` 与 `MEMORY.md` 中表现为可观察的行为倾向，而不是被稀释成泛泛的“温暖”“真诚”“可靠”
+- 若新稿仍然像旧人格只改了名字、年龄、MBTI 或少量用户偏好，则必须视为初始化失败并回炉，而不是接受“轻改旧稿”
 
 ### 8.2 安全边界
 
