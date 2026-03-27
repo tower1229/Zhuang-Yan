@@ -155,6 +155,8 @@ Keep execution-facing material in English:
 
 Keep end-user language and persona content aligned with the product target language. In this repository that means Chinese content assets may remain in `references/mbti/` and other user-facing material, but execution contracts should not mix English structure with Chinese labels in the same layer.
 
+During the interview itself, lock one `interview_language` from the human's initialization language and keep prompts, options, and transitions in that same language for the entire interview unless the human explicitly asks to switch.
+
 ## 3. Optimization targets
 
 Each generation pass should optimize all four targets at once:
@@ -182,6 +184,7 @@ Additional requirement:
 - `gender`: the target persona gender
 - `persona_name`: the final English name selected by the user
 - `human_intro`: the user's grounding details, including how they want to be addressed and any habits, pain points, restrictions, or boundaries worth remembering
+- `interview_language`: the single language used for the entire initialization interview surface
 - `human_mbti_assets`: MBTI source material used to understand the user's need profile
 - `persona_mbti_assets`: MBTI source material used to understand the target persona's attractive expression and relational pull
 - `human_need_profile`: the role-conditioned need analysis derived from `human_mbti × role`

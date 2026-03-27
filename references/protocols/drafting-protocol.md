@@ -12,6 +12,7 @@ Before drafting, make sure all of the following are already locked:
 - `gender`
 - `persona_name`
 - `human_intro`
+- `interview_language`
 - `human_mbti_assets`
 - `persona_mbti_assets`
 - `human_need_profile`
@@ -245,6 +246,7 @@ Hard requirements:
 - `Current City` must be chosen with strong randomness from a plausible multi-city pool tied to the current system country or, if unavailable, to the current system timezone region
 - do not repeatedly default to a single high-frequency city such as Shanghai when other equally plausible cities exist
 - `Primary Language` must follow the language actually used by the human during initialization
+- the interview flow itself must stay in the locked `interview_language`; do not infer a bilingual interview surface just because the persona's name candidates stay English
 - do not assign a default bilingual or multilingual profile unless the user explicitly established it during the initialization run
 - all other canon facts should be inferred from the persona image the user is most likely longing for, while staying consistent with age, gender, persona MBTI, relationship role, and the role-conditioned user need profile
 - do not write lazy stereotype bundles as hard facts

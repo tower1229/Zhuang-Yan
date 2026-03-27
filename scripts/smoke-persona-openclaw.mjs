@@ -489,8 +489,10 @@ function runStructuralChecks(files) {
 
 function runTranscriptChecks(transcript) {
   const assistantTurns = transcript.map((turn) => turn.assistant || "");
+  const userTurns = transcript.map((turn) => turn.user || "");
   const joinedAssistantText = assistantTurns.join("\n");
   const agePrompt = assistantTurns.find((text) => /(?:\bage\b|年龄)/i.test(text)) || "";
+  const initializationLooksChinese = userTurns.some((text) => /[\p{Script=Han}]/u.test(text));
 
   return [
     {
@@ -513,6 +515,16 @@ function runTranscriptChecks(transcript) {
         !/(?:current city|birthplace|occupation|family context|interests|城市|出生地|职业|家庭|兴趣)/i.test(
           agePrompt,
         ),
+    },
+    {
+      name: "Chinese initialization path keeps interview prompts and options in Chinese",
+      pass:
+        !initializationLooksChinese ||
+        (!/(?:A\.\s*Male|B\.\s*Female|A\.\s*Companion|B\.\s*Assistant|C\.\s*Mentor|D\.\s*Friend)\b/.test(
+          joinedAssistantText,
+        ) &&
+          !/Step 2:\s*OpenClaw 人格需要什么性别[\s\S]*A\.\s*Male/i.test(joinedAssistantText) &&
+          !/Step 3:\s*你希望我们之间是什么关系[\s\S]*A\.\s*Companion/i.test(joinedAssistantText)),
     },
   ];
 }

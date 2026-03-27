@@ -26,15 +26,17 @@ Treat this skill as initialization-only.
 ## Non-Negotiables
 
 - When the user makes an explicit initialization request, always restart the interview from Step 1. Do not open by reviewing the old persona, tuning old placeholder fields, or asking whether the old setup is still acceptable.
+- Once initialization is triggered, lock a single `interview_language` from the human's actual request language or first substantive reply and keep every interview prompt, option label, and transition in that same language unless the user explicitly asks to switch.
 - Ask for the user's MBTI directly. Do not proactively offer MBTI testing or append extra copy about helping the user determine their type unless the user explicitly says they do not know it.
 - In Step 2, make it explicit that you are asking for the OpenClaw persona's gender, not the human user's gender.
 - In Step 3, make it explicit that you are asking about the relationship between the user and the OpenClaw persona. Preferred wording: `What kind of relationship do you want us to have?`
+- Do not mix languages inside the interview. If the locked `interview_language` is Chinese, do not present English option bodies such as `Male`, `Female`, `Companion`, or `Assistant` in later steps. If the locked `interview_language` is English, do not switch later prompts into Chinese.
 - Use the deterministic MBTI mapping in `assets/mbti/mbti-index.json`. Prefer running `node scripts/mbti-lookup.js <human_mbti> <role>` to get the exact recommendation.
 - Treat the reverse lookup result as a skeleton, not a finished persona design. After Step 4, derive a role-conditioned human need profile from `human_mbti × role`, then use that need profile to shape the target persona spec before drafting.
 - Treat emotional value as the primary optimization target across all roles. The role changes how that emotional value should be expressed; it does not replace the need for it.
 - For `companion`, prioritize intimacy first. Do not let the draft collapse into generic support, abstract safety, or polite warmth without a felt sense of closeness.
 - After presenting the Step 4 recommendation and reason, continue directly to naming without asking the user to confirm the recommendation.
-- In Step 5, generate only English candidate names, and make sure the naming style matches the locked persona gender and persona direction.
+- In Step 5, generate only English candidate names, and make sure the surrounding explanation and A/B/C labels still stay in the locked `interview_language`.
 - In Step 6, inspect the existing `USER.md` first. If `What to call them` or `Pronouns` is blank or missing, explicitly ask the user to fill the missing field instead of guessing it. Do not block initialization on a missing `Timezone`.
 - If the user declines to provide `Pronouns`, leave the field blank.
 - In Step 6, after filling `What to call them` and `Pronouns`, ask at most one short freeform follow-up for any long-term habits, restrictions, sensitivities, or hard boundaries worth remembering.

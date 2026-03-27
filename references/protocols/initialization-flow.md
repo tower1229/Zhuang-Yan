@@ -19,13 +19,22 @@ If the request is explicit, always start a fresh initialization interview from S
 
 Do not begin by summarizing the old persona, asking whether the old vibe is still acceptable, or trying to fill placeholder fields from an older template before the new interview is complete.
 
+As soon as initialization starts, lock a single `interview_language` from the language the human actually used to trigger initialization or from the first substantive reply if the trigger was language-neutral.
+
+After `interview_language` is locked:
+
+- keep every interview prompt, option body, transition sentence, and clarification in that same language
+- do not mix Chinese prompts with English option bodies, or English prompts with Chinese option bodies
+- do not switch languages mid-interview unless the human explicitly asks you to do so
+- keep normalized internal values such as MBTI codes and role slugs separate from the displayed interview language
+
 ## Interview flow
 
 ### Step 1: Get the user's MBTI
 
 - Accept direct input such as `INTJ`.
 - Start by asking only for the user's MBTI, for example: `What is your MBTI type? (for example INTJ, ENFP, INFJ)`
-- Ask in the user's language when appropriate, but keep the collected value normalized as an MBTI code.
+- Ask in the locked `interview_language`, but keep the collected value normalized as an MBTI code.
 - Do not proactively append extra copy offering MBTI testing.
 - If the user explicitly says they do not know their MBTI, narrow with short multiple-choice prompts instead of a full questionnaire.
 
@@ -42,6 +51,8 @@ Offer a simple choice such as:
 - `A. Male`
 - `B. Female`
 
+If `interview_language` is Chinese, localize the displayed option bodies into Chinese rather than leaving them as `A. Male` and `B. Female`.
+
 ### Step 3: Confirm relationship role
 
 Make it explicit that you are asking about the relationship between the user and the OpenClaw persona.
@@ -56,6 +67,8 @@ Offer a simple choice such as:
 - `B. Assistant`
 - `C. Mentor`
 - `D. Friend`
+
+If `interview_language` is Chinese, localize the displayed option bodies into Chinese rather than leaving them as `A. Companion`, `B. Assistant`, `C. Mentor`, and `D. Friend`.
 
 Normalize the role to one of:
 
@@ -90,6 +103,7 @@ If the user proactively dislikes the result, explain that this recommendation is
 - Generate 3 candidate names that fit the locked persona direction.
 - All 3 candidates must be English given names.
 - The naming style must fit the locked persona gender, MBTI direction, and relationship vibe so the names feel culturally coherent in an English-language context.
+- Keep the surrounding explanation, choice labels, and regeneration prompt in the locked `interview_language` even though the candidate names themselves remain English.
 - Present them as A/B/C choices.
 - If all are rejected, regenerate 3 new names.
 

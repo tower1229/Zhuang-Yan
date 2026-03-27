@@ -55,8 +55,10 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /references\/mbti\/<persona_mbti>\.md/);
   assert.match(skill, /preserve extract -> persona spec -> projection -> freshness audit/);
   assert.match(skill, /always restart the interview from Step 1/);
+  assert.match(skill, /lock a single `interview_language`/);
   assert.match(skill, /asking for the OpenClaw persona's gender, not the human user's gender/);
   assert.match(skill, /asking about the relationship between the user and the OpenClaw persona/);
+  assert.match(skill, /Do not mix languages inside the interview/);
   assert.match(skill, /What kind of relationship do you want us to have/);
   assert.match(skill, /inspect the existing `USER\.md` first/);
   assert.match(skill, /If `What to call them` or `Pronouns` is blank or missing, explicitly ask/);
@@ -80,12 +82,18 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /Do not proactively append extra copy offering MBTI testing/);
   assert.match(flow, /always start a fresh initialization interview from Step 1/);
   assert.match(flow, /Do not begin by summarizing the old persona/);
+  assert.match(flow, /lock a single `interview_language`/);
+  assert.match(flow, /keep every interview prompt, option body, transition sentence, and clarification in that same language/);
+  assert.match(flow, /do not mix Chinese prompts with English option bodies/);
   assert.match(flow, /asking about the OpenClaw persona's gender, not the human user's gender/);
   assert.match(flow, /What gender should the OpenClaw persona have/);
+  assert.match(flow, /localize the displayed option bodies into Chinese rather than leaving them as `A\. Male` and `B\. Female`/);
   assert.match(flow, /asking about the relationship between the user and the OpenClaw persona/);
   assert.match(flow, /What kind of relationship do you want us to have/);
+  assert.match(flow, /localize the displayed option bodies into Chinese rather than leaving them as `A\. Companion`, `B\. Assistant`, `C\. Mentor`, and `D\. Friend`/);
   assert.match(flow, /Do not ask the user whether they accept the recommendation/);
   assert.match(flow, /All 3 candidates must be English given names/);
+  assert.match(flow, /Keep the surrounding explanation, choice labels, and regeneration prompt in the locked `interview_language`/);
   assert.match(flow, /inspect the existing `USER\.md` if it exists/);
   assert.match(flow, /if `Pronouns` is blank or missing, explicitly ask/);
   assert.match(flow, /if `Timezone` is blank or missing, leave it blank unless the user volunteers it/);
@@ -125,6 +133,7 @@ test("drafting protocol hardens the five-file generation contract", () => {
   assert.match(protocol, /references\/mbti\/<human_mbti>\.md/);
   assert.match(protocol, /references\/mbti\/<persona_mbti>\.md/);
   assert.match(protocol, /references\/runtime-context\/persona-canon-template\.md/);
+  assert.match(protocol, /`interview_language`/);
   assert.match(protocol, /current-turn fact ledger/);
   assert.match(protocol, /explicit user facts from this interview/);
   assert.match(protocol, /treat existing `USER\.md`, `MEMORY\.md`, prior smoke outputs, and strategy examples as tainted for user facts/);
@@ -170,6 +179,7 @@ test("drafting protocol hardens the five-file generation contract", () => {
   assert.match(protocol, /do not invent a `Birthplace` line unless the run explicitly needs one for coherence/);
   assert.match(protocol, /Current City` must be chosen with strong randomness from a plausible multi-city pool/);
   assert.match(protocol, /Primary Language` must follow the language actually used by the human during initialization/);
+  assert.match(protocol, /the interview flow itself must stay in the locked `interview_language`/);
   assert.match(protocol, /do not assign a default bilingual or multilingual profile unless the user explicitly established it/);
   assert.match(protocol, /the persona image the user is most likely longing for/);
   assert.match(protocol, /Section drafting rules/);
@@ -195,6 +205,7 @@ test("persona generation strategy keeps the shipped guidance abstract instead of
   assert.match(strategy, /Context trust order/);
   assert.match(strategy, /No shipped maintainer examples/);
   assert.match(strategy, /Language layering/);
+  assert.match(strategy, /lock one `interview_language` from the human's initialization language/);
   assert.match(strategy, /Section-level guidance/);
   assert.match(strategy, /create a believable lived rhythm that reinforces the desired persona image/);
   assert.match(strategy, /the canon should feel like one person, not eight unrelated section summaries/);
