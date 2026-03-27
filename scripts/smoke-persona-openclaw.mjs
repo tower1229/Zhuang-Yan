@@ -291,11 +291,24 @@ function runOpenClawTurn(env, cwd, sessionId, message, timeoutMs) {
 
   const stdout = result.stdout || "";
   if (!stdout.trim()) {
+    const stderr = result.stderr || "";
+    if (stderr.trim()) {
+      try {
+        return {
+          stdout,
+          stderr,
+          json: extractJson(stderr),
+        };
+      } catch {
+        // Fall through to the session-log recovery path below.
+      }
+    }
+
     const payloads = readAssistantPayloadsFromSessionLog(sessionLogPath, sessionLogOffset);
     if (payloads) {
       return {
         stdout,
-        stderr: result.stderr,
+        stderr,
         json: { payloads, source: "session-log-fallback" },
       };
     }
@@ -303,7 +316,7 @@ function runOpenClawTurn(env, cwd, sessionId, message, timeoutMs) {
     throw new Error(
       [
         "OpenClaw returned empty stdout and no assistant payloads were recovered from the session log",
-        result.stderr && `stderr:\n${result.stderr}`,
+        stderr && `stderr:\n${stderr}`,
         `session log: ${sessionLogPath}`,
       ]
         .filter(Boolean)
