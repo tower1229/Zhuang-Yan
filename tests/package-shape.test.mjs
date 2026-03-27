@@ -229,8 +229,10 @@ test("package.json test script uses the tests directory for cross-platform disco
 
 test("smoke runner guards against legacy wrapper leakage", () => {
   const smoke = fs.readFileSync(path.join(root, "scripts", "smoke-persona-openclaw.mjs"), "utf8");
-  assert.doesNotMatch(smoke, /"B",\s*"27"/);
+  assert.match(smoke, /"叫我泛舟，代词用他。"/);
+  assert.match(smoke, /"A",\s*"A",\s*"B",\s*"B",\s*"27"/);
   assert.match(smoke, /Interview does not proactively ask for timezone in the default path/);
+  assert.match(smoke, /Step 6 keeps the four preference prompts explicit in the default path/);
   assert.match(smoke, /Step 7 prompt asks only for age instead of broader canon facts/);
   assert.match(smoke, /CANON uses the full persona canon contract/);
   assert.match(smoke, /CANON locks mandatory age and generated city/);

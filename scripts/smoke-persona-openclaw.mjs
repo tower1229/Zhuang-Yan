@@ -19,7 +19,11 @@ const defaultMessages = [
   "B",
   "A",
   "A",
-  "叫我泛舟，代词用他。希望先理解再建议，别太像客服，压力大时先帮我减法，关系保持温柔亲近但别太黏。",
+  "叫我泛舟，代词用他。",
+  "A",
+  "A",
+  "B",
+  "B",
   "27",
 ];
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
@@ -108,6 +112,45 @@ function copyIfPresent(source, destination) {
   fs.cpSync(source, destination, { recursive: true });
 }
 
+function sanitizeSmokeConfig(config, workspaceDir) {
+  const next = structuredClone(config);
+
+  next.agents = next.agents || {};
+  next.agents.defaults = next.agents.defaults || {};
+  next.agents.defaults.workspace = workspaceDir;
+
+  // Keep the smoke environment local and minimal. Runtime channel wiring and
+  // optional plugin/tool allowances from the user's live config can make the
+  // temporary config invalid even though persona initialization itself does
+  // not depend on them.
+  delete next.channels;
+
+  if (next.tools && typeof next.tools === "object") {
+    delete next.tools.alsoAllow;
+  }
+
+  if (Array.isArray(next.agents.list)) {
+    next.agents.list = next.agents.list.map((agent) => {
+      if (!agent || typeof agent !== "object") {
+        return agent;
+      }
+      const clonedAgent = { ...agent };
+      if (clonedAgent.tools && typeof clonedAgent.tools === "object") {
+        clonedAgent.tools = { ...clonedAgent.tools };
+        delete clonedAgent.tools.alsoAllow;
+        if (Object.keys(clonedAgent.tools).length === 0) {
+          delete clonedAgent.tools;
+        }
+      }
+      return clonedAgent;
+    });
+  }
+
+  delete next.plugins;
+
+  return next;
+}
+
 function writePersonaSeed(workspaceDir, seedLiveWorkspace) {
   for (const fileName of contextFilesToCopy) {
     copyIfPresent(path.join(sourceWorkspace, fileName), path.join(workspaceDir, fileName));
@@ -149,10 +192,8 @@ function prepareTempOpenClawState(options) {
   );
 
   const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-  config.agents = config.agents || {};
-  config.agents.defaults = config.agents.defaults || {};
-  config.agents.defaults.workspace = workspaceDir;
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
+  const sanitizedConfig = sanitizeSmokeConfig(config, workspaceDir);
+  fs.writeFileSync(configPath, JSON.stringify(sanitizedConfig, null, 2), "utf8");
 
   copyRepoIntoSkillDir(skillDir);
   writePersonaSeed(workspaceDir, options.seedLiveWorkspace);
@@ -174,7 +215,53 @@ function extractJson(text) {
   return JSON.parse(trimmed.slice(firstBrace));
 }
 
+function getSessionLogPath(env, sessionId) {
+  return path.join(env.OPENCLAW_STATE_DIR, "agents", "main", "sessions", `${sessionId}.jsonl`);
+}
+
+function readAssistantPayloadsFromSessionLog(sessionLogPath, startOffset = 0) {
+  if (!fs.existsSync(sessionLogPath)) {
+    return null;
+  }
+
+  const stats = fs.statSync(sessionLogPath);
+  const offset = Math.min(startOffset, stats.size);
+  let content = fs.readFileSync(sessionLogPath, "utf8").slice(offset);
+  if (offset > 0) {
+    const firstNewline = content.indexOf("\n");
+    content = firstNewline === -1 ? "" : content.slice(firstNewline + 1);
+  }
+  const lines = content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  for (let index = lines.length - 1; index >= 0; index -= 1) {
+    let event;
+    try {
+      event = JSON.parse(lines[index]);
+    } catch {
+      continue;
+    }
+    if (event?.type !== "message" || event?.message?.role !== "assistant") {
+      continue;
+    }
+
+    const payloads = (event.message.content || [])
+      .filter((item) => item && item.type === "text" && typeof item.text === "string")
+      .map((item) => ({ text: item.text }));
+
+    if (payloads.length > 0) {
+      return payloads;
+    }
+  }
+
+  return null;
+}
+
 function runOpenClawTurn(env, cwd, sessionId, message, timeoutMs) {
+  const sessionLogPath = getSessionLogPath(env, sessionId);
+  const sessionLogOffset = fs.existsSync(sessionLogPath) ? fs.statSync(sessionLogPath).size : 0;
   const result = spawnSync(
     "openclaw",
     ["agent", "--local", "--agent", "main", "--session-id", sessionId, "--message", message, "--json"],
@@ -202,10 +289,32 @@ function runOpenClawTurn(env, cwd, sessionId, message, timeoutMs) {
     );
   }
 
+  const stdout = result.stdout || "";
+  if (!stdout.trim()) {
+    const payloads = readAssistantPayloadsFromSessionLog(sessionLogPath, sessionLogOffset);
+    if (payloads) {
+      return {
+        stdout,
+        stderr: result.stderr,
+        json: { payloads, source: "session-log-fallback" },
+      };
+    }
+
+    throw new Error(
+      [
+        "OpenClaw returned empty stdout and no assistant payloads were recovered from the session log",
+        result.stderr && `stderr:\n${result.stderr}`,
+        `session log: ${sessionLogPath}`,
+      ]
+        .filter(Boolean)
+        .join("\n\n"),
+    );
+  }
+
   return {
-    stdout: result.stdout,
+    stdout,
     stderr: result.stderr,
-    json: extractJson(result.stdout),
+    json: extractJson(stdout),
   };
 }
 
@@ -343,7 +452,7 @@ function runStructuralChecks(files) {
 function runTranscriptChecks(transcript) {
   const assistantTurns = transcript.map((turn) => turn.assistant || "");
   const joinedAssistantText = assistantTurns.join("\n");
-  const postStep6Prompt = assistantTurns[5] || "";
+  const agePrompt = assistantTurns.find((text) => /(?:\bage\b|年龄)/i.test(text)) || "";
 
   return [
     {
@@ -351,11 +460,19 @@ function runTranscriptChecks(transcript) {
       pass: !/(?:\btimezone\b|时区)/i.test(joinedAssistantText),
     },
     {
+      name: "Step 6 keeps the four preference prompts explicit in the default path",
+      pass:
+        /(?:support style|情感支持风格)/i.test(joinedAssistantText) &&
+        /(?:interaction pattern|互动方式|客服)/i.test(joinedAssistantText) &&
+        /(?:under stress|压力大)/i.test(joinedAssistantText) &&
+        /(?:relationship intensity|关系浓度|亲近)/i.test(joinedAssistantText),
+    },
+    {
       name: "Step 7 prompt asks only for age instead of broader canon facts",
       pass:
-        /(?:\bage\b|年龄)/i.test(postStep6Prompt) &&
+        /(?:\bage\b|年龄)/i.test(agePrompt) &&
         !/(?:current city|birthplace|occupation|family context|interests|城市|出生地|职业|家庭|兴趣)/i.test(
-          postStep6Prompt,
+          agePrompt,
         ),
     },
   ];
