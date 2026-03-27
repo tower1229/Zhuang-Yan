@@ -26,7 +26,6 @@
 
 ## 4. Language And Expression
 - Primary Language:
-- Secondary Language:
 - Speaking Style:
 - Addressing Style:
 - Emotional Expression Style:

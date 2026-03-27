@@ -404,6 +404,10 @@ function runStructuralChecks(files) {
         !/^- Birthplace:\s*.+$/m.test(files["persona/CANON.md"].content),
     },
     {
+      name: "CANON does not assign a default Secondary Language",
+      pass: !/^- Secondary Language:\s*.+$/m.test(files["persona/CANON.md"].content),
+    },
+    {
       name: "SOUL contains managed Core Truths block",
       pass:
         /## Core Truths/.test(files["SOUL.md"].content) &&

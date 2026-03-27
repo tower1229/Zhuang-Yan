@@ -169,6 +169,8 @@ test("drafting protocol hardens the five-file generation contract", () => {
   assert.match(protocol, /do not include a filler `Species: Human` line/);
   assert.match(protocol, /do not invent a `Birthplace` line unless the run explicitly needs one for coherence/);
   assert.match(protocol, /Current City` must be chosen with strong randomness from a plausible multi-city pool/);
+  assert.match(protocol, /Primary Language` must follow the language actually used by the human during initialization/);
+  assert.match(protocol, /do not assign a default bilingual or multilingual profile unless the user explicitly established it/);
   assert.match(protocol, /the persona image the user is most likely longing for/);
   assert.match(protocol, /Section drafting rules/);
   assert.match(protocol, /every line should help explain why this person would feel right to the user/);
@@ -204,6 +206,8 @@ test("persona generation strategy keeps the shipped guidance abstract instead of
   assert.match(strategy, /do not include `Species: Human` as a default filler fact/);
   assert.match(strategy, /do not include `Birthplace` unless it is actually doing meaningful coherence work/);
   assert.match(strategy, /Current City` must be selected with strong randomness from a plausible city pool/);
+  assert.match(strategy, /Primary Language` should be the language the human actually used during initialization/);
+  assert.match(strategy, /do not assign a default bilingual profile or a `Secondary Language` unless the user explicitly established that fact/);
   assert.match(strategy, /never mention previous personas, replacement history, or meta-initialization events as part of the relationship state/);
   assert.doesNotMatch(strategy, /Stella|real human female companion/);
   assert.doesNotMatch(strategy, /What to call them: dear/);
@@ -277,6 +281,7 @@ test("smoke runner guards against legacy wrapper leakage", () => {
   assert.match(smoke, /CANON uses the full persona canon contract/);
   assert.match(smoke, /CANON locks mandatory age and generated city/);
   assert.match(smoke, /CANON avoids low-signal Species and Birthplace filler/);
+  assert.match(smoke, /CANON does not assign a default Secondary Language/);
   assert.match(smoke, /SOUL contains managed Core Truths block/);
   assert.match(smoke, /MEMORY contains managed top block and all four required sections/);
   assert.match(smoke, /MEMORY includes the new authorization sentence/);

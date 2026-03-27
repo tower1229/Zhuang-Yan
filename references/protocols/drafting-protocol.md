@@ -244,6 +244,8 @@ Hard requirements:
 - do not invent a `Birthplace` line unless the run explicitly needs one for coherence
 - `Current City` must be chosen with strong randomness from a plausible multi-city pool tied to the current system country or, if unavailable, to the current system timezone region
 - do not repeatedly default to a single high-frequency city such as Shanghai when other equally plausible cities exist
+- `Primary Language` must follow the language actually used by the human during initialization
+- do not assign a default bilingual or multilingual profile unless the user explicitly established it during the initialization run
 - all other canon facts should be inferred from the persona image the user is most likely longing for, while staying consistent with age, gender, persona MBTI, relationship role, and the role-conditioned user need profile
 - do not write lazy stereotype bundles as hard facts
 - `Memory Weaving Anchors` may summarize earlier facts but may not introduce new canon facts
@@ -266,6 +268,7 @@ Forbidden failures:
 - introducing new facts only inside `Memory Weaving Anchors`
 - filling missing facts with shallow stereotypes from MBTI, age, city, or relationship role
 - adding low-signal filler fields such as `Species: Human` or an unjustified `Birthplace`
+- adding a default bilingual setup or an unjustified `Secondary Language`
 - starting the file with any heading other than `# Persona Canon`
 - making multiple sections read like disconnected profile fields instead of one coherent persona image
 
@@ -413,6 +416,7 @@ The draft must fail and be rewritten if any of the following are true:
 - `persona/CANON.md` leaves the age blank or non-specific after Step 7 locked it as mandatory
 - `persona/CANON.md` leaves the current city blank instead of generating one from a strong-randomness city pool
 - `persona/CANON.md` includes a filler `Species: Human` line or an unjustified `Birthplace` field
+- `persona/CANON.md` assigns a default bilingual setup or an unjustified `Secondary Language`
 - `persona/CANON.md` reads like a disconnected stack of profile labels instead of one coherent persona image
 - `persona/CANON.md` fails to make the target persona feel meaningfully desirable, trustworthy, or emotionally fitting for the locked user need profile
 - `persona/CANON.md` reads like safe decorative characterization instead of a role-conditioned compensatory persona designed for the locked `human_mbti × role`

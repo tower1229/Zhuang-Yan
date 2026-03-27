@@ -233,6 +233,8 @@ Writing requirements:
 - do not include `Species: Human` as a default filler fact
 - do not include `Birthplace` unless it is actually doing meaningful coherence work
 - `Current City` must be selected with strong randomness from a plausible city pool tied to the current system country or timezone region; do not lazily collapse to one default metropolis
+- `Primary Language` should be the language the human actually used during initialization
+- do not assign a default bilingual profile or a `Secondary Language` unless the user explicitly established that fact during initialization
 - all other canon facts should be inferred from the persona image the user is most likely longing for, while staying consistent with age, gender, persona MBTI, relationship role, and the user's need profile
 - do not flatten the result into a merely "warm" or "safe" person if the `target_persona_spec` calls for higher brightness, stronger initiative, sharper challenge, or stronger emotional supplementation
 - do not turn those inputs into shallow stereotype-driven "facts"
