@@ -38,7 +38,7 @@ The interview collects:
    - `mentor` — challenge, growth leverage, and emotionally grounded pushback
    - `friend` — low-pressure companionship, shared rhythm, and easy access to warmth
 4. **Persona name** — pick from three English-name candidates or request more
-5. **User-side grounding** — how you want to be addressed, preferred support style, disliked interaction pattern, and what helps most under stress
+5. **User-side grounding** — how you want to be addressed plus any long-term habits, restrictions, sensitivities, or boundaries worth remembering
 6. **Locked persona age** — the one explicit canon fact collected before drafting
 
 The rest of the canon is not filled by a long questionnaire. The skill infers the target persona from:

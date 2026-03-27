@@ -110,36 +110,17 @@ At Step 6:
 - if any of those fields are already present and the user does not contradict them in this run, you may carry them forward instead of asking again
 - if `Timezone` is blank or missing, leave it blank unless the user volunteers it; do not ask for it just to complete initialization
 
-Then lock the user-side grounding with short prompts in this order:
-
-1. preferred emotional support style, for example:
-   - `A. More companionship`
-   - `B. More clarity`
-   - `C. More encouragement`
-   - `D. More lightness`
-2. disliked interaction pattern, for example:
-   - `A. Too corporate`
-   - `B. Too verbose`
-   - `C. Too forceful`
-   - `D. Too clingy or overly emotional`
-3. what helps most under stress, for example:
-   - `A. Stay with me quietly`
-   - `B. Help me sort it out`
-   - `C. Encourage me directly`
-   - `D. Lighten the mood`
-
-Also ask for freeform detail only when needed:
+Then ask at most one short freeform follow-up for durable user-side notes, for example:
 
 - how the persona should address the user
-- preferred emotional support style
-- disliked interaction patterns
-- what helps most under stress
 - habits, preferences, pain points, sensitivities, hard boundaries, or traits worth remembering
+
+Do not ask explicit default questions for support style, disliked interaction pattern, or stress-time preference in Step 6. Those should be inferred from `human_mbti × role` unless the user voluntarily supplies a correction or a high-signal constraint.
 
 Do not ask the user to tune relationship intensity as a separate Step 6 control. The default emotional intensity, closeness style, and affective brightness should be derived from `human_mbti × role`, then refined only when the user explicitly gives a contradictory preference.
 
 Keep it conversational. Do not demand a long-form response.
-Prefer one question at a time even inside Step 6. Do not dump all three preference prompts in one message unless the user explicitly asks for a faster batch mode.
+Prefer one question at a time even inside Step 6.
 
 Do not finalize the initialization immediately after Step 6 if `Pronouns` is still missing and you have not explicitly asked about it yet.
 
@@ -154,7 +135,7 @@ Ask only for age. Do not offer a blank/skip branch for Step 7.
 Rules:
 
 - age must be explicitly locked as a hard canon fact before drafting
-- city must be randomly selected from the current system country or, if that is unavailable, from the current system timezone context
+- `Current City` must be chosen with strong randomness from a plausible city pool tied to the current system country or, if that is unavailable, to the current system timezone region; do not repeatedly default to Shanghai, Beijing, or another single high-frequency city
 - all other canon facts should be inferred from the persona image the user is most likely longing for, as constrained by age, gender, persona MBTI, relationship role, and the role-conditioned user need profile
 - generated canon facts must stay coherent, specific, and emotionally targeted, but must not read like lazy MBTI stereotypes
 - `persona/CANON.md` stores persona facts only; do not treat it as a prompt scratchpad

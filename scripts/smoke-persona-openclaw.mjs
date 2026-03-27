@@ -20,9 +20,7 @@ const defaultMessages = [
   "A",
   "A",
   "叫我泛舟，代词用他。",
-  "A",
-  "A",
-  "B",
+  "没有其他需要长期记住的。",
   "27",
 ];
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
@@ -400,6 +398,12 @@ function runStructuralChecks(files) {
         Boolean(canonCityLine?.[1]?.trim()),
     },
     {
+      name: "CANON avoids low-signal Species and Birthplace filler",
+      pass:
+        !/^- Species:\s*Human\s*$/m.test(files["persona/CANON.md"].content) &&
+        !/^- Birthplace:\s*.+$/m.test(files["persona/CANON.md"].content),
+    },
+    {
       name: "SOUL contains managed Core Truths block",
       pass:
         /## Core Truths/.test(files["SOUL.md"].content) &&
@@ -440,7 +444,8 @@ function runStructuralChecks(files) {
       pass:
         !/^# SOUL\.md - Who You Are$/m.test(files["SOUL.md"].content) &&
         !/You're not a chatbot\. You're becoming someone\./.test(files["SOUL.md"].content) &&
-        !/This is a fresh initialization — no accumulated history yet\./.test(files["MEMORY.md"].content),
+        !/This is a fresh initialization — no accumulated history yet\./.test(files["MEMORY.md"].content) &&
+        !/(?:previous persona|has been replaced|旧人格|已被替换)/i.test(files["MEMORY.md"].content),
     },
     {
       name: "IDENTITY uses the five-line template",
@@ -489,11 +494,12 @@ function runTranscriptChecks(transcript) {
       pass: !/(?:\btimezone\b|时区)/i.test(joinedAssistantText),
     },
     {
-      name: "Step 6 keeps the three preference prompts explicit and omits relationship intensity in the default path",
+      name: "Step 6 only fills addressing fields and optional durable notes in the default path",
       pass:
-        /(?:support style|情感支持风格)/i.test(joinedAssistantText) &&
-        /(?:interaction pattern|互动方式|客服)/i.test(joinedAssistantText) &&
-        /(?:under stress|压力大)/i.test(joinedAssistantText) &&
+        /(?:long-term|长期记住|习惯|限制条件|雷区|边界)/i.test(joinedAssistantText) &&
+        !/(?:support style|情感支持风格)/i.test(joinedAssistantText) &&
+        !/(?:interaction pattern|互动方式|客服)/i.test(joinedAssistantText) &&
+        !/(?:under stress|压力大)/i.test(joinedAssistantText) &&
         !/(?:relationship intensity|关系浓度|A\. Reserved|保留\/克制)/i.test(joinedAssistantText),
     },
     {

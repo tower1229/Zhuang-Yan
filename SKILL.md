@@ -37,7 +37,8 @@ Treat this skill as initialization-only.
 - In Step 5, generate only English candidate names, and make sure the naming style matches the locked persona gender and persona direction.
 - In Step 6, inspect the existing `USER.md` first. If `What to call them` or `Pronouns` is blank or missing, explicitly ask the user to fill the missing field instead of guessing it. Do not block initialization on a missing `Timezone`.
 - If the user declines to provide `Pronouns`, leave the field blank.
-- In Step 6 and Step 7, prefer short A/B/C/D questions before asking for freeform detail. Use freeform follow-ups only when a stable fact or preference still needs to be locked.
+- In Step 6, after filling `What to call them` and `Pronouns`, ask at most one short freeform follow-up for any long-term habits, restrictions, sensitivities, or hard boundaries worth remembering.
+- Do not run extra default questionnaires in Step 6 for support style, disliked interaction pattern, or stress preference. Those should be inferred from `human_mbti × role` unless the user explicitly volunteers a contradiction.
 - Do not ask the user to tune relationship intensity as a separate control in Step 6. The role-conditioned need profile should already decide the default emotional intensity and closeness style.
 - In Step 7, proactively lock only the persona's age. Do not ask for any other canon fact. Generate the rest of `persona/CANON.md` by inferring the persona image the user is most likely longing for, while staying consistent with the locked age, gender, persona MBTI, relationship role, and role-conditioned user-side need profile.
 - Missing target files and legacy placeholder files are not something to "work around". Regenerate all five target files into the current contract during this run.

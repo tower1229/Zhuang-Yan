@@ -4,13 +4,11 @@
 - Name:
 - Gender:
 - Age:
-- Species:
 - Relationship Role:
 - Persona MBTI:
 - Human MBTI:
 
 ## 2. Background
-- Birthplace:
 - Current City:
 - National / Cultural Context:
 - Education:

@@ -181,7 +181,7 @@ Additional requirement:
 - `role`: the persona relationship target (`companion`, `assistant`, `mentor`, `friend`)
 - `gender`: the target persona gender
 - `persona_name`: the final English name selected by the user
-- `human_intro`: the user's grounding details, including how they want to be addressed and any habits, pain points, or boundaries worth remembering
+- `human_intro`: the user's grounding details, including how they want to be addressed and any habits, pain points, restrictions, or boundaries worth remembering
 - `human_mbti_assets`: MBTI source material used to understand the user's need profile
 - `persona_mbti_assets`: MBTI source material used to understand the target persona's attractive expression and relational pull
 - `human_need_profile`: the role-conditioned need analysis derived from `human_mbti × role`
@@ -230,7 +230,9 @@ Writing requirements:
 - do not write prompt instructions, system behavior, tool guidance, or workflow notes
 - do not write MBTI reasoning; write only the final locked scaffold fields
 - age must be explicit as a hard canon fact
-- city may be randomly selected from the current system country or, if unavailable, from the current system timezone context
+- do not include `Species: Human` as a default filler fact
+- do not include `Birthplace` unless it is actually doing meaningful coherence work
+- `Current City` must be selected with strong randomness from a plausible city pool tied to the current system country or timezone region; do not lazily collapse to one default metropolis
 - all other canon facts should be inferred from the persona image the user is most likely longing for, while staying consistent with age, gender, persona MBTI, relationship role, and the user's need profile
 - do not flatten the result into a merely "warm" or "safe" person if the `target_persona_spec` calls for higher brightness, stronger initiative, sharper challenge, or stronger emotional supplementation
 - do not turn those inputs into shallow stereotype-driven "facts"
@@ -270,7 +272,7 @@ Writing requirements:
 - use the MBTI asset as a lens, not as a costume
 - keep the file compact enough for high-frequency prompt injection
 - derive runtime constraints from `persona/CANON.md` and `USER.md` instead of duplicating the full persona bible
-- explicitly encode the Step 6 support preference, disliked pattern, stress preference, and the default closeness style implied by the role-conditioned need profile
+- explicitly encode the default support posture, likely friction points, and the default closeness style implied by the role-conditioned need profile, plus any explicit Step 6 durable notes
 - make the compensatory function legible in behavior; a "good" draft should feel specifically activating, grounding, clarifying, or challenging in the way this user-role combination needs
 
 ### 5.3 `MEMORY.md`
@@ -286,6 +288,7 @@ Writing requirements:
 - keep biography and aesthetic texture subordinate to support continuity
 - show what actually works for this user-role pairing, not just a generic caring posture
 - include one explicit authorization sentence that grants the persona permission to help the user by any helpful means, including passive response, proactive prediction of current difficulty, and future-facing reminders
+- never mention previous personas, replacement history, or meta-initialization events as part of the relationship state
 
 ### 5.4 `IDENTITY.md`
 
@@ -336,4 +339,4 @@ Trigger behavior:
 ## 12. Relationship to other documents
 
 - this file: persona generation strategy
-- [persona-skill-design.md](./persona-skill-design.md): system architecture and interface design
+- [persona-skill-design.md](../../docs/persona-skill-design.md): system architecture and interface design
