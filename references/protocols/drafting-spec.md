@@ -30,23 +30,38 @@
 
 只有在采访结束后，才允许进入下面的读取链：
 
+### 2.1 规格锁定前的读取链
+
 1. `references/protocols/drafting-spec.md`
 2. `references/runtime-context/template-pack.md`
 3. `assets/mbti/mbti-index.json`
 4. `references/mbti/<human_mbti>.md`
 5. `references/mbti/<persona_mbti>.md`
-6. 现有目标文件（如果存在）：
-   - `persona/CANON.md`
-   - `SOUL.md`
-   - `MEMORY.md`
-   - `IDENTITY.md`
-   - `USER.md`
+
+先完成以下动作后，才允许读取任何旧目标文件：
+
+- 建立 `当前轮事实账本`
+- 锁定 `human_need_profile`
+- 锁定 `execution_trigger_protocol`
+- 锁定 `target_persona_spec`
+- 锁定 `forbidden_carryovers`
+
+### 2.2 规格锁定后的旧文件读取
+
+只有在上述规格全部锁定之后，才允许读取现有目标文件（如果存在）：
+
+- `persona/CANON.md`
+- `SOUL.md`
+- `MEMORY.md`
+- `IDENTITY.md`
+- `USER.md`
 
 读取规则：
 
 - 起草前不允许提前读取模板包。
 - 触发判断阶段不允许读取本文件。
 - 采访阶段不允许提前读取本文件。
+- 在 `persona spec` 锁定之前，不允许读取任何旧目标文件。
 - 读取现有目标文件时，必须指明具体路径，不允许出现空的 `Read` 或笼统的“读取现有文件”。
 - 如果在起草阶段被中断，恢复时要从本节的读取顺序重新开始。
 
@@ -149,6 +164,22 @@
 
 仅在新人格正文全部写完后，才允许把极少量必须保留的非人格运行片段拼回去。
 
+文件写入语义必须保持幂等：
+
+- `persona/CANON.md`、`IDENTITY.md`、`USER.md`
+  - 按整文件重写
+  - 首个非空行必须立即满足当前合同
+- `SOUL.md`
+  - `## Core Truths` 内只允许存在一个 skill 托管块
+  - 若旧托管块已存在，必须先删除，再插入新块
+  - 若 `## Vibe` 已存在，替换整个 `Vibe` 区段
+  - 若 `## Vibe` 不存在，再追加新的 `## Vibe`
+- `MEMORY.md`
+  - 文件顶部只允许存在一个 skill 托管块
+  - 若旧托管块已存在，必须先删除
+  - 新托管块必须重新插入到文件最顶部
+  - 不允许把新块追加到旧块之后或插入到中部
+
 ### 5.4 Freshness Audit
 
 写入前必须做污染审计。
@@ -227,6 +258,8 @@
 - 高密度、可执行、面向运行时
 - 重点写人格内核、互动边界、默认支持姿态、反模式
 - 不要重复完整人物传记
+- 若旧托管块已存在，必须先删再插
+- 若旧 `Vibe` 区段已存在，必须整段替换，而不是局部拼接
 
 ### 7.3 `MEMORY.md`
 
@@ -245,6 +278,7 @@
 - 必须包含授权句，明确允许人格以任何有帮助的方式协助用户
 - 支持模式必须能体现 `execution_trigger_protocol`
 - 不要写成第二份人物小传
+- 若旧托管块已存在，必须先删再插，并把新块重新放回文件最顶端
 
 ### 7.4 `IDENTITY.md`
 

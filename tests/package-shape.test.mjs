@@ -99,6 +99,8 @@ test("drafting spec owns generation execution, quality logic, and city strategy"
   assert.match(spec, /本文件是人格初始化起草阶段的唯一执行规范/);
   assert.match(spec, /起草前必须已经锁定的输入/);
   assert.match(spec, /渐进式读取顺序/);
+  assert.match(spec, /规格锁定前的读取链/);
+  assert.match(spec, /规格锁定后的旧文件读取/);
   assert.match(spec, /当前轮事实账本/);
   assert.match(spec, /`preserve extract`/);
   assert.match(spec, /`persona spec`/);
@@ -107,6 +109,7 @@ test("drafting spec owns generation execution, quality logic, and city strategy"
   assert.match(spec, /human_need_profile/);
   assert.match(spec, /execution_trigger_protocol/);
   assert.match(spec, /target_persona_spec/);
+  assert.match(spec, /在 `persona spec` 锁定之前，不允许读取任何旧目标文件/);
   assert.match(spec, /城市抽样策略/);
   assert.match(spec, /先锚定当前系统国家/);
   assert.match(spec, /先抽子区域/);
@@ -114,6 +117,9 @@ test("drafting spec owns generation execution, quality logic, and city strategy"
   assert.match(spec, /五文件合同/);
   assert.match(spec, /# Persona Canon/);
   assert.match(spec, /## 1\. Relationship State/);
+  assert.match(spec, /若旧托管块已存在，必须先删除，再插入新块/);
+  assert.match(spec, /若 `## Vibe` 已存在，替换整个 `Vibe` 区段/);
+  assert.match(spec, /新托管块必须重新插入到文件最顶部/);
   assert.match(spec, /自检与回炉/);
   assert.doesNotMatch(spec, /典型触发口令|initialize persona|run persona initialization/);
   assert.doesNotMatch(spec, /Step 1：|A\. 男性|A\. 伴侣/);
