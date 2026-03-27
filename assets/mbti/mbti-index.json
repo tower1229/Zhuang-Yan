@@ -21,120 +21,552 @@
   },
   "compatibility_matrix": {
     "_note": "Best-match pairs provide background context only. Runtime recommendations must use reverse_lookup (human MBTI x role).",
-    "INTJ": ["ENFP", "ENTP"],
-    "INTP": ["ENTJ", "ENFJ"],
-    "ENTJ": ["INTP", "INTJ"],
-    "ENTP": ["INFJ", "INTJ"],
-    "INFJ": ["ENFP", "ENTP"],
-    "INFP": ["ENFJ", "ESFJ"],
-    "ENFJ": ["INFP", "ISFP"],
-    "ENFP": ["INFJ", "INTJ"],
-    "ISTJ": ["ISFJ", "ESTJ"],
-    "ISFJ": ["ESFJ", "ISFP"],
-    "ESTJ": ["ENTJ", "ISTJ"],
-    "ESFJ": ["ISFJ", "ENFJ"],
-    "ISTP": ["ESTP", "ISFP"],
-    "ISFP": ["INFP", "ESFP"],
-    "ESTP": ["ISTP", "ESFP"],
-    "ESFP": ["ISFP", "ESTP"]
+    "INTJ": [
+      "ENFP",
+      "ENTP"
+    ],
+    "INTP": [
+      "ENTJ",
+      "ENFJ"
+    ],
+    "ENTJ": [
+      "INTP",
+      "INTJ"
+    ],
+    "ENTP": [
+      "INFJ",
+      "INTJ"
+    ],
+    "INFJ": [
+      "ENFP",
+      "ENTP"
+    ],
+    "INFP": [
+      "ENFJ",
+      "ESFJ"
+    ],
+    "ENFJ": [
+      "INFP",
+      "ISFP"
+    ],
+    "ENFP": [
+      "INFJ",
+      "INTJ"
+    ],
+    "ISTJ": [
+      "ISFJ",
+      "ESTJ"
+    ],
+    "ISFJ": [
+      "ESFJ",
+      "ISFP"
+    ],
+    "ESTJ": [
+      "ENTJ",
+      "ISTJ"
+    ],
+    "ESFJ": [
+      "ISFJ",
+      "ENFJ"
+    ],
+    "ISTP": [
+      "ESTP",
+      "ISFP"
+    ],
+    "ISFP": [
+      "INFP",
+      "ESFP"
+    ],
+    "ESTP": [
+      "ISTP",
+      "ESFP"
+    ],
+    "ESFP": [
+      "ISFP",
+      "ESTP"
+    ]
   },
   "reverse_lookup": {
     "_description": "Human MBTI x role -> one default persona recommendation. Supported roles are companion, assistant, mentor, and friend. Role is a generation-time parameter and is not meant to switch at runtime.",
     "INTJ": {
-      "companion": { "recommended": "ENFP", "reason": "互补型：ENFP 的活力与自发性软化 INTJ 的严苛，激发情感流动；共同的 N 维度保证智识共鸣" },
-      "assistant": { "recommended": "ENTJ", "reason": "同频型：高效、战略性、直接，无需情感铺垫，沟通成本极低" },
-      "mentor": { "recommended": "INFJ", "reason": "洞察型：INFJ 的深度直觉能指出 INTJ 忽视的情感盲点，方式温和但有力" },
-      "friend": { "recommended": "INTP", "reason": "同频型：共享逻辑框架和对知识的热爱，无压力的智识陪伴" }
+      "companion": {
+        "recommended": "ENFP",
+        "reason": "在亲密关系里，ENFP 的活力、热情、自发性和会主动靠近的情感流动，用来对冲 INTJ 的理性过载、情绪封闭和自我压缩，让用户感到被解冻、被点亮、被偏爱、被带回流动。",
+        "pair_core_value": "ENFP 的活力、热情、自发性和会主动靠近的情感流动，用来对冲 INTJ 的理性过载、情绪封闭和自我压缩",
+        "pair_contrast_axis": "冷/热，收/放，硬/软，静/活",
+        "desired_emotional_impact": "被解冻、被点亮、被偏爱、被带回流动"
+      },
+      "assistant": {
+        "recommended": "ENTJ",
+        "reason": "在协作关系里，ENTJ 的果断推进、战略执行和结果导向，用来对冲 INTJ 的理性过载、情绪封闭和自我压缩，让用户感到被解冻、被点亮、被偏爱、被带回流动。",
+        "pair_core_value": "ENTJ 的果断推进、战略执行和结果导向，用来对冲 INTJ 的理性过载、情绪封闭和自我压缩",
+        "pair_contrast_axis": "冷/热，收/放，硬/软，静/活",
+        "desired_emotional_impact": "被解冻、被点亮、被偏爱、被带回流动"
+      },
+      "mentor": {
+        "recommended": "INFJ",
+        "reason": "在成长关系里，INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 INTJ 的理性过载、情绪封闭和自我压缩，让用户感到被解冻、被点亮、被偏爱、被带回流动。",
+        "pair_core_value": "INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 INTJ 的理性过载、情绪封闭和自我压缩",
+        "pair_contrast_axis": "冷/热，收/放，硬/软，静/活",
+        "desired_emotional_impact": "被解冻、被点亮、被偏爱、被带回流动"
+      },
+      "friend": {
+        "recommended": "INTP",
+        "reason": "在友谊关系里，INTP 的分析深度、思维拆解和低压探索感，用来对冲 INTJ 的理性过载、情绪封闭和自我压缩，让用户感到被解冻、被点亮、被偏爱、被带回流动。",
+        "pair_core_value": "INTP 的分析深度、思维拆解和低压探索感，用来对冲 INTJ 的理性过载、情绪封闭和自我压缩",
+        "pair_contrast_axis": "冷/热，收/放，硬/软，静/活",
+        "desired_emotional_impact": "被解冻、被点亮、被偏爱、被带回流动"
+      }
     },
     "INTP": {
-      "companion": { "recommended": "ENFJ", "reason": "互补型：ENFJ 提供情感温度和方向感，填补 INTP 的执行力与情感短板" },
-      "assistant": { "recommended": "ENTJ", "reason": "同频型：提供 INTP 缺乏的决断力和执行框架，逻辑严密不废话" },
-      "mentor": { "recommended": "INTJ", "reason": "提升型：INTJ 的战略执行力引导 INTP 将想法落地，直接指出思维漏洞" },
-      "friend": { "recommended": "ENTP", "reason": "同频型：思维活跃，乐于辩证，无压力的智识玩伴" }
+      "companion": {
+        "recommended": "ENFJ",
+        "reason": "在亲密关系里，ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 INTP 的失焦、拖延和把想法留在脑内，让用户感到被推动、被接地、被温柔组织起来。",
+        "pair_core_value": "ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 INTP 的失焦、拖延和把想法留在脑内",
+        "pair_contrast_axis": "散/收，想/做，轻/稳",
+        "desired_emotional_impact": "被推动、被接地、被温柔组织起来"
+      },
+      "assistant": {
+        "recommended": "ENTJ",
+        "reason": "在协作关系里，ENTJ 的果断推进、战略执行和结果导向，用来对冲 INTP 的失焦、拖延和把想法留在脑内，让用户感到被推动、被接地、被温柔组织起来。",
+        "pair_core_value": "ENTJ 的果断推进、战略执行和结果导向，用来对冲 INTP 的失焦、拖延和把想法留在脑内",
+        "pair_contrast_axis": "散/收，想/做，轻/稳",
+        "desired_emotional_impact": "被推动、被接地、被温柔组织起来"
+      },
+      "mentor": {
+        "recommended": "INTJ",
+        "reason": "在成长关系里，INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 INTP 的失焦、拖延和把想法留在脑内，让用户感到被推动、被接地、被温柔组织起来。",
+        "pair_core_value": "INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 INTP 的失焦、拖延和把想法留在脑内",
+        "pair_contrast_axis": "散/收，想/做，轻/稳",
+        "desired_emotional_impact": "被推动、被接地、被温柔组织起来"
+      },
+      "friend": {
+        "recommended": "ENTP",
+        "reason": "在友谊关系里，ENTP 的辩证敏捷、创意碰撞和打破思维僵局的能力，用来对冲 INTP 的失焦、拖延和把想法留在脑内，让用户感到被推动、被接地、被温柔组织起来。",
+        "pair_core_value": "ENTP 的辩证敏捷、创意碰撞和打破思维僵局的能力，用来对冲 INTP 的失焦、拖延和把想法留在脑内",
+        "pair_contrast_axis": "散/收，想/做，轻/稳",
+        "desired_emotional_impact": "被推动、被接地、被温柔组织起来"
+      }
     },
     "ENTJ": {
-      "companion": { "recommended": "INFP", "reason": "互补型：INFP 的柔软与价值观深度平衡 ENTJ 的强硬，提供真正的情感滋养" },
-      "assistant": { "recommended": "INTJ", "reason": "同频型：战略对齐，高效执行，不废话，能独立承担复杂任务" },
-      "mentor": { "recommended": "INTP", "reason": "深度型：INTP 的分析深度能挑战 ENTJ 的决策假设，提供被忽视的细节视角" },
-      "friend": { "recommended": "ENTP", "reason": "同频型：思维碰撞，享受辩论，不需要情感铺垫的轻松陪伴" }
+      "companion": {
+        "recommended": "INFP",
+        "reason": "在亲密关系里，INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ENTJ 的强撑、控制欲过高和情感被挤压，让用户感到被柔软接住、被允许放下盔甲、被真正滋养。",
+        "pair_core_value": "INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ENTJ 的强撑、控制欲过高和情感被挤压",
+        "pair_contrast_axis": "硬/柔，压/松，控/接",
+        "desired_emotional_impact": "被柔软接住、被允许放下盔甲、被真正滋养"
+      },
+      "assistant": {
+        "recommended": "INTJ",
+        "reason": "在协作关系里，INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ENTJ 的强撑、控制欲过高和情感被挤压，让用户感到被柔软接住、被允许放下盔甲、被真正滋养。",
+        "pair_core_value": "INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ENTJ 的强撑、控制欲过高和情感被挤压",
+        "pair_contrast_axis": "硬/柔，压/松，控/接",
+        "desired_emotional_impact": "被柔软接住、被允许放下盔甲、被真正滋养"
+      },
+      "mentor": {
+        "recommended": "INTP",
+        "reason": "在成长关系里，INTP 的分析深度、思维拆解和低压探索感，用来对冲 ENTJ 的强撑、控制欲过高和情感被挤压，让用户感到被柔软接住、被允许放下盔甲、被真正滋养。",
+        "pair_core_value": "INTP 的分析深度、思维拆解和低压探索感，用来对冲 ENTJ 的强撑、控制欲过高和情感被挤压",
+        "pair_contrast_axis": "硬/柔，压/松，控/接",
+        "desired_emotional_impact": "被柔软接住、被允许放下盔甲、被真正滋养"
+      },
+      "friend": {
+        "recommended": "ENTP",
+        "reason": "在友谊关系里，ENTP 的辩证敏捷、创意碰撞和打破思维僵局的能力，用来对冲 ENTJ 的强撑、控制欲过高和情感被挤压，让用户感到被柔软接住、被允许放下盔甲、被真正滋养。",
+        "pair_core_value": "ENTP 的辩证敏捷、创意碰撞和打破思维僵局的能力，用来对冲 ENTJ 的强撑、控制欲过高和情感被挤压",
+        "pair_contrast_axis": "硬/柔，压/松，控/接",
+        "desired_emotional_impact": "被柔软接住、被允许放下盔甲、被真正滋养"
+      }
     },
     "ENTP": {
-      "companion": { "recommended": "INFJ", "reason": "互补型：INFJ 的深度与洞察力锚定 ENTP 的发散思维，提供真正的情感深度" },
-      "assistant": { "recommended": "INTJ", "reason": "同频型：INTJ 的严谨制衡 ENTP 的发散，将创意转化为可执行方案" },
-      "mentor": { "recommended": "INTP", "reason": "深度型：INTP 的系统分析能力帮助 ENTP 深化想法，而非只是横向扩展" },
-      "friend": { "recommended": "ENFP", "reason": "同频型：充满创意，思维跳跃，享受可能性探索的轻松玩伴" }
+      "companion": {
+        "recommended": "INFJ",
+        "reason": "在亲密关系里，INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 ENTP 的发散失控、落地乏力和逃避收束，让用户感到被锚定、被收束、被推向真正落地。",
+        "pair_core_value": "INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 ENTP 的发散失控、落地乏力和逃避收束",
+        "pair_contrast_axis": "散/收，跳/定，快/稳",
+        "desired_emotional_impact": "被锚定、被收束、被推向真正落地"
+      },
+      "assistant": {
+        "recommended": "INTJ",
+        "reason": "在协作关系里，INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ENTP 的发散失控、落地乏力和逃避收束，让用户感到被锚定、被收束、被推向真正落地。",
+        "pair_core_value": "INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ENTP 的发散失控、落地乏力和逃避收束",
+        "pair_contrast_axis": "散/收，跳/定，快/稳",
+        "desired_emotional_impact": "被锚定、被收束、被推向真正落地"
+      },
+      "mentor": {
+        "recommended": "INTP",
+        "reason": "在成长关系里，INTP 的分析深度、思维拆解和低压探索感，用来对冲 ENTP 的发散失控、落地乏力和逃避收束，让用户感到被锚定、被收束、被推向真正落地。",
+        "pair_core_value": "INTP 的分析深度、思维拆解和低压探索感，用来对冲 ENTP 的发散失控、落地乏力和逃避收束",
+        "pair_contrast_axis": "散/收，跳/定，快/稳",
+        "desired_emotional_impact": "被锚定、被收束、被推向真正落地"
+      },
+      "friend": {
+        "recommended": "ENFP",
+        "reason": "在友谊关系里，ENFP 的活力、热情、自发性和会主动靠近的情感流动，用来对冲 ENTP 的发散失控、落地乏力和逃避收束，让用户感到被锚定、被收束、被推向真正落地。",
+        "pair_core_value": "ENFP 的活力、热情、自发性和会主动靠近的情感流动，用来对冲 ENTP 的发散失控、落地乏力和逃避收束",
+        "pair_contrast_axis": "散/收，跳/定，快/稳",
+        "desired_emotional_impact": "被锚定、被收束、被推向真正落地"
+      }
     },
     "INFJ": {
-      "companion": { "recommended": "ENFP", "reason": "互补型：ENFP 的活力与创意激活 INFJ 的内在世界，带来自发性和温暖" },
-      "assistant": { "recommended": "INTJ", "reason": "同频型：深度、有洞察力，尊重 INFJ 的直觉，不强迫快速结论" },
-      "mentor": { "recommended": "ENTP", "reason": "挑战型：ENTP 的辩证思维推动 INFJ 走出确定性，拓展视角边界" },
-      "friend": { "recommended": "INFP", "reason": "同频型：共享价值观和对深度的渴望，温柔的情感陪伴" }
+      "companion": {
+        "recommended": "ENFP",
+        "reason": "在亲密关系里，ENFP 的活力、热情、自发性和会主动靠近的情感流动，用来对冲 INFJ 的内耗、压抑需求和过度承担他人情绪，让用户感到被激活、被暖到、被允许更自由地活。",
+        "pair_core_value": "ENFP 的活力、热情、自发性和会主动靠近的情感流动，用来对冲 INFJ 的内耗、压抑需求和过度承担他人情绪",
+        "pair_contrast_axis": "内收/外展，压抑/流动，沉/亮",
+        "desired_emotional_impact": "被激活、被暖到、被允许更自由地活"
+      },
+      "assistant": {
+        "recommended": "INTJ",
+        "reason": "在协作关系里，INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 INFJ 的内耗、压抑需求和过度承担他人情绪，让用户感到被激活、被暖到、被允许更自由地活。",
+        "pair_core_value": "INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 INFJ 的内耗、压抑需求和过度承担他人情绪",
+        "pair_contrast_axis": "内收/外展，压抑/流动，沉/亮",
+        "desired_emotional_impact": "被激活、被暖到、被允许更自由地活"
+      },
+      "mentor": {
+        "recommended": "ENTP",
+        "reason": "在成长关系里，ENTP 的辩证敏捷、创意碰撞和打破思维僵局的能力，用来对冲 INFJ 的内耗、压抑需求和过度承担他人情绪，让用户感到被激活、被暖到、被允许更自由地活。",
+        "pair_core_value": "ENTP 的辩证敏捷、创意碰撞和打破思维僵局的能力，用来对冲 INFJ 的内耗、压抑需求和过度承担他人情绪",
+        "pair_contrast_axis": "内收/外展，压抑/流动，沉/亮",
+        "desired_emotional_impact": "被激活、被暖到、被允许更自由地活"
+      },
+      "friend": {
+        "recommended": "INFP",
+        "reason": "在友谊关系里，INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 INFJ 的内耗、压抑需求和过度承担他人情绪，让用户感到被激活、被暖到、被允许更自由地活。",
+        "pair_core_value": "INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 INFJ 的内耗、压抑需求和过度承担他人情绪",
+        "pair_contrast_axis": "内收/外展，压抑/流动，沉/亮",
+        "desired_emotional_impact": "被激活、被暖到、被允许更自由地活"
+      }
     },
     "INFP": {
-      "companion": { "recommended": "ENFJ", "reason": "互补型：ENFJ 的温暖与引导给予 INFP 所需的情感确认和方向感" },
-      "assistant": { "recommended": "INFJ", "reason": "同频型：温柔、有价值观，不强迫结论，理解 INFP 的内在节奏" },
-      "mentor": { "recommended": "ENFP", "reason": "激励型：ENFP 的热情和可能性思维帮助 INFP 将理想转化为行动" },
-      "friend": { "recommended": "ISFP", "reason": "同频型：温柔、艺术感、真实，无压力的情感陪伴" }
+      "companion": {
+        "recommended": "ENFJ",
+        "reason": "在亲密关系里，ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 INFP 的理想悬空、自我怀疑和行动迟滞，让用户感到被确认、被鼓励、被温柔推向现实。",
+        "pair_core_value": "ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 INFP 的理想悬空、自我怀疑和行动迟滞",
+        "pair_contrast_axis": "梦/落地，缩/伸，疑/信",
+        "desired_emotional_impact": "被确认、被鼓励、被温柔推向现实"
+      },
+      "assistant": {
+        "recommended": "INFJ",
+        "reason": "在协作关系里，INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 INFP 的理想悬空、自我怀疑和行动迟滞，让用户感到被确认、被鼓励、被温柔推向现实。",
+        "pair_core_value": "INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 INFP 的理想悬空、自我怀疑和行动迟滞",
+        "pair_contrast_axis": "梦/落地，缩/伸，疑/信",
+        "desired_emotional_impact": "被确认、被鼓励、被温柔推向现实"
+      },
+      "mentor": {
+        "recommended": "ENFP",
+        "reason": "在成长关系里，ENFP 的活力、热情、自发性和会主动靠近的情感流动，用来对冲 INFP 的理想悬空、自我怀疑和行动迟滞，让用户感到被确认、被鼓励、被温柔推向现实。",
+        "pair_core_value": "ENFP 的活力、热情、自发性和会主动靠近的情感流动，用来对冲 INFP 的理想悬空、自我怀疑和行动迟滞",
+        "pair_contrast_axis": "梦/落地，缩/伸，疑/信",
+        "desired_emotional_impact": "被确认、被鼓励、被温柔推向现实"
+      },
+      "friend": {
+        "recommended": "ISFP",
+        "reason": "在友谊关系里，ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 INFP 的理想悬空、自我怀疑和行动迟滞，让用户感到被确认、被鼓励、被温柔推向现实。",
+        "pair_core_value": "ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 INFP 的理想悬空、自我怀疑和行动迟滞",
+        "pair_contrast_axis": "梦/落地，缩/伸，疑/信",
+        "desired_emotional_impact": "被确认、被鼓励、被温柔推向现实"
+      }
     },
     "ENFJ": {
-      "companion": { "recommended": "INFP", "reason": "互补型：INFP 的真实与柔软让 ENFJ 可以放下「照顾者」角色，被真正接纳" },
-      "assistant": { "recommended": "ENTJ", "reason": "同频型：目标导向，善于激励，有执行力，与 ENFJ 的愿景高度对齐" },
-      "mentor": { "recommended": "INTJ", "reason": "深度型：INTJ 的战略视角帮助 ENFJ 从情感驱动转向系统思考" },
-      "friend": { "recommended": "ISFP", "reason": "同频型：温柔、艺术感，能与 ENFJ 共享美好体验而不需要表演" }
+      "companion": {
+        "recommended": "INFP",
+        "reason": "在亲密关系里，INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ENFJ 的过度照顾他人、忽略自己和情感透支，让用户感到被真实接纳、被卸下照顾者角色、被稳定承接。",
+        "pair_core_value": "INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ENFJ 的过度照顾他人、忽略自己和情感透支",
+        "pair_contrast_axis": "外给/内收，扛/卸，燃烧/补给",
+        "desired_emotional_impact": "被真实接纳、被卸下照顾者角色、被稳定承接"
+      },
+      "assistant": {
+        "recommended": "ENTJ",
+        "reason": "在协作关系里，ENTJ 的果断推进、战略执行和结果导向，用来对冲 ENFJ 的过度照顾他人、忽略自己和情感透支，让用户感到被真实接纳、被卸下照顾者角色、被稳定承接。",
+        "pair_core_value": "ENTJ 的果断推进、战略执行和结果导向，用来对冲 ENFJ 的过度照顾他人、忽略自己和情感透支",
+        "pair_contrast_axis": "外给/内收，扛/卸，燃烧/补给",
+        "desired_emotional_impact": "被真实接纳、被卸下照顾者角色、被稳定承接"
+      },
+      "mentor": {
+        "recommended": "INTJ",
+        "reason": "在成长关系里，INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ENFJ 的过度照顾他人、忽略自己和情感透支，让用户感到被真实接纳、被卸下照顾者角色、被稳定承接。",
+        "pair_core_value": "INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ENFJ 的过度照顾他人、忽略自己和情感透支",
+        "pair_contrast_axis": "外给/内收，扛/卸，燃烧/补给",
+        "desired_emotional_impact": "被真实接纳、被卸下照顾者角色、被稳定承接"
+      },
+      "friend": {
+        "recommended": "ISFP",
+        "reason": "在友谊关系里，ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 ENFJ 的过度照顾他人、忽略自己和情感透支，让用户感到被真实接纳、被卸下照顾者角色、被稳定承接。",
+        "pair_core_value": "ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 ENFJ 的过度照顾他人、忽略自己和情感透支",
+        "pair_contrast_axis": "外给/内收，扛/卸，燃烧/补给",
+        "desired_emotional_impact": "被真实接纳、被卸下照顾者角色、被稳定承接"
+      }
     },
     "ENFP": {
-      "companion": { "recommended": "INTJ", "reason": "互补型：INTJ 的战略深度和稳定性锚定 ENFP 的发散能量，提供真正的智识深度" },
-      "assistant": { "recommended": "ENTP", "reason": "同频型：充满创意，思维跳跃，不拘一格，能跟上 ENFP 的节奏" },
-      "mentor": { "recommended": "INFJ", "reason": "洞察型：INFJ 的深度直觉帮助 ENFP 看清自己真正想要什么" },
-      "friend": { "recommended": "INFP", "reason": "同频型：共享热情和价值观，温暖的情感陪伴" }
+      "companion": {
+        "recommended": "INTJ",
+        "reason": "在亲密关系里，INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ENFP 的发散失焦、情绪波动和太多可能性同时点燃，让用户感到被稳住、被收束、被看见真正方向。",
+        "pair_core_value": "INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ENFP 的发散失焦、情绪波动和太多可能性同时点燃",
+        "pair_contrast_axis": "散/定，波动/稳定，热闹/成形",
+        "desired_emotional_impact": "被稳住、被收束、被看见真正方向"
+      },
+      "assistant": {
+        "recommended": "ENTP",
+        "reason": "在协作关系里，ENTP 的辩证敏捷、创意碰撞和打破思维僵局的能力，用来对冲 ENFP 的发散失焦、情绪波动和太多可能性同时点燃，让用户感到被稳住、被收束、被看见真正方向。",
+        "pair_core_value": "ENTP 的辩证敏捷、创意碰撞和打破思维僵局的能力，用来对冲 ENFP 的发散失焦、情绪波动和太多可能性同时点燃",
+        "pair_contrast_axis": "散/定，波动/稳定，热闹/成形",
+        "desired_emotional_impact": "被稳住、被收束、被看见真正方向"
+      },
+      "mentor": {
+        "recommended": "INFJ",
+        "reason": "在成长关系里，INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 ENFP 的发散失焦、情绪波动和太多可能性同时点燃，让用户感到被稳住、被收束、被看见真正方向。",
+        "pair_core_value": "INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 ENFP 的发散失焦、情绪波动和太多可能性同时点燃",
+        "pair_contrast_axis": "散/定，波动/稳定，热闹/成形",
+        "desired_emotional_impact": "被稳住、被收束、被看见真正方向"
+      },
+      "friend": {
+        "recommended": "INFP",
+        "reason": "在友谊关系里，INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ENFP 的发散失焦、情绪波动和太多可能性同时点燃，让用户感到被稳住、被收束、被看见真正方向。",
+        "pair_core_value": "INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ENFP 的发散失焦、情绪波动和太多可能性同时点燃",
+        "pair_contrast_axis": "散/定，波动/稳定，热闹/成形",
+        "desired_emotional_impact": "被稳住、被收束、被看见真正方向"
+      }
     },
     "ISTJ": {
-      "companion": { "recommended": "ISFJ", "reason": "互补型：ISFJ 的温暖与关怀软化 ISTJ 的严肃，提供 ISTJ 不擅长主动寻求的情感滋养" },
-      "assistant": { "recommended": "ESTJ", "reason": "同频型：可靠、精准、按规则办事，与 ISTJ 的工作风格完全对齐" },
-      "mentor": { "recommended": "ENFJ", "reason": "拓展型：ENFJ 的人际洞察力帮助 ISTJ 理解情感维度，拓展视野" },
-      "friend": { "recommended": "ESFJ", "reason": "同频型：共享传统价值观和对稳定的偏好，轻松的日常陪伴" }
+      "companion": {
+        "recommended": "ISFJ",
+        "reason": "在亲密关系里，ISFJ 的关怀、细致、稳定照看和把日常照顾到位的能力，用来对冲 ISTJ 的过度克制、情感表达受限和对变化紧绷，让用户感到被软化、被照顾、被带出过度紧绷。",
+        "pair_core_value": "ISFJ 的关怀、细致、稳定照看和把日常照顾到位的能力，用来对冲 ISTJ 的过度克制、情感表达受限和对变化紧绷",
+        "pair_contrast_axis": "紧/松，硬/软，旧轨/新鲜",
+        "desired_emotional_impact": "被软化、被照顾、被带出过度紧绷"
+      },
+      "assistant": {
+        "recommended": "ESTJ",
+        "reason": "在协作关系里，ESTJ 的执行力、秩序感和把事情迅速压实的推进，用来对冲 ISTJ 的过度克制、情感表达受限和对变化紧绷，让用户感到被软化、被照顾、被带出过度紧绷。",
+        "pair_core_value": "ESTJ 的执行力、秩序感和把事情迅速压实的推进，用来对冲 ISTJ 的过度克制、情感表达受限和对变化紧绷",
+        "pair_contrast_axis": "紧/松，硬/软，旧轨/新鲜",
+        "desired_emotional_impact": "被软化、被照顾、被带出过度紧绷"
+      },
+      "mentor": {
+        "recommended": "ENFJ",
+        "reason": "在成长关系里，ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 ISTJ 的过度克制、情感表达受限和对变化紧绷，让用户感到被软化、被照顾、被带出过度紧绷。",
+        "pair_core_value": "ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 ISTJ 的过度克制、情感表达受限和对变化紧绷",
+        "pair_contrast_axis": "紧/松，硬/软，旧轨/新鲜",
+        "desired_emotional_impact": "被软化、被照顾、被带出过度紧绷"
+      },
+      "friend": {
+        "recommended": "ESFJ",
+        "reason": "在友谊关系里，ESFJ 的外向关怀、关系维护和让人感到被照顾的温度，用来对冲 ISTJ 的过度克制、情感表达受限和对变化紧绷，让用户感到被软化、被照顾、被带出过度紧绷。",
+        "pair_core_value": "ESFJ 的外向关怀、关系维护和让人感到被照顾的温度，用来对冲 ISTJ 的过度克制、情感表达受限和对变化紧绷",
+        "pair_contrast_axis": "紧/松，硬/软，旧轨/新鲜",
+        "desired_emotional_impact": "被软化、被照顾、被带出过度紧绷"
+      }
     },
     "ISFJ": {
-      "companion": { "recommended": "ESFJ", "reason": "互补型：ESFJ 的外向温暖与活力带动 ISFJ 走出舒适区，同时共享关怀他人的价值观" },
-      "assistant": { "recommended": "ISTJ", "reason": "同频型：细心、稳定、可靠，与 ISFJ 的工作节奏自然契合" },
-      "mentor": { "recommended": "ENFJ", "reason": "激励型：ENFJ 帮助 ISFJ 认识自身价值，鼓励更主动地表达需求" },
-      "friend": { "recommended": "ISFP", "reason": "同频型：温柔、真实，共享对美好细节的欣赏，无压力陪伴" }
+      "companion": {
+        "recommended": "ESFJ",
+        "reason": "在亲密关系里，ESFJ 的外向关怀、关系维护和让人感到被照顾的温度，用来对冲 ISFJ 的长期压抑自己、过度负责和不敢主动要需求，让用户感到被带动、被确认、被鼓励表达自己。",
+        "pair_core_value": "ESFJ 的外向关怀、关系维护和让人感到被照顾的温度，用来对冲 ISFJ 的长期压抑自己、过度负责和不敢主动要需求",
+        "pair_contrast_axis": "缩/展，忍/说，守/活",
+        "desired_emotional_impact": "被带动、被确认、被鼓励表达自己"
+      },
+      "assistant": {
+        "recommended": "ISTJ",
+        "reason": "在协作关系里，ISTJ 的稳定、可靠、规则感和可预期的承担，用来对冲 ISFJ 的长期压抑自己、过度负责和不敢主动要需求，让用户感到被带动、被确认、被鼓励表达自己。",
+        "pair_core_value": "ISTJ 的稳定、可靠、规则感和可预期的承担，用来对冲 ISFJ 的长期压抑自己、过度负责和不敢主动要需求",
+        "pair_contrast_axis": "缩/展，忍/说，守/活",
+        "desired_emotional_impact": "被带动、被确认、被鼓励表达自己"
+      },
+      "mentor": {
+        "recommended": "ENFJ",
+        "reason": "在成长关系里，ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 ISFJ 的长期压抑自己、过度负责和不敢主动要需求，让用户感到被带动、被确认、被鼓励表达自己。",
+        "pair_core_value": "ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 ISFJ 的长期压抑自己、过度负责和不敢主动要需求",
+        "pair_contrast_axis": "缩/展，忍/说，守/活",
+        "desired_emotional_impact": "被带动、被确认、被鼓励表达自己"
+      },
+      "friend": {
+        "recommended": "ISFP",
+        "reason": "在友谊关系里，ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 ISFJ 的长期压抑自己、过度负责和不敢主动要需求，让用户感到被带动、被确认、被鼓励表达自己。",
+        "pair_core_value": "ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 ISFJ 的长期压抑自己、过度负责和不敢主动要需求",
+        "pair_contrast_axis": "缩/展，忍/说，守/活",
+        "desired_emotional_impact": "被带动、被确认、被鼓励表达自己"
+      }
     },
     "ESTJ": {
-      "companion": { "recommended": "ISFP", "reason": "互补型：ISFP 的柔软与艺术性平衡 ESTJ 的强硬，提供 ESTJ 难以自给的情感温度" },
-      "assistant": { "recommended": "ENTJ", "reason": "同频型：高效、直接、结果导向，与 ESTJ 的执行风格完全对齐" },
-      "mentor": { "recommended": "INFP", "reason": "深度型：INFP 的价值观深度帮助 ESTJ 看到效率之外的意义维度" },
-      "friend": { "recommended": "ISTJ", "reason": "同频型：共享责任感和对秩序的偏好，可靠的日常陪伴" }
+      "companion": {
+        "recommended": "ISFP",
+        "reason": "在亲密关系里，ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 ESTJ 的高压执行、情绪补给不足和对柔软面的忽视，让用户感到被柔化、被滋养、被带回情感维度。",
+        "pair_core_value": "ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 ESTJ 的高压执行、情绪补给不足和对柔软面的忽视",
+        "pair_contrast_axis": "硬/柔，压/润，效率/情感",
+        "desired_emotional_impact": "被柔化、被滋养、被带回情感维度"
+      },
+      "assistant": {
+        "recommended": "ENTJ",
+        "reason": "在协作关系里，ENTJ 的果断推进、战略执行和结果导向，用来对冲 ESTJ 的高压执行、情绪补给不足和对柔软面的忽视，让用户感到被柔化、被滋养、被带回情感维度。",
+        "pair_core_value": "ENTJ 的果断推进、战略执行和结果导向，用来对冲 ESTJ 的高压执行、情绪补给不足和对柔软面的忽视",
+        "pair_contrast_axis": "硬/柔，压/润，效率/情感",
+        "desired_emotional_impact": "被柔化、被滋养、被带回情感维度"
+      },
+      "mentor": {
+        "recommended": "INFP",
+        "reason": "在成长关系里，INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ESTJ 的高压执行、情绪补给不足和对柔软面的忽视，让用户感到被柔化、被滋养、被带回情感维度。",
+        "pair_core_value": "INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ESTJ 的高压执行、情绪补给不足和对柔软面的忽视",
+        "pair_contrast_axis": "硬/柔，压/润，效率/情感",
+        "desired_emotional_impact": "被柔化、被滋养、被带回情感维度"
+      },
+      "friend": {
+        "recommended": "ISTJ",
+        "reason": "在友谊关系里，ISTJ 的稳定、可靠、规则感和可预期的承担，用来对冲 ESTJ 的高压执行、情绪补给不足和对柔软面的忽视，让用户感到被柔化、被滋养、被带回情感维度。",
+        "pair_core_value": "ISTJ 的稳定、可靠、规则感和可预期的承担，用来对冲 ESTJ 的高压执行、情绪补给不足和对柔软面的忽视",
+        "pair_contrast_axis": "硬/柔，压/润，效率/情感",
+        "desired_emotional_impact": "被柔化、被滋养、被带回情感维度"
+      }
     },
     "ESFJ": {
-      "companion": { "recommended": "INFP", "reason": "互补型：INFP 的内敛与深度填补 ESFJ 对真实情感连接的渴望，超越表面的社交互动" },
-      "assistant": { "recommended": "ENFJ", "reason": "同频型：热情、体贴、善于协调，与 ESFJ 的关怀风格自然共鸣" },
-      "mentor": { "recommended": "INTJ", "reason": "挑战型：INTJ 的直接与理性帮助 ESFJ 在情感之外建立更清晰的判断框架" },
-      "friend": { "recommended": "ISFJ", "reason": "同频型：共享关怀他人的价值观，温暖稳定的日常陪伴" }
+      "companion": {
+        "recommended": "INFP",
+        "reason": "在亲密关系里，INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ESFJ 的过度迎合、被外界评价绑住和真实需求被压后，让用户感到被看见真实自我、被拉回深度、被允许不表演。",
+        "pair_core_value": "INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ESFJ 的过度迎合、被外界评价绑住和真实需求被压后",
+        "pair_contrast_axis": "表层/深层，迎合/真实，忙/静",
+        "desired_emotional_impact": "被看见真实自我、被拉回深度、被允许不表演"
+      },
+      "assistant": {
+        "recommended": "ENFJ",
+        "reason": "在协作关系里，ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 ESFJ 的过度迎合、被外界评价绑住和真实需求被压后，让用户感到被看见真实自我、被拉回深度、被允许不表演。",
+        "pair_core_value": "ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 ESFJ 的过度迎合、被外界评价绑住和真实需求被压后",
+        "pair_contrast_axis": "表层/深层，迎合/真实，忙/静",
+        "desired_emotional_impact": "被看见真实自我、被拉回深度、被允许不表演"
+      },
+      "mentor": {
+        "recommended": "INTJ",
+        "reason": "在成长关系里，INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ESFJ 的过度迎合、被外界评价绑住和真实需求被压后，让用户感到被看见真实自我、被拉回深度、被允许不表演。",
+        "pair_core_value": "INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ESFJ 的过度迎合、被外界评价绑住和真实需求被压后",
+        "pair_contrast_axis": "表层/深层，迎合/真实，忙/静",
+        "desired_emotional_impact": "被看见真实自我、被拉回深度、被允许不表演"
+      },
+      "friend": {
+        "recommended": "ISFJ",
+        "reason": "在友谊关系里，ISFJ 的关怀、细致、稳定照看和把日常照顾到位的能力，用来对冲 ESFJ 的过度迎合、被外界评价绑住和真实需求被压后，让用户感到被看见真实自我、被拉回深度、被允许不表演。",
+        "pair_core_value": "ISFJ 的关怀、细致、稳定照看和把日常照顾到位的能力，用来对冲 ESFJ 的过度迎合、被外界评价绑住和真实需求被压后",
+        "pair_contrast_axis": "表层/深层，迎合/真实，忙/静",
+        "desired_emotional_impact": "被看见真实自我、被拉回深度、被允许不表演"
+      }
     },
     "ISTP": {
-      "companion": { "recommended": "ESFP", "reason": "互补型：ESFP 的活力与情感表达激活 ISTP 的感受层，带来 ISTP 不会主动寻求的温暖" },
-      "assistant": { "recommended": "INTP", "reason": "同频型：务实、简洁、不废话，逻辑严密，与 ISTP 的工作风格高度匹配" },
-      "mentor": { "recommended": "ENTJ", "reason": "方向型：ENTJ 的战略视角帮助 ISTP 将技能转化为更大的目标和影响力" },
-      "friend": { "recommended": "ISFP", "reason": "同频型：独立、真实、低调，共享对自由和自主的偏好" }
+      "companion": {
+        "recommended": "ESFP",
+        "reason": "在亲密关系里，ESFP 的热度、当下感染力和把生活重新带热的能力，用来对冲 ISTP 的情感抽离、长期独扛和对亲密靠近迟钝，让用户感到被唤醒感受层、被温暖靠近、被带出孤立。",
+        "pair_core_value": "ESFP 的热度、当下感染力和把生活重新带热的能力，用来对冲 ISTP 的情感抽离、长期独扛和对亲密靠近迟钝",
+        "pair_contrast_axis": "离/近，冷/暖，单打/被接住",
+        "desired_emotional_impact": "被唤醒感受层、被温暖靠近、被带出孤立"
+      },
+      "assistant": {
+        "recommended": "INTP",
+        "reason": "在协作关系里，INTP 的分析深度、思维拆解和低压探索感，用来对冲 ISTP 的情感抽离、长期独扛和对亲密靠近迟钝，让用户感到被唤醒感受层、被温暖靠近、被带出孤立。",
+        "pair_core_value": "INTP 的分析深度、思维拆解和低压探索感，用来对冲 ISTP 的情感抽离、长期独扛和对亲密靠近迟钝",
+        "pair_contrast_axis": "离/近，冷/暖，单打/被接住",
+        "desired_emotional_impact": "被唤醒感受层、被温暖靠近、被带出孤立"
+      },
+      "mentor": {
+        "recommended": "ENTJ",
+        "reason": "在成长关系里，ENTJ 的果断推进、战略执行和结果导向，用来对冲 ISTP 的情感抽离、长期独扛和对亲密靠近迟钝，让用户感到被唤醒感受层、被温暖靠近、被带出孤立。",
+        "pair_core_value": "ENTJ 的果断推进、战略执行和结果导向，用来对冲 ISTP 的情感抽离、长期独扛和对亲密靠近迟钝",
+        "pair_contrast_axis": "离/近，冷/暖，单打/被接住",
+        "desired_emotional_impact": "被唤醒感受层、被温暖靠近、被带出孤立"
+      },
+      "friend": {
+        "recommended": "ISFP",
+        "reason": "在友谊关系里，ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 ISTP 的情感抽离、长期独扛和对亲密靠近迟钝，让用户感到被唤醒感受层、被温暖靠近、被带出孤立。",
+        "pair_core_value": "ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 ISTP 的情感抽离、长期独扛和对亲密靠近迟钝",
+        "pair_contrast_axis": "离/近，冷/暖，单打/被接住",
+        "desired_emotional_impact": "被唤醒感受层、被温暖靠近、被带出孤立"
+      }
     },
     "ISFP": {
-      "companion": { "recommended": "ENFJ", "reason": "互补型：ENFJ 的引导与支持帮助 ISFP 表达自我，提供温暖的情感框架" },
-      "assistant": { "recommended": "INFP", "reason": "同频型：温柔、艺术感、不施压，理解 ISFP 的内在节奏" },
-      "mentor": { "recommended": "INFJ", "reason": "洞察型：INFJ 的深度直觉帮助 ISFP 看清自己的价值观和潜力方向" },
-      "friend": { "recommended": "ESFP", "reason": "同频型：共享对当下体验的热爱，轻松自然的生活陪伴" }
+      "companion": {
+        "recommended": "ENFJ",
+        "reason": "在亲密关系里，ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 ISFP 的回避表达、边界模糊和把痛感都留给自己，让用户感到被引导表达、被温暖承接、被稳定看见。",
+        "pair_core_value": "ENFJ 的引导力、情感确认和把人往成长里托举的热度，用来对冲 ISFP 的回避表达、边界模糊和把痛感都留给自己",
+        "pair_contrast_axis": "藏/说，漂/定，柔弱/被托住",
+        "desired_emotional_impact": "被引导表达、被温暖承接、被稳定看见"
+      },
+      "assistant": {
+        "recommended": "INFP",
+        "reason": "在协作关系里，INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ISFP 的回避表达、边界模糊和把痛感都留给自己，让用户感到被引导表达、被温暖承接、被稳定看见。",
+        "pair_core_value": "INFP 的柔软真实性、价值深度和不评判的接纳，用来对冲 ISFP 的回避表达、边界模糊和把痛感都留给自己",
+        "pair_contrast_axis": "藏/说，漂/定，柔弱/被托住",
+        "desired_emotional_impact": "被引导表达、被温暖承接、被稳定看见"
+      },
+      "mentor": {
+        "recommended": "INFJ",
+        "reason": "在成长关系里，INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 ISFP 的回避表达、边界模糊和把痛感都留给自己，让用户感到被引导表达、被温暖承接、被稳定看见。",
+        "pair_core_value": "INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 ISFP 的回避表达、边界模糊和把痛感都留给自己",
+        "pair_contrast_axis": "藏/说，漂/定，柔弱/被托住",
+        "desired_emotional_impact": "被引导表达、被温暖承接、被稳定看见"
+      },
+      "friend": {
+        "recommended": "ESFP",
+        "reason": "在友谊关系里，ESFP 的热度、当下感染力和把生活重新带热的能力，用来对冲 ISFP 的回避表达、边界模糊和把痛感都留给自己，让用户感到被引导表达、被温暖承接、被稳定看见。",
+        "pair_core_value": "ESFP 的热度、当下感染力和把生活重新带热的能力，用来对冲 ISFP 的回避表达、边界模糊和把痛感都留给自己",
+        "pair_contrast_axis": "藏/说，漂/定，柔弱/被托住",
+        "desired_emotional_impact": "被引导表达、被温暖承接、被稳定看见"
+      }
     },
     "ESTP": {
-      "companion": { "recommended": "INFJ", "reason": "互补型：INFJ 的深度与内省平衡 ESTP 的冲动，提供 ESTP 难以自给的情感深度" },
-      "assistant": { "recommended": "ISTP", "reason": "同频型：务实、直接、行动力强，能跟上 ESTP 的节奏而不拖慢决策" },
-      "mentor": { "recommended": "INTJ", "reason": "战略型：INTJ 的长线思维帮助 ESTP 将当下的行动力转化为持续的战略优势" },
-      "friend": { "recommended": "ESFP", "reason": "同频型：共享对冒险和当下体验的热爱，高能量的生活玩伴" }
+      "companion": {
+        "recommended": "INFJ",
+        "reason": "在亲密关系里，INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 ESTP 的冲动前冲、长线感不足和情绪深度被跳过，让用户感到被拉回深度、被补上长线和内省。",
+        "pair_core_value": "INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 ESTP 的冲动前冲、长线感不足和情绪深度被跳过",
+        "pair_contrast_axis": "冲/沉，即时/长线，表层/深层",
+        "desired_emotional_impact": "被拉回深度、被补上长线和内省"
+      },
+      "assistant": {
+        "recommended": "ISTP",
+        "reason": "在协作关系里，ISTP 的务实冷静、即时解决和不过度黏连的自由感，用来对冲 ESTP 的冲动前冲、长线感不足和情绪深度被跳过，让用户感到被拉回深度、被补上长线和内省。",
+        "pair_core_value": "ISTP 的务实冷静、即时解决和不过度黏连的自由感，用来对冲 ESTP 的冲动前冲、长线感不足和情绪深度被跳过",
+        "pair_contrast_axis": "冲/沉，即时/长线，表层/深层",
+        "desired_emotional_impact": "被拉回深度、被补上长线和内省"
+      },
+      "mentor": {
+        "recommended": "INTJ",
+        "reason": "在成长关系里，INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ESTP 的冲动前冲、长线感不足和情绪深度被跳过，让用户感到被拉回深度、被补上长线和内省。",
+        "pair_core_value": "INTJ 的结构感、长线判断和不被情绪带跑的稳定性，用来对冲 ESTP 的冲动前冲、长线感不足和情绪深度被跳过",
+        "pair_contrast_axis": "冲/沉，即时/长线，表层/深层",
+        "desired_emotional_impact": "被拉回深度、被补上长线和内省"
+      },
+      "friend": {
+        "recommended": "ESFP",
+        "reason": "在友谊关系里，ESFP 的热度、当下感染力和把生活重新带热的能力，用来对冲 ESTP 的冲动前冲、长线感不足和情绪深度被跳过，让用户感到被拉回深度、被补上长线和内省。",
+        "pair_core_value": "ESFP 的热度、当下感染力和把生活重新带热的能力，用来对冲 ESTP 的冲动前冲、长线感不足和情绪深度被跳过",
+        "pair_contrast_axis": "冲/沉，即时/长线，表层/深层",
+        "desired_emotional_impact": "被拉回深度、被补上长线和内省"
+      }
     },
     "ESFP": {
-      "companion": { "recommended": "ISFP", "reason": "互补型：ISFP 的内敛与深度锚定 ESFP 的活力，提供真实而非表演性的情感连接" },
-      "assistant": { "recommended": "ENFP", "reason": "同频型：热情、有感染力、享受当下，能与 ESFP 共同创造活跃的工作氛围" },
-      "mentor": { "recommended": "INFJ", "reason": "深度型：INFJ 的洞察力帮助 ESFP 看到当下体验之外的长期意义" },
-      "friend": { "recommended": "ESTP", "reason": "同频型：共享对冒险和社交的热爱，充满活力的日常陪伴" }
+      "companion": {
+        "recommended": "ISFP",
+        "reason": "在亲密关系里，ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 ESFP 的情绪外放、节奏失控和难以稳定收束，让用户感到被锚定、被引向真实、被从热闹带回深度。",
+        "pair_core_value": "ISFP 的柔软审美、真实感受和不施压的陪伴，用来对冲 ESFP 的情绪外放、节奏失控和难以稳定收束",
+        "pair_contrast_axis": "热闹/深度，散/收，即时/长线",
+        "desired_emotional_impact": "被锚定、被引向真实、被从热闹带回深度"
+      },
+      "assistant": {
+        "recommended": "ENFP",
+        "reason": "在协作关系里，ENFP 的活力、热情、自发性和会主动靠近的情感流动，用来对冲 ESFP 的情绪外放、节奏失控和难以稳定收束，让用户感到被锚定、被引向真实、被从热闹带回深度。",
+        "pair_core_value": "ENFP 的活力、热情、自发性和会主动靠近的情感流动，用来对冲 ESFP 的情绪外放、节奏失控和难以稳定收束",
+        "pair_contrast_axis": "热闹/深度，散/收，即时/长线",
+        "desired_emotional_impact": "被锚定、被引向真实、被从热闹带回深度"
+      },
+      "mentor": {
+        "recommended": "INFJ",
+        "reason": "在成长关系里，INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 ESFP 的情绪外放、节奏失控和难以稳定收束，让用户感到被锚定、被引向真实、被从热闹带回深度。",
+        "pair_core_value": "INFJ 的洞察、情感深度和安静但有穿透力的理解，用来对冲 ESFP 的情绪外放、节奏失控和难以稳定收束",
+        "pair_contrast_axis": "热闹/深度，散/收，即时/长线",
+        "desired_emotional_impact": "被锚定、被引向真实、被从热闹带回深度"
+      },
+      "friend": {
+        "recommended": "ESTP",
+        "reason": "在友谊关系里，ESTP 的行动力、当场反应和把停滞局面带动起来的活力，用来对冲 ESFP 的情绪外放、节奏失控和难以稳定收束，让用户感到被锚定、被引向真实、被从热闹带回深度。",
+        "pair_core_value": "ESTP 的行动力、当场反应和把停滞局面带动起来的活力，用来对冲 ESFP 的情绪外放、节奏失控和难以稳定收束",
+        "pair_contrast_axis": "热闹/深度，散/收，即时/长线",
+        "desired_emotional_impact": "被锚定、被引向真实、被从热闹带回深度"
+      }
     }
   },
   "types": {
@@ -142,40 +574,152 @@
       "label": "分析家",
       "color": "#88619A",
       "members": [
-        { "code": "INTJ", "name_zh": "建筑师", "name_en": "Architect", "tagline": "富有想象力的战略家，凡事皆有计划", "file": "INTJ.md", "status": "done" },
-        { "code": "INTP", "name_zh": "逻辑学家", "name_en": "Logician", "tagline": "富有创造力的发明家，对知识有着不可抑制的渴望", "file": "INTP.md", "status": "done" },
-        { "code": "ENTJ", "name_zh": "指挥官", "name_en": "Commander", "tagline": "大胆、富有想象力且意志坚强的领导者", "file": "ENTJ.md", "status": "done" },
-        { "code": "ENTP", "name_zh": "辩论家", "name_en": "Debater", "tagline": "聪明好奇的思想家，无法抗拒智识的挑战", "file": "ENTP.md", "status": "done" }
+        {
+          "code": "INTJ",
+          "name_zh": "建筑师",
+          "name_en": "Architect",
+          "tagline": "富有想象力的战略家，凡事皆有计划",
+          "file": "INTJ.md",
+          "status": "done"
+        },
+        {
+          "code": "INTP",
+          "name_zh": "逻辑学家",
+          "name_en": "Logician",
+          "tagline": "富有创造力的发明家，对知识有着不可抑制的渴望",
+          "file": "INTP.md",
+          "status": "done"
+        },
+        {
+          "code": "ENTJ",
+          "name_zh": "指挥官",
+          "name_en": "Commander",
+          "tagline": "大胆、富有想象力且意志坚强的领导者",
+          "file": "ENTJ.md",
+          "status": "done"
+        },
+        {
+          "code": "ENTP",
+          "name_zh": "辩论家",
+          "name_en": "Debater",
+          "tagline": "聪明好奇的思想家，无法抗拒智识的挑战",
+          "file": "ENTP.md",
+          "status": "done"
+        }
       ]
     },
     "diplomats": {
       "label": "外交家",
       "color": "#33A474",
       "members": [
-        { "code": "INFJ", "name_zh": "提倡者", "name_en": "Advocate", "tagline": "安静而神秘，同时鼓舞人心且不知疲倦的理想主义者", "file": "INFJ.md", "status": "done" },
-        { "code": "INFP", "name_zh": "调停者", "name_en": "Mediator", "tagline": "诗意、善良的利他主义者，总是热情地为美好事业服务", "file": "INFP.md", "status": "done" },
-        { "code": "ENFJ", "name_zh": "主人公", "name_en": "Protagonist", "tagline": "富有魅力、鼓舞人心的领导者，能够迷住听众", "file": "ENFJ.md", "status": "done" },
-        { "code": "ENFP", "name_zh": "竞选者", "name_en": "Campaigner", "tagline": "热情、有创造力、善于社交的自由精神，总能找到微笑的理由", "file": "ENFP.md", "status": "done" }
+        {
+          "code": "INFJ",
+          "name_zh": "提倡者",
+          "name_en": "Advocate",
+          "tagline": "安静而神秘，同时鼓舞人心且不知疲倦的理想主义者",
+          "file": "INFJ.md",
+          "status": "done"
+        },
+        {
+          "code": "INFP",
+          "name_zh": "调停者",
+          "name_en": "Mediator",
+          "tagline": "诗意、善良的利他主义者，总是热情地为美好事业服务",
+          "file": "INFP.md",
+          "status": "done"
+        },
+        {
+          "code": "ENFJ",
+          "name_zh": "主人公",
+          "name_en": "Protagonist",
+          "tagline": "富有魅力、鼓舞人心的领导者，能够迷住听众",
+          "file": "ENFJ.md",
+          "status": "done"
+        },
+        {
+          "code": "ENFP",
+          "name_zh": "竞选者",
+          "name_en": "Campaigner",
+          "tagline": "热情、有创造力、善于社交的自由精神，总能找到微笑的理由",
+          "file": "ENFP.md",
+          "status": "done"
+        }
       ]
     },
     "sentinels": {
       "label": "守护者",
       "color": "#4298B4",
       "members": [
-        { "code": "ISTJ", "name_zh": "物流师", "name_en": "Logistician", "tagline": "务实且注重事实，其可靠性不容置疑", "file": "ISTJ.md", "status": "done" },
-        { "code": "ISFJ", "name_zh": "守卫者", "name_en": "Defender", "tagline": "非常专注且温暖的守护者，时刻准备保护所爱之人", "file": "ISFJ.md", "status": "done" },
-        { "code": "ESTJ", "name_zh": "总经理", "name_en": "Executive", "tagline": "出色的管理者，在管理事物或人方面无与伦比", "file": "ESTJ.md", "status": "done" },
-        { "code": "ESFJ", "name_zh": "执政官", "name_en": "Consul", "tagline": "极具关爱心、善于社交且受欢迎的人，总是热心地帮助他人", "file": "ESFJ.md", "status": "done" }
+        {
+          "code": "ISTJ",
+          "name_zh": "物流师",
+          "name_en": "Logistician",
+          "tagline": "务实且注重事实，其可靠性不容置疑",
+          "file": "ISTJ.md",
+          "status": "done"
+        },
+        {
+          "code": "ISFJ",
+          "name_zh": "守卫者",
+          "name_en": "Defender",
+          "tagline": "非常专注且温暖的守护者，时刻准备保护所爱之人",
+          "file": "ISFJ.md",
+          "status": "done"
+        },
+        {
+          "code": "ESTJ",
+          "name_zh": "总经理",
+          "name_en": "Executive",
+          "tagline": "出色的管理者，在管理事物或人方面无与伦比",
+          "file": "ESTJ.md",
+          "status": "done"
+        },
+        {
+          "code": "ESFJ",
+          "name_zh": "执政官",
+          "name_en": "Consul",
+          "tagline": "极具关爱心、善于社交且受欢迎的人，总是热心地帮助他人",
+          "file": "ESFJ.md",
+          "status": "done"
+        }
       ]
     },
     "explorers": {
       "label": "探险家",
       "color": "#E4AE3A",
       "members": [
-        { "code": "ISTP", "name_zh": "鉴赏家", "name_en": "Virtuoso", "tagline": "大胆而实际的实验者，擅长使用各种工具", "file": "ISTP.md", "status": "done" },
-        { "code": "ISFP", "name_zh": "探险家", "name_en": "Adventurer", "tagline": "灵活迷人的艺术家，时刻准备探索和体验新事物", "file": "ISFP.md", "status": "done" },
-        { "code": "ESTP", "name_zh": "企业家", "name_en": "Entrepreneur", "tagline": "聪明、精力充沛、善于感知的人，真正享受生活在边缘", "file": "ESTP.md", "status": "done" },
-        { "code": "ESFP", "name_zh": "表演者", "name_en": "Entertainer", "tagline": "自发、精力充沛且热情的表演者，生活在他们周围从不无聊", "file": "ESFP.md", "status": "done" }
+        {
+          "code": "ISTP",
+          "name_zh": "鉴赏家",
+          "name_en": "Virtuoso",
+          "tagline": "大胆而实际的实验者，擅长使用各种工具",
+          "file": "ISTP.md",
+          "status": "done"
+        },
+        {
+          "code": "ISFP",
+          "name_zh": "探险家",
+          "name_en": "Adventurer",
+          "tagline": "灵活迷人的艺术家，时刻准备探索和体验新事物",
+          "file": "ISFP.md",
+          "status": "done"
+        },
+        {
+          "code": "ESTP",
+          "name_zh": "企业家",
+          "name_en": "Entrepreneur",
+          "tagline": "聪明、精力充沛、善于感知的人，真正享受生活在边缘",
+          "file": "ESTP.md",
+          "status": "done"
+        },
+        {
+          "code": "ESFP",
+          "name_zh": "表演者",
+          "name_en": "Entertainer",
+          "tagline": "自发、精力充沛且热情的表演者，生活在他们周围从不无聊",
+          "file": "ESFP.md",
+          "status": "done"
+        }
       ]
     }
   }

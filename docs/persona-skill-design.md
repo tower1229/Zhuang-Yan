@@ -71,6 +71,7 @@
 - 当前轮事实账本
 - 四段流水线
 - `SOUL / MEMORY` 专属规则推导方法
+- `pair_core_value / pair_contrast_axis / desired_emotional_impact`
 - 五文件合同
 - 城市抽样策略
 - 自检与回炉
@@ -83,7 +84,7 @@
 
 - `CANON` 结构模板
 - `execution_trigger_protocol` 思考骨架
-- `SOUL / MEMORY / CANON` 推导方法与高质量示例
+- `SOUL / MEMORY / CANON` 推导方法与双高质量示例
 - 反模式提醒
 
 它是“好稿长什么样”的唯一模板包。
@@ -109,6 +110,7 @@
 - reverse lookup 只锁定人格骨架
 - 模板包负责提供推导方法与高质量示例，不负责提供可直接套用的标准答案
 - 具体生成规则、质量目标、文件合同与城市策略都集中收口在 `drafting-spec.md`
+- `SOUL` 与 `MEMORY` 的高价值内容必须优先围绕 `pair_core_value` 展开，而不是平均分配给一组泛优点
 
 ## 6. 对外维护文档
 

@@ -54,6 +54,9 @@ function lookupRecommendation(humanMbtiRaw, roleRaw, index) {
     role,
     recommended: row.recommended,
     reason: row.reason,
+    pair_core_value: row.pair_core_value,
+    pair_contrast_axis: row.pair_contrast_axis,
+    desired_emotional_impact: row.desired_emotional_impact,
   };
 }
 

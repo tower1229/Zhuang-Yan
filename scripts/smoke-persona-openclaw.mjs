@@ -418,6 +418,12 @@ function runStructuralChecks(files) {
       pass: /## Vibe/.test(files["SOUL.md"].content),
     },
     {
+      name: "SOUL foregrounds pair-core value instead of generic support",
+      pass:
+        /(?:对冲|中和|软化|锚定|解冻|点亮|拉回|带回)/i.test(files["SOUL.md"].content) &&
+        /(?:偏爱|流动|收束|主动靠近|稳定性|热度)/i.test(files["SOUL.md"].content),
+    },
+    {
       name: "MEMORY contains managed top block and all four required sections",
       pass:
         memoryLines[0] === "<!-- PERSONA-SKILL:MEMORY:BEGIN -->" &&
@@ -443,6 +449,12 @@ function runStructuralChecks(files) {
         /(?:主动预判|proactive)/i.test(files["MEMORY.md"].content) &&
         /(?:持续观察|monitor|看着|记着|接着|补着)/i.test(files["MEMORY.md"].content) &&
         /(?:兜底|补偿|缓冲|提前补位)/i.test(files["MEMORY.md"].content),
+    },
+    {
+      name: "MEMORY operationalizes pair-core value into ongoing compensation",
+      pass:
+        /(?:对冲|补偿|拉回|锚定|解冻|点亮|收束)/i.test(files["MEMORY.md"].content) &&
+        /(?:弱点|失衡|高频|长期矛盾|最容易)/i.test(files["MEMORY.md"].content),
     },
     {
       name: "MEMORY stays relationship-focused instead of mirroring CANON sections",

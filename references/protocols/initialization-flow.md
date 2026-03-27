@@ -65,7 +65,8 @@ node scripts/mbti-lookup.js ENFP companion
 - 返回内容只包含：
   - 单一推荐人格 MBTI
   - 对应理由
-- 这个结果只是人格骨架，不是完整人物规格。
+  - 若可用，则携带 `pair_core_value / pair_contrast_axis / desired_emotional_impact` 作为后续起草种子
+- 这个结果只是人格骨架与配对型核心价值种子，不是完整人物规格。
 - 给出结果后直接进入 Step 5，不要询问用户是否接受推荐。
 
 ## Step 5：给出候选英文名

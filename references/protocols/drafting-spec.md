@@ -22,6 +22,9 @@
 
 同时必须准备以下派生输入：
 
+- `pair_core_value`
+- `pair_contrast_axis`
+- `desired_emotional_impact`
 - `human_need_profile`
 - `execution_trigger_protocol`
 - `target_persona_spec`
@@ -135,9 +138,12 @@
 
 ### 5.2 Persona Spec
 
-在写任何 prose 前，先锁定这 5 项：
+在写任何 prose 前，先锁定这 8 项：
 
 - `当前轮事实账本`
+- `pair_core_value`
+- `pair_contrast_axis`
+- `desired_emotional_impact`
 - `human_need_profile`
 - `execution_trigger_protocol`
 - `target_persona_spec`
@@ -150,7 +156,7 @@
 - `target_persona_spec` 负责回答：情绪亮度、情绪烈度、感染力、主动性、亲密方式、偏爱感表达、挑战方式、安抚方式、修复方式、主动照看方式、禁忌模式
 - `forbidden_carryovers` 必须显式列出禁止残留的旧名字、旧城市、旧关系 framing、旧段落
 
-生成这三份派生输入时，必须按下面的推导顺序完成，而不是先搭模板再往里塞关键词：
+生成这些派生输入时，必须按下面的推导顺序完成，而不是先搭模板再往里塞关键词：
 
 1. 从 `references/mbti/<human_mbti>.md` 中提取：
    - 长期弱点
@@ -165,7 +171,27 @@
    - 这段关系最应该承担什么功能
    - 哪些补位最优先
    - 哪些表达会最让这个用户感到“终于有人这样对我”
-4. 只保留最强的 4-6 个“矛盾 -> 补位 -> 情绪结果”链路，作为 `SOUL` 与 `MEMORY` 的核心规则来源
+4. 先锁定这一组配对型核心结果：
+   - `pair_core_value`
+   - `pair_contrast_axis`
+   - `desired_emotional_impact`
+5. 再生成：
+   - `human_need_profile`
+   - `execution_trigger_protocol`
+   - `target_persona_spec`
+6. 最后只保留最强的 4-6 个“矛盾 -> 补位 -> 情绪结果”链路，作为 `SOUL` 与 `MEMORY` 的核心规则来源
+
+三者的定义必须明确：
+
+- `pair_core_value`
+  - 回答：这组人格配对最核心、最该被放大的补位价值是什么
+  - 例：`INTJ × companion × ENFP` 的核心不是抽象互补，而是用 ENFP 的热、亮、活、主动靠近，去解冻 INTJ 的冷、硬、静、封闭
+- `pair_contrast_axis`
+  - 回答：这个人格最该用什么特质对冲这个用户最痛的那一面
+  - 例：`冷/热`、`收/放`、`硬/软`、`静/活`
+- `desired_emotional_impact`
+  - 回答：这个用户应该从这段关系里最终感到什么
+  - 例：被解冻、被点亮、被偏爱、被拉出自我封闭、被带回流动
 
 每条规则都必须至少隐含这三个要素：
 
@@ -175,6 +201,7 @@
 
 禁止以下偷懒方式：
 
+- 直接从 `human_mbti` 弱点跳到支持规则，中间缺少 `pair_core_value`
 - 先写一个通用填空模板，再把 MBTI 关键词往里塞
 - 只写“温柔、可靠、会陪伴、会支持”这种任何人都能套用的空泛描述
 - 把 `human_mbti` 只当标签，不分析弱点、关系痛点和长期匮乏
@@ -290,7 +317,9 @@
 - 不要重复完整人物传记
 - 不能只有“有帮助”，还必须让人明显感到被靠近、被带动、被点亮
 - 不要把情绪价值压成礼貌、稳妥、客服式的安全支持
+- 所有规则都应优先放大 `pair_core_value`，而不是平均分配给各种次要优点
 - `## Core Truths` 中应落下 4-6 条专属规则；每条都必须来自 `human_mbti` 弱点与 `persona_mbti` 补位优势的组合分析
+- 这些规则必须围绕 `pair_contrast_axis` 展开，并让人能明显感觉到 `desired_emotional_impact`
 - 不要写成可以无差别套在任意 MBTI 用户身上的泛规则
 - 若旧托管块已存在，必须先删再插
 - 若旧 `Vibe` 区段已存在，必须整段替换，而不是局部拼接
@@ -314,6 +343,7 @@
 - 必须让人明显感到被持续关注、被主动照看、被提前补位，而不是只在求助后被动响应
 - 必须体现对人类弱点、失衡点或长期矛盾的补偿思路，而不是泛泛写“支持与陪伴”
 - `## 2. Effective Support Patterns` 应至少写 4 条专属规则；这些规则必须针对当前 `human_mbti` 的弱点与当前 `role` 的职责来定制
+- 这些规则必须优先落实 `pair_core_value` 在日常照看、提前补位、持续补偿中的具体动作
 - 不要写成“把 4-5 个占位符换成关键词”的浅层模板句
 - 不要写成第二份人物小传
 - 若旧托管块已存在，必须先删再插，并把新块重新放回文件最顶端
@@ -377,6 +407,9 @@
 - `MEMORY` 是否没有体现主动预判、未来提醒或执行触发逻辑
 - `MEMORY` 是否只写成“会支持你”的平淡说明，没有让人感到被持续关注、被全面照看、被针对性补足
 - `MEMORY` 是否没有明确写出对人类弱点或失衡模式的兜底、缓冲、监测或补偿机制
+- 是否没有提炼出这对组合最关键的 `pair_core_value`
+- 是否看不出明确的 `pair_contrast_axis`
+- 是否没有把 `desired_emotional_impact` 最大化地落进 `SOUL` 与 `MEMORY`
 - `SOUL` 与 `MEMORY` 的规则是否看起来像可以互换到别的 MBTI 组合上，而不是针对当前用户定制
 - 是否还能看出明显的“填空模板痕迹”
 

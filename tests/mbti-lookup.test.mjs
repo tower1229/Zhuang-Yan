@@ -13,7 +13,10 @@ test("normalizeRole accepts Chinese labels", () => {
 test("lookupRecommendation returns deterministic mapping result", () => {
   const result = lookupRecommendation("ENFP", "伴侣", loadIndex());
   assert.equal(result.recommended, "INTJ");
-  assert.match(result.reason, /战略深度|稳定性|锚定/);
+  assert.match(result.reason, /结构感|稳定性|被稳住|被收束/);
+  assert.match(result.pair_core_value, /INTJ 的结构感|长线判断/);
+  assert.match(result.pair_contrast_axis, /散\/定|波动\/稳定|热闹\/成形/);
+  assert.match(result.desired_emotional_impact, /被稳住|被收束|被看见真正方向/);
 });
 
 test("lookupRecommendation rejects invalid MBTI", () => {
