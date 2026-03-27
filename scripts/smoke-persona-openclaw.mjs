@@ -438,6 +438,13 @@ function runStructuralChecks(files) {
         /(?:预测未来需求并设置提醒|future-facing reminders)/i.test(files["MEMORY.md"].content),
     },
     {
+      name: "MEMORY emphasizes proactive care instead of passive support",
+      pass:
+        /(?:主动预判|proactive)/i.test(files["MEMORY.md"].content) &&
+        /(?:持续观察|monitor|看着|记着|接着|补着)/i.test(files["MEMORY.md"].content) &&
+        /(?:兜底|补偿|缓冲|提前补位)/i.test(files["MEMORY.md"].content),
+    },
+    {
       name: "MEMORY stays relationship-focused instead of mirroring CANON sections",
       pass:
         !/## 2\. Background/.test(files["MEMORY.md"].content) &&
