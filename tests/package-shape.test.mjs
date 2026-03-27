@@ -109,6 +109,8 @@ test("drafting spec owns generation execution, quality logic, and city strategy"
   assert.match(spec, /human_need_profile/);
   assert.match(spec, /execution_trigger_protocol/);
   assert.match(spec, /target_persona_spec/);
+  assert.match(spec, /如何持续带动状态/);
+  assert.match(spec, /情绪烈度、感染力、主动性、亲密方式、偏爱感表达/);
   assert.match(spec, /在 `persona spec` 锁定之前，不允许读取任何旧目标文件/);
   assert.match(spec, /城市抽样策略/);
   assert.match(spec, /先锚定当前系统国家/);
@@ -121,19 +123,28 @@ test("drafting spec owns generation execution, quality logic, and city strategy"
   assert.match(spec, /若 `## Vibe` 已存在，替换整个 `Vibe` 区段/);
   assert.match(spec, /新托管块必须重新插入到文件最顶部/);
   assert.match(spec, /自检与回炉/);
+  assert.match(spec, /被靠近、被带动、被点亮/);
+  assert.match(spec, /明亮感、感染力、偏爱感或主动带动感/);
   assert.doesNotMatch(spec, /典型触发口令|initialize persona|run persona initialization/);
   assert.doesNotMatch(spec, /Step 1：|A\. 男性|A\. 伴侣/);
 });
 
 test("template pack only owns templates, examples, and anti-pattern reminders", () => {
   const pack = fs.readFileSync(path.join(root, "references/runtime-context/template-pack.md"), "utf8");
-  assert.match(pack, /本文件只提供模板、范式与校准参考/);
+  assert.match(pack, /本文件只提供模板、骨架与校准参考/);
   assert.match(pack, /`persona\/CANON\.md` 结构模板/);
   assert.match(pack, /execution_trigger_protocol/);
-  assert.match(pack, /`SOUL\.md` 高质量范式/);
-  assert.match(pack, /`MEMORY\.md` 高质量范式/);
+  assert.match(pack, /`SOUL\.md` 高质量骨架/);
+  assert.match(pack, /`MEMORY\.md` 高质量骨架/);
+  assert.match(pack, /`persona\/CANON\.md` 高质量片段骨架/);
+  assert.match(pack, /\{高亮补位方式\}/);
+  assert.match(pack, /\{被偏爱的方式\}/);
+  assert.match(pack, /\{关系核心作用\}/);
   assert.match(pack, /反模式提醒/);
-  assert.match(pack, /不要把这里的具体事实、措辞或角色设定直接复制进输出文件/);
+  assert.match(pack, /写法骨架/);
+  assert.match(pack, /质量标尺/);
+  assert.match(pack, /不要把这里的完整成句、具体事实、关系表述或角色设定直接复制进输出文件/);
+  assert.doesNotMatch(pack, /亲近感不是靠设定自动成立的|靠每一次真实、准确、不过火的靠近逐渐累积出来的|避免把关系写成已经非常深厚/);
   assert.doesNotMatch(pack, /只允许写入|必须写入|写入前必须|触发后起点|Step 1：/);
 });
 

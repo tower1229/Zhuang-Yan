@@ -82,7 +82,7 @@
 
 - `CANON` 结构模板
 - `execution_trigger_protocol` 思考骨架
-- `SOUL / MEMORY / CANON` 高质量范式
+- `SOUL / MEMORY / CANON` 高质量骨架
 - 反模式提醒
 
 它是“好稿长什么样”的唯一模板包。
