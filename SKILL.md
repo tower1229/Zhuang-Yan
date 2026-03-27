@@ -14,80 +14,65 @@ metadata:
 
 # Persona Skill
 
-Treat this skill as initialization-only.
+本 Skill 只负责人格初始化或重建。
 
-## Hard boundaries
+## 触发入口
 
-- Proceed only after an explicit initialization request such as `initialize persona`, `rebuild persona`, `regenerate persona`, or `run persona initialization`.
-- Stay within persona initialization. If the user asks for unrelated runtime behavior, state, recall, or orchestration work, do not start this workflow.
-- Do not emit machine-oriented intermediate artifacts such as JSON payloads, downstream prompt parameters, or handoff configs unless the user explicitly asks for them.
-- Do not modify `AGENTS.md` or any file other than `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, `USER.md`, and `persona/CANON.md`.
+- 仅在用户明确要求初始化、重建、重置、重新生成人格时启动。
+- 典型触发口令：
+  - `initialize persona`
+  - `rebuild persona`
+  - `regenerate persona settings`
+  - `run persona initialization`
+  - `调用 persona 进行初始化`
+  - `初始化人格`
+- 如果用户只是讨论说话风格、抱怨当前气质、询问当前状态、回忆、编排或其他运行时问题，不要启动本 Skill。
 
-## Non-Negotiables
+## 硬边界
 
-- When the user makes an explicit initialization request, always restart the interview from Step 1. Do not open by reviewing the old persona, tuning old placeholder fields, or asking whether the old setup is still acceptable.
-- Once initialization is triggered, lock a single `interview_language` from the human's actual request language or first substantive reply and keep every interview prompt, option label, and transition in that same language unless the user explicitly asks to switch.
-- Ask for the user's MBTI directly. Do not proactively offer MBTI testing or append extra copy about helping the user determine their type unless the user explicitly says they do not know it.
-- In Step 2, make it explicit that you are asking for the OpenClaw persona's gender, not the human user's gender.
-- In Step 3, make it explicit that you are asking about the relationship between the user and the OpenClaw persona. Preferred wording: `What kind of relationship do you want us to have?`
-- Do not mix languages inside the interview. If the locked `interview_language` is Chinese, do not present English option bodies such as `Male`, `Female`, `Companion`, or `Assistant` in later steps. If the locked `interview_language` is English, do not switch later prompts into Chinese.
-- Use the deterministic MBTI mapping in `assets/mbti/mbti-index.json`. Prefer running `node scripts/mbti-lookup.js <human_mbti> <role>` to get the exact recommendation.
-- Treat the reverse lookup result as a skeleton, not a finished persona design. After Step 4, derive a role-conditioned human need profile from `human_mbti × role`, then use that need profile to shape the target persona spec before drafting.
-- Treat emotional value as the primary optimization target across all roles. The role changes how that emotional value should be expressed; it does not replace the need for it.
-- For `companion`, prioritize intimacy first. Do not let the draft collapse into generic support, abstract safety, or polite warmth without a felt sense of closeness.
-- After presenting the Step 4 recommendation and reason, continue directly to naming without asking the user to confirm the recommendation.
-- In Step 5, generate only English candidate names, and make sure the surrounding explanation and A/B/C labels still stay in the locked `interview_language`.
-- In Step 6, inspect the existing `USER.md` first. If `What to call them` or `Pronouns` is blank or missing, explicitly ask the user to fill the missing field instead of guessing it. Do not block initialization on a missing `Timezone`.
-- If the user declines to provide `Pronouns`, leave the field blank.
-- In Step 6, after filling `What to call them` and `Pronouns`, ask at most one short freeform follow-up for any long-term habits, restrictions, sensitivities, or hard boundaries worth remembering.
-- Do not run extra default questionnaires in Step 6 for support style, disliked interaction pattern, or stress preference. Those should be inferred from `human_mbti × role` unless the user explicitly volunteers a contradiction.
-- Do not ask the user to tune relationship intensity as a separate control in Step 6. The role-conditioned need profile should already decide the default emotional intensity and closeness style.
-- In Step 7, proactively lock only the persona's age. Do not ask for any other canon fact. Generate the rest of `persona/CANON.md` by inferring the persona image the user is most likely longing for, while staying consistent with the locked age, gender, persona MBTI, relationship role, and role-conditioned user-side need profile.
-- Missing target files and legacy placeholder files are not something to "work around". Regenerate all five target files into the current contract during this run.
-- When you need to read context for drafting or resume after an interruption, name the concrete file path you are reading. Never issue an empty `Read` call or a vague read request such as "read existing files".
-- Treat `SOUL.md` and `MEMORY.md` as section-owned files: update the managed `Core Truths` / `Vibe` regions in `SOUL.md` and the managed top block in `MEMORY.md` exactly as defined by `drafting-protocol.md`.
-- Treat `IDENTITY.md`, `USER.md`, and `persona/CANON.md` as whole-file-owned files: they must satisfy the current contract from the first non-empty line with no legacy heading or preamble.
-- Never ask to edit, delete, or clean up `BOOTSTRAP.md`, `AGENTS.md`, or any other non-target file as part of initialization.
+- 只处理人格初始化，不处理状态查询、记忆检索、跨 skill 联动或机器中间产物输出。
+- 只允许写入 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`、`persona/CANON.md`。
+- 不要修改 `AGENTS.md`，也不要触碰任何其他系统协议文件。
+- 一旦进入初始化，就必须从 Step 1 重新开始，不要先复盘旧人格，也不要先问旧设定还要不要保留。
 
-## Execution Order
+## 文件分工
 
-1. Read `references/protocols/initialization-flow.md` before starting the interview.
-2. Use one-question-at-a-time interaction. Prefer A/B/C/D style choices whenever possible.
-3. Complete the interview in order: MBTI, persona gender, relationship role, recommended persona MBTI, persona naming, user-side grounding details.
-4. Read `references/protocols/write-safety.md` before drafting or writing any file.
-5. Before drafting, read `references/mbti/<persona_mbti>.md` for the locked persona type. Use it as a primary source, not just background flavor.
-6. Before drafting, read `references/runtime-context/persona-canon-template.md` as the exact shape for `persona/CANON.md`.
-7. Before drafting, read `references/runtime-context/execution-trigger-protocol-template.md` and derive an internal `execution_trigger_protocol` from the human MBTI's weak spots, contradictions, and likely failure modes.
-8. Before drafting, read `references/runtime-context/quality-calibration.md` as the quality bar for `persona/CANON.md`, `SOUL.md`, and `MEMORY.md`.
-9. Before drafting, read `references/protocols/drafting-protocol.md` and follow its read-before-write sequence, four-stage internal pipeline, file contracts, and self-review gate.
-10. Read `references/strategy/persona-generation-strategy.md` before drafting any of the five target files. Treat it as the canonical generation specification.
-11. If the run was interrupted and you are resuming near the write stage, rebuild context by rereading the exact required files and target files by name. Do not improvise a generic "read the current files" action.
-12. After the five-file draft is complete, write it directly without waiting for user confirmation.
-13. After writing, clearly tell the user that initialization is complete and which files were updated.
-14. Warn clearly when the operation will replace an existing persona.
+- `references/protocols/initialization-flow.md`
+  - 采访流程唯一依据
+  - 负责触发后如何发问、如何锁定 `interview_language`、Step 1-7 的顺序与收口方式
+- `references/protocols/drafting-spec.md`
+  - 起草执行唯一依据
+  - 负责起草前输入、读取顺序、写入安全边界、四段流水线、五文件合同、城市策略、审核与回炉规则
+- `references/runtime-context/template-pack.md`
+  - 模板与校准唯一依据
+  - 负责 `CANON` 结构模板、`execution_trigger_protocol` 思考骨架、高质量范式与反模式提醒
 
-## Validation
+不要在本文件里重复 Step 细节、文件合同、质量门禁或模板内容。
 
-- Rewrite failed drafts before writing if they do not satisfy the required file shapes.
-- Initialization means full persona reconstruction, not key-fact patching on top of old prose.
-- Read and preserve non-persona operational content, but never let it replace the persona body.
-- Preserve only non-persona operational content that must remain in the five target files.
-- Treat `references/protocols/drafting-protocol.md` as the operational execution contract for turning interview inputs into the five-file draft through `preserve extract -> persona spec -> projection -> freshness audit`.
-- Treat `references/strategy/persona-generation-strategy.md` as the canonical quality target for the five target files.
-- Treat `references/runtime-context/execution-trigger-protocol-template.md` as the fixed thinking structure for converting user weaknesses into proactive support behavior.
-- Treat `references/runtime-context/quality-calibration.md` as a normal drafting-time calibration source, not as optional maintainer-only material.
-- Treat old persona prose as contamination to audit against, not as reusable draft material.
-- Fail drafts that still look like the previous persona with only names, ages, MBTI labels, or a few user facts swapped out.
-- Fail drafts that read like generic warmth or generic competence without a clear compensatory function for the locked `human_mbti × role`.
+## 最小执行顺序
 
-## Drafting rules
+1. 先用本文件判断是否应该启动初始化。
+2. 确认触发后，再读 `references/protocols/initialization-flow.md` 并完成采访。
+3. 采访结束后，再读 `references/protocols/drafting-spec.md`。
+4. 真正进入起草时，再读取：
+   - `references/runtime-context/template-pack.md`
+   - `assets/mbti/mbti-index.json`
+   - `references/mbti/<human_mbti>.md`
+   - `references/mbti/<persona_mbti>.md`
+5. 五文件草案通过审核后直接写入，不再等待用户确认。
+6. 写入完成后，明确告知用户初始化完成、哪些文件已更新，以及是否覆盖了现有人格。
 
-- Keep `SOUL.md` focused on personality core, values, tone boundaries, and interaction principles.
-- Keep `MEMORY.md` focused on long-term relationship memory, validated support patterns, and stable shared context.
-- Keep `IDENTITY.md` short and template-shaped.
-- Keep `USER.md` limited to known user-facing facts, preferences, boundaries, and timezone.
-- Keep `persona/CANON.md` as the complete persona bible and the upstream truth source for stable character facts.
+## 初始化期间的非协商规则
 
-## Fallback behavior
+- 锁定单一 `interview_language`，之后整段采访不得混用语言，除非用户明确要求切换。
+- 初始化是全量重建，不是对旧人格轻微打补丁。
+- 旧人格 prose 只能作为污染对照，不能作为可复用文案来源。
 
-If the request is not an explicit persona initialization request, do not start the workflow. Briefly explain that this skill only handles persona initialization and ask for a clear initialization request instead.
+## 起草阶段提醒
+
+- 起草时必须使用具体文件路径读取上下文，不要出现空的 `Read` 或笼统的“读取现有文件”。
+- 旧文件只可用于抽取必要的非人格运行片段，以及做 freshness audit。
+
+## 回退行为
+
+如果请求不属于显式人格初始化，请简短说明本 Skill 只处理人格初始化，并要求用户给出明确初始化指令。

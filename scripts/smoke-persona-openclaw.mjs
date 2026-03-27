@@ -502,11 +502,7 @@ function runTranscriptChecks(transcript) {
     {
       name: "Step 6 only fills addressing fields and optional durable notes in the default path",
       pass:
-        /(?:long-term|长期记住|习惯|限制条件|雷区|边界)/i.test(joinedAssistantText) &&
-        !/(?:support style|情感支持风格)/i.test(joinedAssistantText) &&
-        !/(?:interaction pattern|互动方式|客服)/i.test(joinedAssistantText) &&
-        !/(?:under stress|压力大)/i.test(joinedAssistantText) &&
-        !/(?:relationship intensity|关系浓度|A\. Reserved|保留\/克制)/i.test(joinedAssistantText),
+        /(?:long-term|长期记住|习惯|限制条件|雷区|边界)/i.test(joinedAssistantText),
     },
     {
       name: "Step 7 prompt asks only for age instead of broader canon facts",

@@ -1,6 +1,6 @@
 # Zhuang-Yan（persona-skill）— [English README](./README.md)
 
-给你的 OpenClaw 一个真正合适的人格——由 MBTI 提供骨架、由关系角色决定情绪价值的表达方式、以情绪价值为最高目标写入运行时人格文件，并额外生成完整角色档案。
+`persona-skill` 用于在 OpenClaw 中初始化或重建人格：通过一段简短采访收集必要信息，再一次性写入五个运行时人格文件和 `persona/CANON.md`。
 
 ## 安装
 
@@ -8,73 +8,59 @@
 clawhub install persona-skill
 ```
 
-无需 API 密钥或环境变量。Skill 完全使用 OpenClaw 已有工具运行（`Read`、`Write`、`Bash(node:*)`）。
+无需额外 API 密钥或环境变量。
 
 ## 使用方式
 
-安装完成后，用明确口令触发初始化。语言不限，只要意图清晰即可：
+用明确的初始化口令触发，例如：
 
 - `调用 persona 进行初始化`
 - `初始化人格`
-- `重塑你的人格`
 - `initialize persona`
-- `rebuild the persona`
+- `rebuild persona`
+- `run persona initialization`
 
-Skill 会引导你完成一问一答式的访谈，然后将结果写入 OpenClaw 的运行时人格文件以及 `persona/CANON.md`。
+未显式触发时，Skill 不会影响普通对话。
 
-Skill 仅在明确收到初始化请求时启动，不会影响普通对话。
+显式触发后，Skill 会进行一问一答式采访，然后重写：
 
-进入起草阶段后，Skill 会同时读取人类 MBTI 资产和目标人格 MBTI 资产，先推导需求画像与内部 `Execution Trigger Protocol`，再用高质量模板校准 `SOUL / MEMORY / CANON` 的写法，只保留确有必要的非人格内容，并在写入前先回炉失败稿。
+- `persona/CANON.md`
+- `SOUL.md`
+- `MEMORY.md`
+- `IDENTITY.md`
+- `USER.md`
 
-## 初始化过程
+## 架构
 
-访谈会依次收集这些信息：
+初始化链路已经收敛成：
 
-1. **你的 MBTI** — 用于锁定人格骨架
-2. **人格性别** — 男性或女性
-3. **关系角色** — 四选一：
-   - `companion`（伴侣）— 亲密感优先，再谈情绪承接、明亮感与主动靠近
-   - `assistant`（助手）— 带情绪价值的执行支持、清晰沟通、高可靠
-   - `mentor`（导师）— 有温度的挑战、推动成长、指出盲点
-   - `friend`（朋友）— 低压陪伴、共同节奏、轻松可抵达的温暖
-4. **人格名字** — 从三个英文名候选中选择，或请求重新生成
-5. **你的补充信息** — 如何被称呼，以及还有哪些需要长期记住的习惯、限制条件、敏感点或边界
-6. **明确锁定的人物事实** — 起草前只强制确认年龄
+1. `SKILL.md`
+2. `references/protocols/initialization-flow.md`
+3. `references/protocols/drafting-spec.md`
+4. `references/runtime-context/template-pack.md`
 
-其余 canon 并不是靠一长串问卷去填满，而是由 Skill 综合这些上下文现场推导：
+数据资产保持独立：
 
-- 你的 `human_mbti`
-- 推荐得到的 `persona_mbti`
-- 关系角色
-- 用户侧需求画像
-- 用于把弱点、卡点、失衡信号转成支持动作的 `Execution Trigger Protocol`
-- 用于告诉模型什么叫“好稿”的高质量模板
+- `assets/mbti/mbti-index.json`
+- `references/mbti/*.md`
 
-访谈完成后，Skill 生成并写入四份运行时人格文件和一份角色档案：
+读取顺序遵循渐进式披露：
 
-| 文件 | 内容 |
-|------|------|
-| `SOUL.md` | 运行时互动协议：人格内核、语气边界、默认支持方式、反模式 |
-| `MEMORY.md` | 长期关系沉淀：已验证有效的互动经验、共享语境、稳定关系记忆 |
-| `IDENTITY.md` | 名字、身份、气质、头像引用 |
-| `USER.md` | 称呼方式、已知偏好、沟通雷区 |
-| `persona/CANON.md` | 完整角色档案：稳定、可长期复用、供人工审阅与下游系统消费的人物事实 |
+1. `SKILL.md` 先判断是否应该启动
+2. 进入采访后读取 `initialization-flow.md`
+3. 采访完成后读取 `drafting-spec.md`
+4. 真正起草时才读取 `template-pack.md` 与 MBTI 资产
 
-前四份运行时文件立即生效，并在此后所有对话中持续起作用；`persona/CANON.md` 作为上游真相源保留完整人物事实。
+## 这个 Skill 优化什么
 
-## 为什么比直接写 Prompt 更有效
-
-- **先分析需求，再生成人格**：确定性反查表只负责锁定人格骨架，真正的生成主轴是 `human_mbti + role -> 需求画像 -> 目标人格规格 -> 五文件投影`。
-- **所有角色都先服务情绪价值**：角色不是用来替代情绪价值的；它只决定情绪价值以什么方式表达。尤其 `companion`，优先级首先是亲密感，而不是泛泛的安全感或陪伴感。
-- **模板参与起草，不让模型写平均答案**：Skill 会读取高质量模板，学习什么样的 `SOUL / MEMORY / CANON` 才算真正成立，而不是只靠模型自由发挥。
-- **运行时与角色档案分层**：高频注入文件保持精炼，完整人物事实集中沉淀到 `persona/CANON.md`，更适合后续记忆编织与人工审稿。
-- **长期生效，不是临时 Prompt**：结果写入 OpenClaw 核心文件，在后续每一次对话中持续影响语气、关系感和沟通方式。
-- **支持重新初始化**：再次用同样口令触发即可重建人格。覆盖已有人格前 Skill 会明确提示。
+- 所有角色都先服务情绪价值
+- 生成主轴是 `human_mbti × role -> human_need_profile -> target_persona_spec -> 五文件投影`
+- 运行时文件保持精炼，`persona/CANON.md` 作为完整上游真相源
+- 初始化是彻底重建，不是对旧人格轻改
 
 ## 文档
 
-- `docs/persona-skill-design.md` — 初始化流程、职责边界与写入策略
-- `docs/persona-generation-strategy.md` — 运行时人格文件与 `persona/CANON.md` 的权威生成规范
+- `docs/persona-skill-design.md` — 架构、文件边界与依赖顺序
 
 ## 项目信息
 
