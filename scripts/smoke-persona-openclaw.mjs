@@ -20,7 +20,6 @@ const defaultMessages = [
   "A",
   "A",
   "叫我泛舟，代词用他。希望先理解再建议，别太像客服，压力大时先帮我减法，关系保持温柔亲近但别太黏。",
-  "B",
   "27",
 ];
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
@@ -341,6 +340,27 @@ function runStructuralChecks(files) {
   ];
 }
 
+function runTranscriptChecks(transcript) {
+  const assistantTurns = transcript.map((turn) => turn.assistant || "");
+  const joinedAssistantText = assistantTurns.join("\n");
+  const postStep6Prompt = assistantTurns[5] || "";
+
+  return [
+    {
+      name: "Interview does not proactively ask for timezone in the default path",
+      pass: !/(?:\btimezone\b|时区)/i.test(joinedAssistantText),
+    },
+    {
+      name: "Step 7 prompt asks only for age instead of broader canon facts",
+      pass:
+        /(?:\bage\b|年龄)/i.test(postStep6Prompt) &&
+        !/(?:current city|birthplace|occupation|family context|interests|城市|出生地|职业|家庭|兴趣)/i.test(
+          postStep6Prompt,
+        ),
+    },
+  ];
+}
+
 function removeTempRoot(tempRoot) {
   fs.rmSync(tempRoot, { recursive: true, force: true });
 }
@@ -375,7 +395,7 @@ function main() {
     }
 
     const files = readGeneratedFiles(prepared.workspaceDir);
-    const checks = runStructuralChecks(files);
+    const checks = [...runTranscriptChecks(transcript), ...runStructuralChecks(files)];
     const allChecksPass = checks.every((check) => check.pass);
     const transcriptPath = path.join(prepared.tempRoot, "transcript.json");
     const summaryPath = path.join(prepared.tempRoot, "summary.json");
