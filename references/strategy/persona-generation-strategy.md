@@ -13,7 +13,7 @@ This document defines the persona generation strategy for the `persona` skill. I
 - generation boundaries for `IDENTITY.md` and `USER.md`
 - quality checks, rewrite triggers, and iteration rules
 
-It does not define downstream situation mapping or runtime consumption rules. See [persona-skill-design.md](./persona-skill-design.md) for that layer.
+It does not define downstream situation mapping or runtime consumption rules. See [persona-skill-design.md](../../docs/persona-skill-design.md) for that layer.
 
 ## 2. Non-negotiables
 
@@ -124,26 +124,25 @@ When drafting the five files, rank all context sources in this order:
 
 1. `current-turn hard facts`: what the user explicitly said in this interview and what the flow has already locked
 2. `file contracts`: structural requirements, forbidden failures, and rewrite conditions
-3. `quality templates`: `references/templates/high-quality-file-templates.md`
+3. `quality templates`: `references/runtime-context/quality-calibration.md`
 4. `MBTI assets`: `references/mbti/<human_mbti>.md`, `references/mbti/<persona_mbti>.md`, and `assets/mbti/mbti-index.json`
 5. `existing persona/CANON.md`: only when separating locked canon facts from draft-stage gaps
 6. `old file residue`: only for preserving non-persona operational fragments
 
 Never promote levels 5 or 6 into current-turn user facts, and never let examples or templates override level 1 facts.
 
-### 2.10 Example isolation
+### 2.10 No shipped maintainer examples
 
-Real examples live in [examples/persona-drafting-examples.md](./examples/persona-drafting-examples.md).
+This repository no longer ships a separate `examples/` layer.
 
-The default initialization workflow should not proactively read the `examples/` directory. Examples exist only for:
+The normal initialization flow should rely on:
 
-- maintainer style calibration
-- manual quality review
-- explicit user requests to see examples
+- current-turn facts
+- file contracts
+- MBTI assets
+- runtime-context calibration assets
 
-The strategy file should contain rules, contracts, skeletons, and prohibitions instead of full finished persona samples.
-
-Even inside `examples/`, examples are not default personas, not default user profiles, and not reusable canned copy. Specific names, cities, jobs, family backgrounds, interests, nicknames, pronouns, or trigger points are demonstration material only.
+If maintainers need additional review samples later, they should live outside normal runtime references and must not become default prompt context.
 
 ### 2.11 Language layering
 

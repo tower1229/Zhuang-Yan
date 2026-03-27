@@ -171,12 +171,12 @@ Draft and then directly write:
 
 Before drafting:
 
-- read `write-safety.md`
-- read `persona-generation-strategy.md`
-- read `drafting-protocol.md`
-- read `templates/persona-canon-template.md`
-- read `templates/execution-trigger-protocol-template.md`
-- read `templates/high-quality-file-templates.md`
+- read `references/protocols/write-safety.md`
+- read `references/strategy/persona-generation-strategy.md`
+- read `references/protocols/drafting-protocol.md`
+- read `references/runtime-context/persona-canon-template.md`
+- read `references/runtime-context/execution-trigger-protocol-template.md`
+- read `references/runtime-context/quality-calibration.md`
 - read `references/mbti/<persona_mbti>.md`
 - read `references/mbti/<human_mbti>.md` as a need-analysis source
 - derive a `human need profile` from `human_mbti × role`
@@ -211,7 +211,7 @@ Then:
 - during `projection`, write fresh persona prose from the locked spec, not by editing old paragraphs
 - during `freshness audit`, fail the draft if it still reads like the previous persona with only key facts swapped, if old city/job/family bundles survive, or if legacy wrappers remain
 - draft all five files against the required file contracts
-- run the self-review gate from `drafting-protocol.md`
+- run the self-review gate from `references/protocols/drafting-protocol.md`
 - rewrite any failed file before writing
 
 ### Step 9: Completion notice

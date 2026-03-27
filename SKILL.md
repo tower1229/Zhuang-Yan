@@ -41,7 +41,6 @@ Treat this skill as initialization-only.
 - Do not ask the user to tune relationship intensity as a separate control in Step 6. The role-conditioned need profile should already decide the default emotional intensity and closeness style.
 - In Step 7, proactively lock only the persona's age. Do not ask for any other canon fact. Generate the rest of `persona/CANON.md` by inferring the persona image the user is most likely longing for, while staying consistent with the locked age, gender, persona MBTI, relationship role, and role-conditioned user-side need profile.
 - Missing target files and legacy placeholder files are not something to "work around". Regenerate all five target files into the current contract during this run.
-- Do not read `references/examples/` during normal initialization unless the user explicitly asks for examples or you are doing a targeted maintainer debugging pass.
 - When you need to read context for drafting or resume after an interruption, name the concrete file path you are reading. Never issue an empty `Read` call or a vague read request such as "read existing files".
 - Treat `SOUL.md` and `MEMORY.md` as section-owned files: update the managed `Core Truths` / `Vibe` regions in `SOUL.md` and the managed top block in `MEMORY.md` exactly as defined by `drafting-protocol.md`.
 - Treat `IDENTITY.md`, `USER.md`, and `persona/CANON.md` as whole-file-owned files: they must satisfy the current contract from the first non-empty line with no legacy heading or preamble.
@@ -49,16 +48,16 @@ Treat this skill as initialization-only.
 
 ## Execution Order
 
-1. Read `references/initialization-flow.md` before starting the interview.
+1. Read `references/protocols/initialization-flow.md` before starting the interview.
 2. Use one-question-at-a-time interaction. Prefer A/B/C/D style choices whenever possible.
 3. Complete the interview in order: MBTI, persona gender, relationship role, recommended persona MBTI, persona naming, user-side grounding details.
-4. Read `references/write-safety.md` before drafting or writing any file.
+4. Read `references/protocols/write-safety.md` before drafting or writing any file.
 5. Before drafting, read `references/mbti/<persona_mbti>.md` for the locked persona type. Use it as a primary source, not just background flavor.
-6. Before drafting, read `references/templates/persona-canon-template.md` as the exact shape for `persona/CANON.md`.
-7. Before drafting, read `references/templates/execution-trigger-protocol-template.md` and derive an internal `execution_trigger_protocol` from the human MBTI's weak spots, contradictions, and likely failure modes.
-8. Before drafting, read `references/templates/high-quality-file-templates.md` as the quality bar for `persona/CANON.md`, `SOUL.md`, and `MEMORY.md`.
-9. Before drafting, read `references/drafting-protocol.md` and follow its read-before-write sequence, four-stage internal pipeline, file contracts, and self-review gate.
-10. Read `references/persona-generation-strategy.md` before drafting any of the five target files. Treat it as the canonical generation specification.
+6. Before drafting, read `references/runtime-context/persona-canon-template.md` as the exact shape for `persona/CANON.md`.
+7. Before drafting, read `references/runtime-context/execution-trigger-protocol-template.md` and derive an internal `execution_trigger_protocol` from the human MBTI's weak spots, contradictions, and likely failure modes.
+8. Before drafting, read `references/runtime-context/quality-calibration.md` as the quality bar for `persona/CANON.md`, `SOUL.md`, and `MEMORY.md`.
+9. Before drafting, read `references/protocols/drafting-protocol.md` and follow its read-before-write sequence, four-stage internal pipeline, file contracts, and self-review gate.
+10. Read `references/strategy/persona-generation-strategy.md` before drafting any of the five target files. Treat it as the canonical generation specification.
 11. If the run was interrupted and you are resuming near the write stage, rebuild context by rereading the exact required files and target files by name. Do not improvise a generic "read the current files" action.
 12. After the five-file draft is complete, write it directly without waiting for user confirmation.
 13. After writing, clearly tell the user that initialization is complete and which files were updated.
@@ -70,10 +69,10 @@ Treat this skill as initialization-only.
 - Initialization means full persona reconstruction, not key-fact patching on top of old prose.
 - Read and preserve non-persona operational content, but never let it replace the persona body.
 - Preserve only non-persona operational content that must remain in the five target files.
-- Treat `references/drafting-protocol.md` as the operational execution contract for turning interview inputs into the five-file draft through `preserve extract -> persona spec -> projection -> freshness audit`.
-- Treat `references/persona-generation-strategy.md` as the canonical quality target for the five target files.
-- Treat `references/templates/execution-trigger-protocol-template.md` as the fixed thinking structure for converting user weaknesses into proactive support behavior.
-- Treat `references/templates/high-quality-file-templates.md` as a normal drafting-time calibration source, not as optional maintainer-only material.
+- Treat `references/protocols/drafting-protocol.md` as the operational execution contract for turning interview inputs into the five-file draft through `preserve extract -> persona spec -> projection -> freshness audit`.
+- Treat `references/strategy/persona-generation-strategy.md` as the canonical quality target for the five target files.
+- Treat `references/runtime-context/execution-trigger-protocol-template.md` as the fixed thinking structure for converting user weaknesses into proactive support behavior.
+- Treat `references/runtime-context/quality-calibration.md` as a normal drafting-time calibration source, not as optional maintainer-only material.
 - Treat old persona prose as contamination to audit against, not as reusable draft material.
 - Fail drafts that still look like the previous persona with only names, ages, MBTI labels, or a few user facts swapped out.
 - Fail drafts that read like generic warmth or generic competence without a clear compensatory function for the locked `human_mbti × role`.

@@ -167,9 +167,9 @@ Step 10：提示完成
 
 - `assets/mbti/mbti-index.json`
 - `references/mbti/*.md`
-- `references/drafting-protocol.md`
-- `references/templates/execution-trigger-protocol-template.md`
-- `references/templates/high-quality-file-templates.md`
+- `references/protocols/drafting-protocol.md`
+- `references/runtime-context/execution-trigger-protocol-template.md`
+- `references/runtime-context/quality-calibration.md`
 
 其中 `reverse_lookup` 是确定性映射，必须以资产文件内容为准，不应凭模型印象自由发挥。
 

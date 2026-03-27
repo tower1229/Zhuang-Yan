@@ -22,15 +22,14 @@ function containsHan(value) {
 test("runtime files required by the skill exist", () => {
   assert.equal(exists("SKILL.md"), true);
   assert.equal(exists("assets/mbti/mbti-index.json"), true);
-  assert.equal(exists("references/initialization-flow.md"), true);
-  assert.equal(exists("references/drafting-protocol.md"), true);
-  assert.equal(exists("references/write-safety.md"), true);
-  assert.equal(exists("references/examples/persona-drafting-examples.md"), true);
-  assert.equal(exists("references/templates/persona-canon-template.md"), true);
-  assert.equal(exists("references/templates/execution-trigger-protocol-template.md"), true);
-  assert.equal(exists("references/templates/high-quality-file-templates.md"), true);
+  assert.equal(exists("references/protocols/initialization-flow.md"), true);
+  assert.equal(exists("references/protocols/drafting-protocol.md"), true);
+  assert.equal(exists("references/protocols/write-safety.md"), true);
+  assert.equal(exists("references/runtime-context/persona-canon-template.md"), true);
+  assert.equal(exists("references/runtime-context/execution-trigger-protocol-template.md"), true);
+  assert.equal(exists("references/runtime-context/quality-calibration.md"), true);
   assert.equal(exists("scripts/smoke-persona-openclaw.mjs"), true);
-  assert.equal(exists("references/persona-generation-strategy.md"), true);
+  assert.equal(exists("references/strategy/persona-generation-strategy.md"), true);
   assert.equal(exists("scripts/mbti-lookup.js"), true);
 });
 
@@ -48,11 +47,11 @@ test(".clawhubignore excludes maintainer-only files", () => {
 
 test("SKILL.md requires the shipped persona generation strategy", () => {
   const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
-  assert.match(skill, /references\/persona-generation-strategy\.md/);
-  assert.match(skill, /references\/drafting-protocol\.md/);
-  assert.match(skill, /references\/templates\/persona-canon-template\.md/);
-  assert.match(skill, /references\/templates\/execution-trigger-protocol-template\.md/);
-  assert.match(skill, /references\/templates\/high-quality-file-templates\.md/);
+  assert.match(skill, /references\/strategy\/persona-generation-strategy\.md/);
+  assert.match(skill, /references\/protocols\/drafting-protocol\.md/);
+  assert.match(skill, /references\/runtime-context\/persona-canon-template\.md/);
+  assert.match(skill, /references\/runtime-context\/execution-trigger-protocol-template\.md/);
+  assert.match(skill, /references\/runtime-context\/quality-calibration\.md/);
   assert.match(skill, /references\/mbti\/<persona_mbti>\.md/);
   assert.match(skill, /preserve extract -> persona spec -> projection -> freshness audit/);
   assert.match(skill, /always restart the interview from Step 1/);
@@ -65,7 +64,6 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
   assert.match(skill, /prefer short A\/B\/C\/D questions before asking for freeform detail/);
   assert.match(skill, /Do not ask for any other canon fact/);
   assert.match(skill, /Missing target files and legacy placeholder files are not something to "work around"/);
-  assert.match(skill, /Do not read `references\/examples\/` during normal initialization/);
   assert.match(skill, /Never issue an empty `Read` call or a vague read request such as "read existing files"/);
   assert.match(skill, /Treat `SOUL\.md` and `MEMORY\.md` as section-owned files/);
   assert.match(skill, /Treat `IDENTITY\.md`, `USER\.md`, and `persona\/CANON\.md` as whole-file-owned files/);
@@ -77,7 +75,7 @@ test("SKILL.md requires the shipped persona generation strategy", () => {
 });
 
 test("initialization flow encodes the current interview constraints", () => {
-  const flow = fs.readFileSync(path.join(root, "references/initialization-flow.md"), "utf8");
+  const flow = fs.readFileSync(path.join(root, "references/protocols/initialization-flow.md"), "utf8");
   assert.match(flow, /Do not proactively append extra copy offering MBTI testing/);
   assert.match(flow, /always start a fresh initialization interview from Step 1/);
   assert.match(flow, /Do not begin by summarizing the old persona/);
@@ -115,19 +113,19 @@ test("initialization flow encodes the current interview constraints", () => {
   assert.match(flow, /preserve extract -> persona spec -> projection -> freshness audit/);
   assert.match(flow, /write fresh persona prose from the locked spec, not by editing old paragraphs/);
   assert.match(flow, /fail the draft if it still reads like the previous persona with only key facts swapped/);
-  assert.match(flow, /self-review gate from `drafting-protocol\.md`/);
-  assert.match(flow, /read `templates\/persona-canon-template\.md`/);
-  assert.match(flow, /read `templates\/execution-trigger-protocol-template\.md`/);
-  assert.match(flow, /read `templates\/high-quality-file-templates\.md`/);
+  assert.match(flow, /self-review gate from `references\/protocols\/drafting-protocol\.md`/);
+  assert.match(flow, /read `references\/runtime-context\/persona-canon-template\.md`/);
+  assert.match(flow, /read `references\/runtime-context\/execution-trigger-protocol-template\.md`/);
+  assert.match(flow, /read `references\/runtime-context\/quality-calibration\.md`/);
 });
 
 test("drafting protocol hardens the five-file generation contract", () => {
-  const protocol = fs.readFileSync(path.join(root, "references", "drafting-protocol.md"), "utf8");
-  assert.match(protocol, /references\/templates\/execution-trigger-protocol-template\.md/);
-  assert.match(protocol, /references\/templates\/high-quality-file-templates\.md/);
+  const protocol = fs.readFileSync(path.join(root, "references", "protocols", "drafting-protocol.md"), "utf8");
+  assert.match(protocol, /references\/runtime-context\/execution-trigger-protocol-template\.md/);
+  assert.match(protocol, /references\/runtime-context\/quality-calibration\.md/);
   assert.match(protocol, /references\/mbti\/<human_mbti>\.md/);
   assert.match(protocol, /references\/mbti\/<persona_mbti>\.md/);
-  assert.match(protocol, /references\/templates\/persona-canon-template\.md/);
+  assert.match(protocol, /references\/runtime-context\/persona-canon-template\.md/);
   assert.match(protocol, /current-turn fact ledger/);
   assert.match(protocol, /explicit user facts from this interview/);
   assert.match(protocol, /treat existing `USER\.md`, `MEMORY\.md`, prior smoke outputs, and strategy examples as tainted for user facts/);
@@ -188,13 +186,9 @@ test("drafting protocol hardens the five-file generation contract", () => {
 });
 
 test("persona generation strategy keeps the shipped guidance abstract instead of bundling a default persona", () => {
-  const strategy = fs.readFileSync(path.join(root, "references", "persona-generation-strategy.md"), "utf8");
-  const examples = fs.readFileSync(
-    path.join(root, "references", "examples", "persona-drafting-examples.md"),
-    "utf8",
-  );
+  const strategy = fs.readFileSync(path.join(root, "references", "strategy", "persona-generation-strategy.md"), "utf8");
   assert.match(strategy, /Context trust order/);
-  assert.match(strategy, /Example isolation/);
+  assert.match(strategy, /No shipped maintainer examples/);
   assert.match(strategy, /Language layering/);
   assert.match(strategy, /Section-level guidance/);
   assert.match(strategy, /create a believable lived rhythm that reinforces the desired persona image/);
@@ -204,21 +198,17 @@ test("persona generation strategy keeps the shipped guidance abstract instead of
   assert.match(strategy, /Initialization must be a rebuild, not a light edit of the old persona/);
   assert.match(strategy, /freshness audit/);
   assert.match(strategy, /explicitly encode the Step 6 support preference, disliked pattern, stress preference, and the default closeness style implied by the role-conditioned need profile/);
-  assert.match(strategy, /examples\/persona-drafting-examples\.md/);
   assert.doesNotMatch(strategy, /Stella|real human female companion/);
   assert.doesNotMatch(strategy, /What to call them: dear/);
-  assert.match(examples, /SOUL excerpt sketch/);
-  assert.match(examples, /MEMORY skeleton sketch/);
 });
 
 test("execution-facing guidance files stay English-first", () => {
   const files = [
     "SKILL.md",
-    "references/initialization-flow.md",
-    "references/write-safety.md",
-    "references/drafting-protocol.md",
-    "references/persona-generation-strategy.md",
-    "references/examples/persona-drafting-examples.md",
+    "references/protocols/initialization-flow.md",
+    "references/protocols/write-safety.md",
+    "references/protocols/drafting-protocol.md",
+    "references/strategy/persona-generation-strategy.md",
     "CONTRIBUTING.md",
   ];
 

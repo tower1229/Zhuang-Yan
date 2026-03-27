@@ -31,11 +31,11 @@ You must also read the MBTI asset for the human user type:
 
 You must also read the fixed execution-trigger thinking template:
 
-- `references/templates/execution-trigger-protocol-template.md`
+- `references/runtime-context/execution-trigger-protocol-template.md`
 
 You must also read the normal drafting-time quality templates:
 
-- `references/templates/high-quality-file-templates.md`
+- `references/runtime-context/quality-calibration.md`
 
 Do not draft the five files from MBTI stereotypes alone. Use the locked MBTI asset as a primary source for tone, emotional texture, strengths, weaknesses, and relationship dynamics.
 Do not draft directly from `persona_mbti` alone. Use `references/mbti/<human_mbti>.md` to understand the user's need profile, use `references/mbti/<persona_mbti>.md` to understand the target persona's attractive expression, then derive a role-conditioned `human_need_profile`, an `execution_trigger_protocol`, and a `target_persona_spec` before writing any prose.
@@ -74,11 +74,11 @@ If `Pronouns` is blank both in the current-turn facts and in `carry-forward cand
 Before drafting, read in this order:
 
 1. the locked interview answers and `human_intro`
-2. `references/write-safety.md`
-3. `references/persona-generation-strategy.md`
-4. `references/templates/persona-canon-template.md`
-5. `references/templates/execution-trigger-protocol-template.md`
-6. `references/templates/high-quality-file-templates.md`
+2. `references/protocols/write-safety.md`
+3. `references/strategy/persona-generation-strategy.md`
+4. `references/runtime-context/persona-canon-template.md`
+5. `references/runtime-context/execution-trigger-protocol-template.md`
+6. `references/runtime-context/quality-calibration.md`
 7. `references/mbti/<human_mbti>.md`
 8. `references/mbti/<persona_mbti>.md`
 9. existing `persona/CANON.md` if it exists
@@ -206,7 +206,7 @@ Before writing the files, build an internal dossier with:
 - the `target_persona_spec`
 - the `forbidden carryovers`
 - the most relevant traits from `references/mbti/<persona_mbti>.md`
-- the most relevant quality cues from `references/templates/high-quality-file-templates.md`
+- the most relevant quality cues from `references/runtime-context/quality-calibration.md`
 - the locked persona canon facts
 - the system country or timezone context used for city generation
 - the user's specific pain points, preferences, sensitivities, and desired form of address when and only when they are present in the current-turn fact ledger
@@ -442,7 +442,7 @@ The draft must fail and be rewritten if any of the following are true:
 - `USER.md` does not start with `- Name:`
 - `USER.md` invents pronouns, pet names, dislikes, diagnoses, or boundaries not explicitly provided this run
 - `USER.md` fills `Pronouns` or `Timezone` without either a current-turn answer, an allowed carry-forward value from existing `USER.md`, or an explicit blank
-- the draft copies example-specific bundles, names, or user phrasing from `references/persona-generation-strategy.md`
+- the draft copies example-specific bundles, names, or user phrasing from `references/strategy/persona-generation-strategy.md`
 - the draft preserves old persona names, city/job/family bundles, or relationship framing that are listed in `forbidden carryovers`
 - the draft still looks like a light edit of the prior persona instead of a fresh initialization
 - preserved operational content overwhelms the persona content
