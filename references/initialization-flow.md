@@ -175,8 +175,12 @@ Before drafting:
 - read `persona-generation-strategy.md`
 - read `drafting-protocol.md`
 - read `templates/persona-canon-template.md`
+- read `templates/execution-trigger-protocol-template.md`
+- read `templates/high-quality-file-templates.md`
 - read `references/mbti/<persona_mbti>.md`
+- read `references/mbti/<human_mbti>.md` as a need-analysis source
 - derive a `human need profile` from `human_mbti × role`
+- derive an internal `execution_trigger_protocol` from the fixed template and the user's weak spots, contradictions, and likely failure modes
 - derive a `target persona spec` from that need profile before writing any prose
 - read the existing five target files if they already exist
 - when reading, always name the exact file path; do not use a vague "read existing files" action

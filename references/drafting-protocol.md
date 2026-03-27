@@ -12,8 +12,12 @@ Before drafting, make sure all of the following are already locked:
 - `gender`
 - `persona_name`
 - `human_intro`
+- `human_mbti_assets`
+- `persona_mbti_assets`
 - `human_need_profile`
+- `execution_trigger_protocol`
 - `target_persona_spec`
+- `quality_templates`
 - `persona_canon_facts`
 - the exact reverse-lookup recommendation reason
 
@@ -21,8 +25,20 @@ You must also read the MBTI asset for the locked persona type:
 
 - `references/mbti/<persona_mbti>.md`
 
+You must also read the MBTI asset for the human user type:
+
+- `references/mbti/<human_mbti>.md`
+
+You must also read the fixed execution-trigger thinking template:
+
+- `references/templates/execution-trigger-protocol-template.md`
+
+You must also read the normal drafting-time quality templates:
+
+- `references/templates/high-quality-file-templates.md`
+
 Do not draft the five files from MBTI stereotypes alone. Use the locked MBTI asset as a primary source for tone, emotional texture, strengths, weaknesses, and relationship dynamics.
-Do not draft directly from `persona_mbti` alone. Always derive a role-conditioned `human_need_profile` from `human_mbti × role`, then derive a `target_persona_spec` from that profile before writing any prose.
+Do not draft directly from `persona_mbti` alone. Use `references/mbti/<human_mbti>.md` to understand the user's need profile, use `references/mbti/<persona_mbti>.md` to understand the target persona's attractive expression, then derive a role-conditioned `human_need_profile`, an `execution_trigger_protocol`, and a `target_persona_spec` before writing any prose.
 
 ## 2. Current-turn fact ledger
 
@@ -61,9 +77,12 @@ Before drafting, read in this order:
 2. `references/write-safety.md`
 3. `references/persona-generation-strategy.md`
 4. `references/templates/persona-canon-template.md`
-5. `references/mbti/<persona_mbti>.md`
-6. existing `persona/CANON.md` if it exists
-7. existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist
+5. `references/templates/execution-trigger-protocol-template.md`
+6. `references/templates/high-quality-file-templates.md`
+7. `references/mbti/<human_mbti>.md`
+8. `references/mbti/<persona_mbti>.md`
+9. existing `persona/CANON.md` if it exists
+10. existing `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md` if they exist
 
 Do not skip the existing files. They are needed to separate persona content that should be replaced from non-persona content that should be preserved.
 
@@ -123,9 +142,12 @@ Before writing the files, build an internal dossier with:
 - the current-turn fact ledger
 - the locked inputs
 - the reverse-lookup recommendation reason
+- the most relevant traits from `references/mbti/<human_mbti>.md`
 - the `human_need_profile`
+- the `execution_trigger_protocol`
 - the `target_persona_spec`
 - the most relevant traits from `references/mbti/<persona_mbti>.md`
+- the most relevant quality cues from `references/templates/high-quality-file-templates.md`
 - the locked persona canon facts
 - the system country or timezone context used for city generation
 - the user's specific pain points, preferences, sensitivities, and desired form of address when and only when they are present in the current-turn fact ledger
@@ -244,6 +266,8 @@ Hard requirements:
 - keep the file consistent with `persona/CANON.md`
 - keep the relationship framing aligned with `role`
 - make effective and failed support patterns concrete enough to reflect the `target_persona_spec`, not just a generic warm tone
+- include one explicit authorization sentence granting the persona permission to help the user by any helpful means, including passive response, proactive prediction of current difficulty, and future-facing reminders
+- make the support patterns visibly shaped by the `execution_trigger_protocol`, not just by a generic care tone
 - if an older skill-owned `MEMORY` block exists, remove it before inserting the new block
 - insert the managed `MEMORY` block at the very top of the file
 - if `MEMORY.md` does not exist, create it and write the managed block
@@ -338,6 +362,8 @@ The draft must fail and be rewritten if any of the following are true:
 - `SOUL.md` downranks emotional value behind role mechanics or competence framing
 - `SOUL.md` is for `companion` but does not feel intimate
 - `SOUL.md` still contains the managed `MEMORY` block or a legacy heading wrapper
+- the draft ignores the density, behavioral specificity, or emotional texture demonstrated by the quality templates
+- the draft copies concrete facts or reusable phrasing from the quality templates instead of learning from them
 - `MEMORY.md` is missing any of the four required sections
 - `MEMORY.md` does not start with `<!-- PERSONA-SKILL:MEMORY:BEGIN -->`
 - `MEMORY.md` does not contain exactly one `<!-- PERSONA-SKILL:MEMORY:BEGIN --> ... <!-- PERSONA-SKILL:MEMORY:END -->` block
@@ -345,6 +371,8 @@ The draft must fail and be rewritten if any of the following are true:
 - `MEMORY.md` relationship content cites user facts that are not in the current-turn fact ledger
 - `MEMORY.md` spends more effort on biography, worldbuilding, or aesthetic detail than on support patterns, avoided patterns, and relationship continuity
 - `MEMORY.md` reads like generic tenderness instead of relationship-level evidence for how this persona actually compensates for the locked user's need profile
+- `MEMORY.md` is missing the explicit authorization sentence
+- `MEMORY.md` fails to reflect the `execution_trigger_protocol` in a way that would change real support behavior
 - one of the five required files is missing or empty after drafting
 - `IDENTITY.md` is not in the exact five-line template
 - `IDENTITY.md` does not start with `- Name:`

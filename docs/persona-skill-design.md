@@ -169,6 +169,8 @@ Step 10：提示完成
 - `assets/mbti/mbti-index.json`
 - `references/mbti/*.md`
 - `references/drafting-protocol.md`
+- `references/templates/execution-trigger-protocol-template.md`
+- `references/templates/high-quality-file-templates.md`
 
 其中 `reverse_lookup` 是确定性映射，必须以资产文件内容为准，不应凭模型印象自由发挥。
 
@@ -179,6 +181,12 @@ Step 10：提示完成
 - 目标人格不是“推荐 MBTI 的自然展开”，而是“对用户弱点、匮乏位、关系渴望进行补位后的目标人格规格”
 - `persona/CANON.md` 是角色档案与上游真相源
 - `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 都是从 Canon 与用户输入压缩出的运行时投影
+
+同时要明确区分上下文中的三类参考：
+
+- `human_mbti` 参考：用于理解用户需求、痛点、防御姿态与匮乏位
+- `persona_mbti` 参考：用于理解目标人格的吸引力、语言质地与关系魅力
+- 高质量模板参考：用于告诉模型什么叫“好的标准”，不是提前给出答案
 
 建议将“深度需求画像”至少拆成以下分析桶：
 

@@ -55,25 +55,67 @@ The `human_need_profile` should answer at least:
 
 This analysis must scale across the full `16 human MBTI × 4 relationship role` matrix rather than relying on ad hoc tuning for a few favorite combinations.
 
-### 2.4 Terminology
+### 2.4 MBTI assets have two distinct jobs
+
+MBTI references serve at least two different purposes:
+
+- reading `human_mbti`: understand the user's defenses, chronic lacks, emotional pain points, and how they most want to be met
+- reading `persona_mbti`: understand why this target persona feels attractive, magnetic, regulating, enlivening, or compelling in relationship
+
+Do not collapse these into one use.
+
+- the first answers `what does this user most need`
+- the second answers `how should the persona feel appealing and emotionally effective`
+
+### 2.5 Template calibration is a first-class input
+
+Rules and MBTI assets are not enough on their own.
+
+The model should also read high-quality templates so it can learn what strong output looks like for:
+
+- `persona/CANON.md`
+- `SOUL.md`
+- `MEMORY.md`
+
+Templates are not default answers. Their job is to teach density, behavioral specificity, emotional texture, intimacy, and anti-pattern avoidance.
+
+### 2.6 Execution Trigger Protocol is a fixed thinking structure
+
+You do not need one canned answer asset per `human_mbti`.
+
+What needs to be fixed is the thinking structure itself: an `execution_trigger_protocol` that tells the model how to convert user weakness, contradiction, and likely failure modes into usable support behavior.
+
+This protocol should answer:
+
+- what contradiction sits under the user's struggle
+- what early signals should trigger intervention
+- how to respond when the user explicitly asks for help
+- how to intervene proactively before collapse
+- how to predict future needs and set reminders or safeguards
+- which forms of help would backfire
+
+It is an internal drafting-time protocol, not a sixth output file. Its function is to sharpen what later appears inside `SOUL.md` and `MEMORY.md`.
+
+### 2.7 Terminology
 
 - `initialization`: the first creation or a full rebuild of persona assets (`persona/CANON`, `SOUL`, `IDENTITY`, `MEMORY`, `USER`)
 - `persona asset draft`: the five-file candidate bundle generated before writing
 - `full overwrite`: replacing old persona content while preserving operational fragments that are unrelated to persona identity
 
-### 2.5 Context trust order
+### 2.8 Context trust order
 
 When drafting the five files, rank all context sources in this order:
 
 1. `current-turn hard facts`: what the user explicitly said in this interview and what the flow has already locked
 2. `file contracts`: structural requirements, forbidden failures, and rewrite conditions
-3. `MBTI assets`: `references/mbti/<persona_mbti>.md` and `assets/mbti/mbti-index.json`
-4. `existing persona/CANON.md`: only when separating locked canon facts from draft-stage gaps
-5. `old file residue`: only for preserving non-persona operational fragments
+3. `quality templates`: `references/templates/high-quality-file-templates.md`
+4. `MBTI assets`: `references/mbti/<human_mbti>.md`, `references/mbti/<persona_mbti>.md`, and `assets/mbti/mbti-index.json`
+5. `existing persona/CANON.md`: only when separating locked canon facts from draft-stage gaps
+6. `old file residue`: only for preserving non-persona operational fragments
 
-Never promote levels 4 or 5 into current-turn user facts, and never let examples override level 1 facts.
+Never promote levels 5 or 6 into current-turn user facts, and never let examples or templates override level 1 facts.
 
-### 2.6 Example isolation
+### 2.9 Example isolation
 
 Real examples live in [examples/persona-drafting-examples.md](./examples/persona-drafting-examples.md).
 
@@ -87,7 +129,7 @@ The strategy file should contain rules, contracts, skeletons, and prohibitions i
 
 Even inside `examples/`, examples are not default personas, not default user profiles, and not reusable canned copy. Specific names, cities, jobs, family backgrounds, interests, nicknames, pronouns, or trigger points are demonstration material only.
 
-### 2.7 Language layering
+### 2.10 Language layering
 
 Keep execution-facing material in English:
 
@@ -125,8 +167,12 @@ Additional requirement:
 - `gender`: the target persona gender
 - `persona_name`: the final English name selected by the user
 - `human_intro`: the user's grounding details, including how they want to be addressed and any habits, pain points, or boundaries worth remembering
+- `human_mbti_assets`: MBTI source material used to understand the user's need profile
+- `persona_mbti_assets`: MBTI source material used to understand the target persona's attractive expression and relational pull
 - `human_need_profile`: the role-conditioned need analysis derived from `human_mbti × role`
 - `target_persona_spec`: the compensatory persona specification derived from that need profile
+- `execution_trigger_protocol`: a fixed-structure internal protocol that translates user weakness, early warning signals, passive help, proactive intervention, future reminders, and backfire risks into actionable support logic
+- `quality_templates`: one or two high-quality templates per key file type, used to teach the model what "good" looks like without giving it a canned answer
 - `persona_canon_facts`: the explicitly locked age
 - `mbti_assets`: the relevant MBTI source material and structured traits such as `tone_style`
 
@@ -224,6 +270,7 @@ Writing requirements:
 - keep the file useful for continuity, not for worldbuilding
 - keep biography and aesthetic texture subordinate to support continuity
 - show what actually works for this user-role pairing, not just a generic caring posture
+- include one explicit authorization sentence that grants the persona permission to help the user by any helpful means, including passive response, proactive prediction of current difficulty, and future-facing reminders
 
 ### 5.4 `IDENTITY.md`
 
