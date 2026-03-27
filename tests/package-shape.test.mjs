@@ -137,6 +137,8 @@ test("drafting protocol hardens the five-file generation contract", () => {
   assert.match(protocol, /age must be explicit as a hard canon fact/);
   assert.match(protocol, /city must be randomly selected from the current system country or, if unavailable, from the current system timezone context/);
   assert.match(protocol, /the persona image the user is most likely longing for/);
+  assert.match(protocol, /Section drafting rules/);
+  assert.match(protocol, /every line should help explain why this person would feel right to the user/);
   assert.match(protocol, /failing to generate `MEMORY\.md` because an older workspace did not already have one/);
   assert.match(protocol, /one of the five required files is missing or empty after drafting/);
   assert.match(protocol, /Never preserve or discuss edits to files outside the five target persona files/);
@@ -152,6 +154,8 @@ test("persona generation strategy keeps the shipped guidance abstract instead of
   assert.match(strategy, /Context trust order/);
   assert.match(strategy, /Example isolation/);
   assert.match(strategy, /Language layering/);
+  assert.match(strategy, /Section-level guidance/);
+  assert.match(strategy, /create a believable lived rhythm that reinforces the desired persona image/);
   assert.match(strategy, /examples\/persona-drafting-examples\.md/);
   assert.doesNotMatch(strategy, /Stella|real human female companion/);
   assert.doesNotMatch(strategy, /What to call them: dear/);

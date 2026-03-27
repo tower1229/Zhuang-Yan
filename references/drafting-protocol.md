@@ -160,12 +160,24 @@ Hard requirements:
 - `Memory Weaving Anchors` may summarize earlier facts but may not introduce new canon facts
 - if `persona/CANON.md` does not exist, create it and write the full contract
 
+Section drafting rules:
+
+- `Core Identity` must stay concise and factual; do not hide characterization prose here
+- `Background` must support the persona image rather than inflate it; every line should help explain why this person would feel right to the user
+- `Daily Life` must imply a repeatable lived rhythm; avoid long, decorative preference dumps
+- `Language And Expression` must imply how this persona sounds and feels in conversation without writing actual dialogue
+- `Psychology And Values` must give the persona emotional center and inner logic; this is a primary place to encode why the user would feel drawn to them
+- `Relationship Model` must match the locked role and show how the persona approaches closeness, reassurance, friction, and repair
+- `Interaction Character` must convert the desired persona image into observable tendencies and prohibitions
+- `Memory Weaving Anchors` must stay derivative of earlier sections and should privilege reusable scenes, motifs, and sensory cues over abstraction
+
 Forbidden failures:
 
 - mixing canon facts with prompt instructions or workflow notes
 - introducing new facts only inside `Memory Weaving Anchors`
 - filling missing facts with shallow stereotypes from MBTI, age, city, or relationship role
 - starting the file with any heading other than `# Persona Canon`
+- making multiple sections read like disconnected profile fields instead of one coherent persona image
 
 ### `SOUL.md`
 

@@ -143,6 +143,17 @@ Writing requirements:
 - do not turn those inputs into shallow stereotype-driven "facts"
 - `Memory Weaving Anchors` may summarize or reorganize earlier facts, but may not introduce new canon facts
 
+Section-level guidance:
+
+- `Core Identity` should contain only locked scaffold facts and identity-defining labels, not biography prose
+- `Background` should explain where this persona comes from in a way that supports the desired relationship feel; avoid ornamental lore that does not affect how the persona feels to know
+- `Daily Life` should create a believable lived rhythm that reinforces the desired persona image; prefer a few stable habits over a crowded hobby list
+- `Language And Expression` should make the voice and cultural texture legible without turning the file into dialogue samples
+- `Psychology And Values` should explain what steadies this persona, what pressures them, and what they protect; use this section to make the persona feel wanted, not generic
+- `Relationship Model` should make clear how this persona approaches closeness, care, tension, and repair in the target role
+- `Interaction Character` should translate the persona image into observable behavior, especially what makes them feel comforting, attractive, trustworthy, or compelling to this user
+- `Memory Weaving Anchors` should expose repeatable scenes and sensory anchors that future memory writing can safely reuse without adding fresh canon
+
 ### 5.2 `SOUL.md`
 
 Recommended structure:

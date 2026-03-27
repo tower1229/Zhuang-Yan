@@ -111,6 +111,17 @@
 - 其他人物事实应在不违背已选信息的前提下，基于对用户需求的深刻洞察，反推出其真正渴望的人物画像；不得写成偷懒的刻板印象拼贴
 - `Memory Weaving Anchors` 只能重述或整理前文已经成立的事实，不得新增人物事实
 
+分节约束：
+
+- `Core Identity` 只放锁定的人物骨架字段，不承担小传 prose
+- `Background` 要解释这个人为什么会让用户觉得“对味”，而不是堆装饰性设定
+- `Daily Life` 要写出可持续的生活节奏，优先少量稳定习惯，而不是堆兴趣清单
+- `Language And Expression` 负责让语言质地和表达方式变得可感，但不要写成对白示例
+- `Psychology And Values` 要给人物稳定的内在重心，解释其吸引力、可靠感或亲近感来自哪里
+- `Relationship Model` 要讲清楚这个 persona 在目标关系里如何靠近、照顾、起冲突和修复
+- `Interaction Character` 要把“用户真正渴望的人物画像”翻译成可观察的行为倾向与禁止模式
+- `Memory Weaving Anchors` 要优先提供可复用的场景、意象与感官锚点，但不能新增事实
+
 ### 5.2 SOUL.md（运行时互动协议）
 
 `SOUL.md` 的目标不是承载完整人设，而是在最小 token 成本下稳定塑造互动方式。
