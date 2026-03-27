@@ -30,12 +30,16 @@ Treat this skill as initialization-only.
 - In Step 2, make it explicit that you are asking for the OpenClaw persona's gender, not the human user's gender.
 - In Step 3, make it explicit that you are asking about the relationship between the user and the OpenClaw persona. Preferred wording: `What kind of relationship do you want us to have?`
 - Use the deterministic MBTI mapping in `assets/mbti/mbti-index.json`. Prefer running `node scripts/mbti-lookup.js <human_mbti> <role>` to get the exact recommendation.
+- Treat the reverse lookup result as a skeleton, not a finished persona design. After Step 4, derive a role-conditioned human need profile from `human_mbti × role`, then use that need profile to shape the target persona spec before drafting.
+- Treat emotional value as the primary optimization target across all roles. The role changes how that emotional value should be expressed; it does not replace the need for it.
+- For `companion`, prioritize intimacy first. Do not let the draft collapse into generic support, abstract safety, or polite warmth without a felt sense of closeness.
 - After presenting the Step 4 recommendation and reason, continue directly to naming without asking the user to confirm the recommendation.
 - In Step 5, generate only English candidate names, and make sure the naming style matches the locked persona gender and persona direction.
 - In Step 6, inspect the existing `USER.md` first. If `What to call them` or `Pronouns` is blank or missing, explicitly ask the user to fill the missing field instead of guessing it. Do not block initialization on a missing `Timezone`.
 - If the user declines to provide `Pronouns`, leave the field blank.
 - In Step 6 and Step 7, prefer short A/B/C/D questions before asking for freeform detail. Use freeform follow-ups only when a stable fact or preference still needs to be locked.
-- In Step 7, proactively lock only the persona's age. Do not ask for any other canon fact. Generate the rest of `persona/CANON.md` by inferring the persona image the user is most likely longing for, while staying consistent with the locked age, gender, persona MBTI, relationship role, and user-side need profile.
+- Do not ask the user to tune relationship intensity as a separate control in Step 6. The role-conditioned need profile should already decide the default emotional intensity and closeness style.
+- In Step 7, proactively lock only the persona's age. Do not ask for any other canon fact. Generate the rest of `persona/CANON.md` by inferring the persona image the user is most likely longing for, while staying consistent with the locked age, gender, persona MBTI, relationship role, and role-conditioned user-side need profile.
 - Missing target files and legacy placeholder files are not something to "work around". Regenerate all five target files into the current contract during this run.
 - Do not read `references/examples/` during normal initialization unless the user explicitly asks for examples or you are doing a targeted maintainer debugging pass.
 - When you need to read context for drafting or resume after an interruption, name the concrete file path you are reading. Never issue an empty `Read` call or a vague read request such as "read existing files".
@@ -65,6 +69,7 @@ Treat this skill as initialization-only.
 - Preserve only non-persona operational content that must remain in the five target files.
 - Treat `references/drafting-protocol.md` as the operational execution contract for turning interview inputs into the five-file draft.
 - Treat `references/persona-generation-strategy.md` as the canonical quality target for the five target files.
+- Fail drafts that read like generic warmth or generic competence without a clear compensatory function for the locked `human_mbti × role`.
 
 ## Drafting rules
 

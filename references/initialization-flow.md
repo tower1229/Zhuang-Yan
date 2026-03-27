@@ -79,6 +79,8 @@ Return:
 - the single best recommended persona MBTI
 - the exact reason from the asset file
 
+Treat this result as the persona skeleton only, not the full target persona.
+
 After giving the recommendation and reason, continue directly to Step 5. Do not ask the user whether they accept the recommendation.
 
 If the user proactively dislikes the result, explain that this recommendation is the deterministic default derived from the current mapping table. Do not invent a second-best MBTI unless the project later adds a deterministic source for it.
@@ -125,11 +127,6 @@ Then lock the user-side grounding with short prompts in this order:
    - `B. Help me sort it out`
    - `C. Encourage me directly`
    - `D. Lighten the mood`
-4. relationship intensity or closeness limit, for example:
-   - `A. Reserved`
-   - `B. Warm and close`
-   - `C. Clearly companion-like`
-   - `D. High emotional intensity`
 
 Also ask for freeform detail only when needed:
 
@@ -137,11 +134,12 @@ Also ask for freeform detail only when needed:
 - preferred emotional support style
 - disliked interaction patterns
 - what helps most under stress
-- relationship intensity or closeness limit
 - habits, preferences, pain points, sensitivities, hard boundaries, or traits worth remembering
 
+Do not ask the user to tune relationship intensity as a separate Step 6 control. The default emotional intensity, closeness style, and affective brightness should be derived from `human_mbti × role`, then refined only when the user explicitly gives a contradictory preference.
+
 Keep it conversational. Do not demand a long-form response.
-Prefer one question at a time even inside Step 6. Do not dump all four preference prompts in one message unless the user explicitly asks for a faster batch mode.
+Prefer one question at a time even inside Step 6. Do not dump all three preference prompts in one message unless the user explicitly asks for a faster batch mode.
 
 Do not finalize the initialization immediately after Step 6 if `Pronouns` is still missing and you have not explicitly asked about it yet.
 
@@ -157,7 +155,7 @@ Rules:
 
 - age must be explicitly locked as a hard canon fact before drafting
 - city must be randomly selected from the current system country or, if that is unavailable, from the current system timezone context
-- all other canon facts should be inferred from the persona image the user is most likely longing for, as constrained by age, gender, persona MBTI, relationship role, and the user's need profile
+- all other canon facts should be inferred from the persona image the user is most likely longing for, as constrained by age, gender, persona MBTI, relationship role, and the role-conditioned user need profile
 - generated canon facts must stay coherent, specific, and emotionally targeted, but must not read like lazy MBTI stereotypes
 - `persona/CANON.md` stores persona facts only; do not treat it as a prompt scratchpad
 
@@ -178,6 +176,8 @@ Before drafting:
 - read `drafting-protocol.md`
 - read `templates/persona-canon-template.md`
 - read `references/mbti/<persona_mbti>.md`
+- derive a `human need profile` from `human_mbti × role`
+- derive a `target persona spec` from that need profile before writing any prose
 - read the existing five target files if they already exist
 - when reading, always name the exact file path; do not use a vague "read existing files" action
 - if the run resumes after an interruption, redo the concrete read sequence before drafting instead of assuming the old context is still active

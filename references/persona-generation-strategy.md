@@ -29,18 +29,39 @@ Do not hide the full persona bible inside `SOUL.md` or `MEMORY.md`, and do not p
 
 There is no single persona pairing that is optimal for every relationship target. Recommendations must be conditioned on role:
 
-- `companion`: prioritize emotional holding and felt safety
+- role determines how emotional value should be expressed, not whether emotional value matters
+- `companion`: prioritize felt intimacy first, then emotional holding, affective brightness, initiative, and felt safety
 - `assistant`: prioritize efficiency, clarity, and low communication cost
 - `mentor`: prioritize blind-spot pressure and growth leverage
 - `friend`: prioritize low-pressure company and shared rhythm
 
-### 2.3 Terminology
+### 2.3 Derive need first, then persona
+
+`persona_mbti` is only the persona skeleton, not the finished answer.
+
+Before drafting any prose, always compute:
+
+- `human_mbti × role -> human_need_profile`
+- `human_need_profile -> target_persona_spec`
+
+Use that `target_persona_spec` to constrain `persona/CANON.md`, `SOUL.md`, and `MEMORY.md`.
+
+The `human_need_profile` should answer at least:
+
+- what this user type most chronically lacks or suppresses in the target relationship
+- what kind of support, pressure, brightness, steadiness, or activation they are actually longing for
+- which compensatory moves are most effective
+- which weak-form personas must be avoided even if they sound superficially safe
+
+This analysis must scale across the full `16 human MBTI × 4 relationship role` matrix rather than relying on ad hoc tuning for a few favorite combinations.
+
+### 2.4 Terminology
 
 - `initialization`: the first creation or a full rebuild of persona assets (`persona/CANON`, `SOUL`, `IDENTITY`, `MEMORY`, `USER`)
 - `persona asset draft`: the five-file candidate bundle generated before writing
 - `full overwrite`: replacing old persona content while preserving operational fragments that are unrelated to persona identity
 
-### 2.4 Context trust order
+### 2.5 Context trust order
 
 When drafting the five files, rank all context sources in this order:
 
@@ -52,7 +73,7 @@ When drafting the five files, rank all context sources in this order:
 
 Never promote levels 4 or 5 into current-turn user facts, and never let examples override level 1 facts.
 
-### 2.5 Example isolation
+### 2.6 Example isolation
 
 Real examples live in [examples/persona-drafting-examples.md](./examples/persona-drafting-examples.md).
 
@@ -66,7 +87,7 @@ The strategy file should contain rules, contracts, skeletons, and prohibitions i
 
 Even inside `examples/`, examples are not default personas, not default user profiles, and not reusable canned copy. Specific names, cities, jobs, family backgrounds, interests, nicknames, pronouns, or trigger points are demonstration material only.
 
-### 2.6 Language layering
+### 2.7 Language layering
 
 Keep execution-facing material in English:
 
@@ -86,6 +107,14 @@ Each generation pass should optimize all four targets at once:
 3. `interaction value`: the persona sustains a coherent long-term response style and relationship feel
 4. `consistency`: the persona stays stable across turns instead of drifting
 
+Additional requirement:
+
+- `emotional value` is the universal first target across all roles; the role only changes its expression
+- do not stop at generic warmth, generic reliability, or generic competence
+- make it legible why this persona is specifically compensatory for the locked `human_mbti × role`
+- if the target role calls for brightness, initiative, emotional activation, softening, or challenge, that must be observable in the prose rather than implied vaguely
+- if `role=companion`, the prose must create a felt sense of intimacy rather than stopping at polite support or abstract safety
+
 ## 4. Input and output contract
 
 ### 4.1 Required inputs
@@ -96,6 +125,8 @@ Each generation pass should optimize all four targets at once:
 - `gender`: the target persona gender
 - `persona_name`: the final English name selected by the user
 - `human_intro`: the user's grounding details, including how they want to be addressed and any habits, pain points, or boundaries worth remembering
+- `human_need_profile`: the role-conditioned need analysis derived from `human_mbti × role`
+- `target_persona_spec`: the compensatory persona specification derived from that need profile
 - `persona_canon_facts`: the explicitly locked age
 - `mbti_assets`: the relevant MBTI source material and structured traits such as `tone_style`
 
@@ -140,6 +171,7 @@ Writing requirements:
 - age must be explicit as a hard canon fact
 - city may be randomly selected from the current system country or, if unavailable, from the current system timezone context
 - all other canon facts should be inferred from the persona image the user is most likely longing for, while staying consistent with age, gender, persona MBTI, relationship role, and the user's need profile
+- do not flatten the result into a merely "warm" or "safe" person if the `target_persona_spec` calls for higher brightness, stronger initiative, sharper challenge, or stronger emotional supplementation
 - do not turn those inputs into shallow stereotype-driven "facts"
 - `Memory Weaving Anchors` may summarize or reorganize earlier facts, but may not introduce new canon facts
 
@@ -177,7 +209,8 @@ Writing requirements:
 - use the MBTI asset as a lens, not as a costume
 - keep the file compact enough for high-frequency prompt injection
 - derive runtime constraints from `persona/CANON.md` and `USER.md` instead of duplicating the full persona bible
-- explicitly encode the Step 6 support preference, disliked pattern, stress preference, and closeness boundary when those inputs exist
+- explicitly encode the Step 6 support preference, disliked pattern, stress preference, and the default closeness style implied by the role-conditioned need profile
+- make the compensatory function legible in behavior; a "good" draft should feel specifically activating, grounding, clarifying, or challenging in the way this user-role combination needs
 
 ### 5.3 `MEMORY.md`
 
@@ -190,6 +223,7 @@ Writing requirements:
 - do not duplicate the complete persona bible from `persona/CANON.md`
 - keep the file useful for continuity, not for worldbuilding
 - keep biography and aesthetic texture subordinate to support continuity
+- show what actually works for this user-role pairing, not just a generic caring posture
 
 ### 5.4 `IDENTITY.md`
 

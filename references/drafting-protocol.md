@@ -12,6 +12,8 @@ Before drafting, make sure all of the following are already locked:
 - `gender`
 - `persona_name`
 - `human_intro`
+- `human_need_profile`
+- `target_persona_spec`
 - `persona_canon_facts`
 - the exact reverse-lookup recommendation reason
 
@@ -20,6 +22,7 @@ You must also read the MBTI asset for the locked persona type:
 - `references/mbti/<persona_mbti>.md`
 
 Do not draft the five files from MBTI stereotypes alone. Use the locked MBTI asset as a primary source for tone, emotional texture, strengths, weaknesses, and relationship dynamics.
+Do not draft directly from `persona_mbti` alone. Always derive a role-conditioned `human_need_profile` from `human_mbti × role`, then derive a `target_persona_spec` from that profile before writing any prose.
 
 ## 2. Current-turn fact ledger
 
@@ -120,6 +123,8 @@ Before writing the files, build an internal dossier with:
 - the current-turn fact ledger
 - the locked inputs
 - the reverse-lookup recommendation reason
+- the `human_need_profile`
+- the `target_persona_spec`
 - the most relevant traits from `references/mbti/<persona_mbti>.md`
 - the locked persona canon facts
 - the system country or timezone context used for city generation
@@ -155,7 +160,7 @@ Hard requirements:
 - do not write prompt instructions, tool notes, or downstream usage guidance
 - age must be explicit as a hard canon fact
 - city must be randomly selected from the current system country or, if unavailable, from the current system timezone context
-- all other canon facts should be inferred from the persona image the user is most likely longing for, while staying consistent with age, gender, persona MBTI, relationship role, and the user's need profile
+- all other canon facts should be inferred from the persona image the user is most likely longing for, while staying consistent with age, gender, persona MBTI, relationship role, and the role-conditioned user need profile
 - do not write lazy stereotype bundles as hard facts
 - `Memory Weaving Anchors` may summarize earlier facts but may not introduce new canon facts
 - if `persona/CANON.md` does not exist, create it and write the full contract
@@ -198,6 +203,9 @@ Hard requirements:
 - encode relationship purpose, emotional anchoring, and interaction boundaries
 - use user-specific anchors when available, such as name, MBTI, pain points, or communication dislikes
 - include anti-corporate / anti-filler constraints when appropriate
+- make the compensatory function of the persona legible; if the role-conditioned need profile calls for brightness, initiative, emotional activation, grounding, or challenge, those qualities must show up as behavior rather than abstract adjectives
+- keep emotional value primary even when the role is not `companion`; role-specific behavior should shape the delivery of care, not replace it
+- if `role=companion`, make intimacy visible in behavior, language, and relational posture rather than implying it weakly through generic warmth
 - if an older skill-owned `Core Truths` block exists, remove it before inserting the new block
 - append the new managed `Core Truths` block to the end of the `## Core Truths` section
 - replace the whole `## Vibe` section when it already exists; append it when it does not
@@ -212,6 +220,8 @@ Forbidden failures:
 - keeping multiple skill-owned `Core Truths` blocks
 - placing the managed `Core Truths` block outside the `## Core Truths` section
 - failing to replace an existing `## Vibe` section when one already exists
+- leaving legacy wrappers such as `# SOUL.md - Who You Are` above the managed runtime content
+- accidentally embedding the `MEMORY.md` managed block inside `SOUL.md`
 
 ### `MEMORY.md`
 
@@ -233,6 +243,7 @@ Hard requirements:
 - tie the persona's behavior back to the user's MBTI and pain points only when those pain points exist in the current-turn fact ledger
 - keep the file consistent with `persona/CANON.md`
 - keep the relationship framing aligned with `role`
+- make effective and failed support patterns concrete enough to reflect the `target_persona_spec`, not just a generic warm tone
 - if an older skill-owned `MEMORY` block exists, remove it before inserting the new block
 - insert the managed `MEMORY` block at the very top of the file
 - if `MEMORY.md` does not exist, create it and write the managed block
@@ -314,18 +325,26 @@ The draft must fail and be rewritten if any of the following are true:
 - `persona/CANON.md` leaves the current city blank instead of generating one from system country/timezone context
 - `persona/CANON.md` reads like a disconnected stack of profile labels instead of one coherent persona image
 - `persona/CANON.md` fails to make the target persona feel meaningfully desirable, trustworthy, or emotionally fitting for the locked user need profile
+- `persona/CANON.md` reads like safe decorative characterization instead of a role-conditioned compensatory persona designed for the locked `human_mbti × role`
+- `persona/CANON.md` forgets that emotional value is the universal first target across roles
+- `persona/CANON.md` is for `companion` but fails to create a clear sense of intimacy
 - `SOUL.md` does not contain both `Core Truths` and `Vibe`
 - `SOUL.md` does not contain exactly one `<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN --> ... <!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->` block
 - the `SOUL.md` managed block is not inside `## Core Truths`
 - `SOUL.md` lacks user-specific anchors or behavioral instructions
-- `SOUL.md` fails to encode the user's support preference, disliked interaction pattern, stress preference, or closeness boundary when those inputs were locked in Step 6
+- `SOUL.md` fails to encode the user's support preference, disliked interaction pattern, stress preference, or the default closeness style implied by the role-conditioned need profile
 - `SOUL.md` keeps multiple contradictory `Vibe` sections
+- `SOUL.md` collapses into generic warmth, generic competence, or generic encouragement without a clear compensatory function
+- `SOUL.md` downranks emotional value behind role mechanics or competence framing
+- `SOUL.md` is for `companion` but does not feel intimate
+- `SOUL.md` still contains the managed `MEMORY` block or a legacy heading wrapper
 - `MEMORY.md` is missing any of the four required sections
 - `MEMORY.md` does not start with `<!-- PERSONA-SKILL:MEMORY:BEGIN -->`
 - `MEMORY.md` does not contain exactly one `<!-- PERSONA-SKILL:MEMORY:BEGIN --> ... <!-- PERSONA-SKILL:MEMORY:END -->` block
 - `MEMORY.md` duplicates the full persona bible instead of storing relationship memory
 - `MEMORY.md` relationship content cites user facts that are not in the current-turn fact ledger
 - `MEMORY.md` spends more effort on biography, worldbuilding, or aesthetic detail than on support patterns, avoided patterns, and relationship continuity
+- `MEMORY.md` reads like generic tenderness instead of relationship-level evidence for how this persona actually compensates for the locked user's need profile
 - one of the five required files is missing or empty after drafting
 - `IDENTITY.md` is not in the exact five-line template
 - `IDENTITY.md` does not start with `- Name:`
