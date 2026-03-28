@@ -44,7 +44,7 @@
 
 - 使用确定性 reverse lookup。
 - Step 3 的 lookup 输入只能来自 Step 1 刚刚锁定的 `human_mbti`。
-- 必须把 Step 1 采集到的 MBTI 代码原样传给 lookup，不允许手改、不允许猜、不允许沿用当前运行人格、旧 `CANON`、旧 `SOUL` 或任何现有人格残留里的 MBTI。
+- 必须把 Step 1 采集到的 MBTI 代码原样传给 lookup，不允许手改、不允许猜、不允许沿用当前运行人格、旧 `PERSONA_PROFILE`、旧 `SOUL` 或任何现有人格残留里的 MBTI。
 - 当前运行人格只是一层正在被重建的外壳，不是初始化事实源；一旦 Step 1 已锁定 `human_mbti`，Step 3 就只能围绕这个值执行。
 - 标准命令：
 
@@ -102,9 +102,9 @@ node scripts/mbti-lookup.js <human_mbti>
 ## Step 6：只锁定年龄
 
 - 进入起草前，必须明确询问人格年龄。
-- Step 6 只允许问年龄，不允许顺带再问城市、职业、家庭、兴趣等其他 canon 事实。
+- Step 6 只允许问年龄，不允许顺带再问城市、职业、家庭、兴趣等其他 profile 事实。
 - 年龄必须锁死，不能跳过、不能留白。
-- 其他 canon 事实都留到起草阶段再推导。
+- 其他 `PERSONA_PROFILE` 事实都留到起草阶段再推导。
 
 ## Step 7：交给起草规范
 
@@ -119,7 +119,7 @@ node scripts/mbti-lookup.js <human_mbti>
 写入完成后必须明确告知：
 
 - 初始化已完成
-- 已更新 `persona/CANON.md`、`SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`
+- 已更新 `persona/PERSONA_PROFILE.md`、`SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`
 - 如果覆盖了现有人格，也要明确说明
 
 不要在完成提示里引申到其他文件或其他工作流。

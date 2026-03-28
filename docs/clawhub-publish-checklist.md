@@ -7,6 +7,7 @@
   - `references/protocols/initialization-flow.md`
   - `references/protocols/drafting-spec.md`
   - `references/runtime-context/template-pack.md`
+  - `references/runtime-context/persona-profile-consumption-guide.md`
 - 数据资产只依赖：
   - `assets/mbti/mbti-index.json`
   - `references/mbti/*.md`
@@ -22,6 +23,7 @@
   - `references/protocols/initialization-flow.md`
   - `references/protocols/drafting-spec.md`
   - `references/runtime-context/template-pack.md`
+  - `references/runtime-context/persona-profile-consumption-guide.md`
 - 确认旧文件已移除：
   - `references/protocols/drafting-protocol.md`
   - `references/protocols/write-safety.md`
@@ -29,13 +31,15 @@
   - `references/runtime-context/persona-canon-template.md`
   - `references/runtime-context/execution-trigger-protocol-template.md`
   - `references/runtime-context/quality-calibration.md`
+  - `references/runtime-context/canon-consumption-guide.md`
   - `docs/persona-generation-strategy.md`
 - 确认 Skill 仍只承担人格初始化，不包含状态查询和跨 skill 联动
 - 确认渐进式披露顺序没有被破坏：
   - `SKILL.md` 只负责是否启动
   - `initialization-flow.md` 只负责采访流程
-  - `drafting-spec.md` 只负责起草与写入
+  - `drafting-spec.md` 只负责起草、profile normalization 与写入
   - `template-pack.md` 只负责模板与校准
+  - `persona-profile-consumption-guide.md` 只负责 `PERSONA_PROFILE` 的结构约定与消费方式
 
 ## 建议发布方式
 
@@ -56,8 +60,9 @@ npm run publish:clawhub
 - 验证 Step 5 只补称呼/代词/长期备注
 - 验证 Step 6 只问年龄
 - 验证起草结果仍只写五个目标文件
+- 验证 `persona/PERSONA_PROFILE.md` 包含 `Meta / Appearance Tendencies / Constraint Rules / Retrieval Units`
+- 验证 `PERSONA_PROFILE` 不含当前时间判断、即时事件或季节结论
 - 验证 `MEMORY.md` 不含旧人格残留
-- 验证 `CANON.md` 不含默认 `Species: Human` / `Birthplace`
 - 验证初始化不再询问额外分类标签
 
 ## ClawHub 当前格式要点

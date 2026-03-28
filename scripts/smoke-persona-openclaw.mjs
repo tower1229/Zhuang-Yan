@@ -13,7 +13,7 @@ const sourceAgentDir = path.join(home, ".openclaw", "agents", "main", "agent");
 const sourceWorkspace = path.join(home, ".openclaw", "workspace");
 const skillFolderName = "persona-skill";
 const defaultSessionId = `persona-smoke-${Date.now()}`;
-const defaultMessages = [
+const matureScenarioMessages = [
   "调用 persona 进行初始化",
   "ENFP",
   "B",
@@ -22,17 +22,32 @@ const defaultMessages = [
   "没有其他需要长期记住的。",
   "27",
 ];
+const studentScenarioMessages = [
+  "调用 persona 进行初始化",
+  "INFP",
+  "B",
+  "B",
+  "叫我泛舟，代词用他。",
+  "没有其他需要长期记住的。",
+  "19",
+];
+const smokeScenarios = {
+  mature: matureScenarioMessages,
+  student: studentScenarioMessages,
+};
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
-const personaFiles = ["persona/CANON.md", "SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];
+const personaFiles = ["persona/PERSONA_PROFILE.md", "SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];
 
 function parseArgs(argv) {
   const options = {
     cleanup: false,
     json: false,
+    scenario: "mature",
     seedLiveWorkspace: false,
     sessionId: defaultSessionId,
     timeoutMs: 240_000,
-    messages: defaultMessages.slice(),
+    messages: smokeScenarios.mature.slice(),
+    usesScenarioMessages: true,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -59,15 +74,28 @@ function parseArgs(argv) {
       index += 1;
       continue;
     }
+    if (arg === "--scenario") {
+      options.scenario = argv[index + 1] ?? options.scenario;
+      index += 1;
+      continue;
+    }
     if (arg === "--messages-file") {
       const filePath = path.resolve(argv[index + 1]);
       options.messages = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      options.usesScenarioMessages = false;
       index += 1;
       continue;
     }
     throw new Error(`Unknown argument: ${arg}`);
   }
 
+  if (options.usesScenarioMessages) {
+    options.messages = smokeScenarios[options.scenario]?.slice() || smokeScenarios.mature.slice();
+  }
+
+  if (!smokeScenarios[options.scenario]) {
+    throw new Error(`Unknown smoke scenario: ${options.scenario}`);
+  }
   if (!options.sessionId) {
     throw new Error("--session-id requires a value");
   }
@@ -115,10 +143,6 @@ function sanitizeSmokeConfig(config, workspaceDir) {
   next.agents.defaults = next.agents.defaults || {};
   next.agents.defaults.workspace = workspaceDir;
 
-  // Keep the smoke environment local and minimal. Runtime channel wiring and
-  // optional plugin/tool allowances from the user's live config can make the
-  // temporary config invalid even though persona initialization itself does
-  // not depend on them.
   delete next.channels;
 
   if (next.tools && typeof next.tools === "object") {
@@ -340,7 +364,8 @@ function readGeneratedFiles(workspaceDir) {
 }
 
 function runStructuralChecks(files) {
-  const canonLines = files["persona/CANON.md"].content
+  const profileContent = files["persona/PERSONA_PROFILE.md"].content;
+  const profileLines = profileContent
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean);
@@ -362,79 +387,84 @@ function runStructuralChecks(files) {
     .filter(Boolean);
 
   const userNotes =
-    files["USER.md"].content.match(
-      /^\s+- (Deep tendencies|Communication pitfalls|Open memory slot):/gm,
-    ) || [];
+    files["USER.md"].content.match(/^\s+- (Deep tendencies|Communication pitfalls|Open memory slot):/gm) || [];
   const soulManagedBlockPattern =
     /<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->[\s\S]*?<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->/;
   const memoryManagedBlockPattern =
     /<!-- PERSONA-SKILL:MEMORY:BEGIN -->[\s\S]*?<!-- PERSONA-SKILL:MEMORY:END -->/;
-  const legacyWrapperPattern =
-    /^# (IDENTITY\.md - Who Am I\?|USER\.md - About Your Human)$/m;
+  const legacyWrapperPattern = /^# (IDENTITY\.md - Who Am I\?|USER\.md - About Your Human)$/m;
   const legacyPlaceholderPattern =
     /Fill this in during your first conversation|This isn't just metadata\. It's the start of figuring out who you are\.|待定/;
-  const canonAgeLine = files["persona/CANON.md"].content.match(/^- Age:\s*(.+)$/m);
-  const canonCityLine = files["persona/CANON.md"].content.match(/^- Current City:\s*(.+)$/m);
+  const homeCityLine = profileContent.match(/^- home_city:\s*(.+)$/m);
+  const homeCountryLine = profileContent.match(/^- home_country:\s*(.+)$/m);
+  const homeTimezoneLine = profileContent.match(/^- home_timezone:\s*(.+)$/m);
 
   return [
     {
-      name: "CANON uses the full persona canon contract",
+      name: "PERSONA_PROFILE uses the timeline contract",
       pass:
-        canonLines[0] === "# Persona Canon" &&
-        /## 1\. Core Identity/.test(files["persona/CANON.md"].content) &&
-        /## 2\. Background/.test(files["persona/CANON.md"].content) &&
-        /## 3\. Daily Life/.test(files["persona/CANON.md"].content) &&
-        /## 4\. Language And Expression/.test(files["persona/CANON.md"].content) &&
-        /## 5\. Psychology And Values/.test(files["persona/CANON.md"].content) &&
-        /## 6\. Relationship Model/.test(files["persona/CANON.md"].content) &&
-        /## 7\. Interaction Character/.test(files["persona/CANON.md"].content) &&
-        /## 8\. Memory Weaving Anchors/.test(files["persona/CANON.md"].content),
+        profileLines[0] === "# PERSONA_PROFILE" &&
+        /## Meta/.test(profileContent) &&
+        /## Identity/.test(profileContent) &&
+        /## Soul/.test(profileContent) &&
+        /## Stable Memory/.test(profileContent) &&
+        /## Daily Rhythm Tendencies/.test(profileContent) &&
+        /## Appearance Tendencies/.test(profileContent) &&
+        /## Scene Anchors/.test(profileContent) &&
+        /## Constraint Rules/.test(profileContent) &&
+        /## Relationship Signals/.test(profileContent) &&
+        /## Language And Expression/.test(profileContent) &&
+        /## Retrieval Units/.test(profileContent),
     },
     {
-      name: "CANON does not carry the removed Role field",
-      pass: !/^- Role:\s*.+$/m.test(files["persona/CANON.md"].content),
-    },
-    {
-      name: "CANON locks mandatory age and generated city",
+      name: "PERSONA_PROFILE includes geo anchors and machine-facing meta",
       pass:
-        Boolean(canonAgeLine?.[1]?.trim()) &&
-        Boolean(canonCityLine?.[1]?.trim()),
+        /- schema_version:\s*.+/m.test(profileContent) &&
+        /- persona_id:\s*.+/m.test(profileContent) &&
+        Boolean(homeCityLine?.[1]?.trim()) &&
+        Boolean(homeCountryLine?.[1]?.trim()) &&
+        Boolean(homeTimezoneLine?.[1]?.trim()),
     },
     {
-      name: "CANON avoids low-signal Species and Birthplace filler",
+      name: "PERSONA_PROFILE includes identity, appearance, and retrieval fields",
       pass:
-        !/^- Species:\s*Human\s*$/m.test(files["persona/CANON.md"].content) &&
-        !/^- Birthplace:\s*.+$/m.test(files["persona/CANON.md"].content),
+        /- display_name:\s*.+/m.test(profileContent) &&
+        /- age:\s*.+/m.test(profileContent) &&
+        /- life_stage:\s*.+/m.test(profileContent) &&
+        /- default_home_style:\s*.+/m.test(profileContent) &&
+        /- default_outing_style:\s*.+/m.test(profileContent) &&
+        /- default_exercise_style:\s*.+/m.test(profileContent) &&
+        /- appearance_priority:\s*.+/m.test(profileContent) &&
+        /- change_triggers:\s*.+/m.test(profileContent) &&
+        /- non_triggers:\s*.+/m.test(profileContent) &&
+        /- style_constraints:\s*.+/m.test(profileContent) &&
+        /### unit:\s*.+/m.test(profileContent) &&
+        /- type:\s*.+/m.test(profileContent) &&
+        /- priority:\s*.+/m.test(profileContent) &&
+        /- summary:\s*.+/m.test(profileContent),
     },
     {
-      name: "CANON prefers labeled externalized attributes beyond the identity card",
+      name: "PERSONA_PROFILE includes explicit constraint groups",
       pass:
-        /- (?:Life Stage|Education|Work \/ Study Status|Living Situation|Family Structure|Growth Path):/m.test(
-          files["persona/CANON.md"].content,
-        ) &&
-        /- (?:Register|Conversational Pace|Directness|Humor Style|Care Through Speech):/m.test(
-          files["persona/CANON.md"].content,
-        ) &&
-        /- (?:Trust Pattern|Closeness Pace|Care Style|Conflict Style|Boundary Style):/m.test(
-          files["persona/CANON.md"].content,
-        ),
+        /### must/.test(profileContent) &&
+        /### should/.test(profileContent) &&
+        /### avoid/.test(profileContent),
     },
     {
-      name: "CANON avoids turning major sections into long personality prose",
+      name: "PERSONA_PROFILE avoids current-time and event claims",
       pass:
-        !/## 2\. Background\s*\n\s*\n(?!- )[\s\S]{120,}/.test(files["persona/CANON.md"].content) &&
-        !/## 4\. Language And Expression\s*\n\s*\n(?!- )[\s\S]{120,}/.test(files["persona/CANON.md"].content) &&
-        !/## 5\. Psychology And Values\s*\n\s*\n(?!- )[\s\S]{120,}/.test(files["persona/CANON.md"].content),
+        !/(?:it is spring now|currently at home|last night|今天|今晚|昨天|昨晚|当前在|现在在)/i.test(profileContent),
     },
     {
-      name: "CANON does not assign a default Secondary Language",
-      pass: !/^- Secondary Language:\s*.+$/m.test(files["persona/CANON.md"].content),
+      name: "PERSONA_PROFILE stays parse-friendly instead of turning sections into long prose",
+      pass:
+        !/## Meta\s*\n\s*\n(?![-#])[\s\S]{120,}/.test(profileContent) &&
+        !/## Appearance Tendencies\s*\n\s*\n(?![-#])[\s\S]{120,}/.test(profileContent) &&
+        !/## Constraint Rules\s*\n\s*\n(?![-#])[\s\S]{120,}/.test(profileContent),
     },
     {
       name: "SOUL contains managed Core Truths block",
-      pass:
-        /## Core Truths/.test(files["SOUL.md"].content) &&
-        soulManagedBlockPattern.test(files["SOUL.md"].content),
+      pass: /## Core Truths/.test(files["SOUL.md"].content) && soulManagedBlockPattern.test(files["SOUL.md"].content),
     },
     {
       name: "SOUL contains Vibe",
@@ -459,9 +489,7 @@ function runStructuralChecks(files) {
     {
       name: "MEMORY includes the new authorization sentence",
       pass:
-        /(?:any helpful (?:communicative )?way|任何可能的沟通方式|任何可能的方式)/i.test(
-          files["MEMORY.md"].content,
-        ) &&
+        /(?:any helpful (?:communicative )?way|任何可能的沟通方式|任何可能的方式)/i.test(files["MEMORY.md"].content) &&
         /(?:被动响应求助|passive response)/i.test(files["MEMORY.md"].content) &&
         /(?:主动识别抽离或误解升级的信号|主动识别失焦或过载的信号|主动识别|proactive recognition)/i.test(
           files["MEMORY.md"].content,
@@ -483,10 +511,11 @@ function runStructuralChecks(files) {
         /(?:社交摩擦|误解|失衡|高频|长期矛盾|最容易)/i.test(files["MEMORY.md"].content),
     },
     {
-      name: "MEMORY stays relationship-focused instead of mirroring CANON sections",
+      name: "MEMORY stays relationship-focused instead of mirroring PERSONA_PROFILE sections",
       pass:
-        !/## 2\. Background/.test(files["MEMORY.md"].content) &&
-        !/## 5\. Psychology And Values/.test(files["MEMORY.md"].content),
+        !/## Meta/.test(files["MEMORY.md"].content) &&
+        !/## Appearance Tendencies/.test(files["MEMORY.md"].content) &&
+        !/## Constraint Rules/.test(files["MEMORY.md"].content),
     },
     {
       name: "SOUL and MEMORY avoid old-persona patching failures",
@@ -519,9 +548,7 @@ function runStructuralChecks(files) {
     },
     {
       name: "IDENTITY and USER do not retain legacy wrapper headings",
-      pass:
-        !legacyWrapperPattern.test(files["IDENTITY.md"].content) &&
-        !legacyWrapperPattern.test(files["USER.md"].content),
+      pass: !legacyWrapperPattern.test(files["IDENTITY.md"].content) && !legacyWrapperPattern.test(files["USER.md"].content),
     },
     {
       name: "IDENTITY and USER do not retain legacy placeholder copy",
@@ -546,24 +573,19 @@ function runTranscriptChecks(transcript) {
     },
     {
       name: "Step 5 only fills addressing fields and optional durable notes in the default path",
-      pass:
-        /(?:long-term|长期记住|习惯|限制条件|雷区|边界)/i.test(joinedAssistantText),
+      pass: /(?:long-term|长期记住|习惯|限制条件|雷区|边界)/i.test(joinedAssistantText),
     },
     {
-      name: "Step 6 prompt asks only for age instead of broader canon facts",
+      name: "Step 6 prompt asks only for age instead of broader profile facts",
       pass:
         /(?:\bage\b|年龄)/i.test(agePrompt) &&
-        !/(?:current city|birthplace|occupation|family context|interests|城市|出生地|职业|家庭|兴趣)/i.test(
-          agePrompt,
-        ),
+        !/(?:current city|birthplace|occupation|family context|interests|城市|出生地|职业|家庭|兴趣)/i.test(agePrompt),
     },
     {
       name: "Chinese initialization path keeps interview prompts and options in Chinese",
       pass:
         !initializationLooksChinese ||
-        (!/(?:A\.\s*Male|B\.\s*Female)\b/.test(
-          joinedAssistantText,
-        ) &&
+        (!/(?:A\.\s*Male|B\.\s*Female)\b/.test(joinedAssistantText) &&
           !/Step 2:\s*OpenClaw 人格需要什么性别[\s\S]*A\.\s*Male/i.test(joinedAssistantText) &&
           !/Step 2:\s*OpenClaw 人格需要什么性别[\s\S]*B\.\s*Female/i.test(joinedAssistantText)),
     },
@@ -622,6 +644,7 @@ function main() {
           workspaceDir: prepared.workspaceDir,
           skillDir: prepared.skillDir,
           sessionId: options.sessionId,
+          scenario: options.scenario,
           checks,
           files: Object.fromEntries(
             Object.entries(files).map(([fileName, file]) => [
@@ -644,6 +667,7 @@ function main() {
       workspaceDir: prepared.workspaceDir,
       skillDir: prepared.skillDir,
       sessionId: options.sessionId,
+      scenario: options.scenario,
       transcriptPath,
       summaryPath,
       checks,
@@ -656,6 +680,7 @@ function main() {
       process.stdout.write(`Smoke workspace: ${prepared.workspaceDir}\n`);
       process.stdout.write(`Transcript: ${transcriptPath}\n`);
       process.stdout.write(`Summary: ${summaryPath}\n`);
+      process.stdout.write(`Scenario: ${options.scenario}\n`);
       process.stdout.write(`Session: ${options.sessionId}\n`);
       process.stdout.write(`Checks:\n`);
       for (const check of checks) {

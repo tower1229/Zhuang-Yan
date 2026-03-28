@@ -19,15 +19,17 @@ function containsHan(value) {
   return /[\p{Script=Han}]/u.test(value);
 }
 
-test("runtime files required by the skill exist under the new architecture", () => {
+test("runtime files required by the skill exist under the PERSONA_PROFILE architecture", () => {
   assert.equal(exists("SKILL.md"), true);
   assert.equal(exists("assets/mbti/mbti-index.json"), true);
   assert.equal(exists("references/protocols/initialization-flow.md"), true);
   assert.equal(exists("references/protocols/drafting-spec.md"), true);
   assert.equal(exists("references/runtime-context/template-pack.md"), true);
+  assert.equal(exists("references/runtime-context/persona-profile-consumption-guide.md"), true);
   assert.equal(exists("scripts/mbti-lookup.js"), true);
   assert.equal(exists("scripts/smoke-persona-openclaw.mjs"), true);
 
+  assert.equal(exists("references/runtime-context/canon-consumption-guide.md"), false);
   assert.equal(exists("references/protocols/drafting-protocol.md"), false);
   assert.equal(exists("references/protocols/write-safety.md"), false);
   assert.equal(exists("references/strategy/persona-generation-strategy.md"), false);
@@ -49,153 +51,111 @@ test(".clawhubignore excludes maintainer-only files", () => {
   assert.match(ignore, /^scripts\/release-clawhub\.mjs$/m);
 });
 
-test("core guidance files are now Chinese-first", () => {
+test("core guidance files are Chinese-first", () => {
   const files = [
     "SKILL.md",
     "references/protocols/initialization-flow.md",
     "references/protocols/drafting-spec.md",
     "references/runtime-context/template-pack.md",
+    "references/runtime-context/persona-profile-consumption-guide.md",
     "docs/persona-skill-design.md",
   ];
 
   for (const relativePath of files) {
     const text = fs.readFileSync(path.join(root, relativePath), "utf8");
-    assert.equal(containsHan(text), true, `${relativePath} should now be Chinese-first`);
+    assert.equal(containsHan(text), true, `${relativePath} should be Chinese-first`);
   }
 });
 
-test("SKILL.md only owns trigger, boundaries, file ownership, and minimal execution order", () => {
+test("SKILL.md owns trigger, boundaries, file ownership, and minimal execution order", () => {
   const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
   assert.match(skill, /本 Skill 只负责人格初始化或重建/);
-  assert.match(skill, /典型触发口令/);
-  assert.match(skill, /references\/protocols\/initialization-flow\.md/);
-  assert.match(skill, /references\/protocols\/drafting-spec\.md/);
-  assert.match(skill, /references\/runtime-context\/template-pack\.md/);
+  assert.match(skill, /persona\/PERSONA_PROFILE\.md/);
+  assert.match(skill, /references\/runtime-context\/persona-profile-consumption-guide\.md/);
   assert.match(skill, /最小执行顺序/);
-  assert.match(skill, /再读 `references\/protocols\/drafting-spec\.md`/);
-  assert.doesNotMatch(skill, /Step 2|Step 3|Step 4|Step 5|Step 6|Step 7/);
-  assert.doesNotMatch(skill, /What kind of relationship do you want us to have|companion|assistant|mentor|friend/);
+  assert.match(skill, /真正进入起草时/);
   assert.doesNotMatch(skill, /Current City|Core Identity|Relationship State/);
-  assert.doesNotMatch(skill, /social_need_profile|target_persona_spec/);
+  assert.doesNotMatch(skill, /companion|assistant|mentor|friend/);
 });
 
-test("initialization flow only owns the interview", () => {
+test("initialization flow stays interview-only while switching completion target to PERSONA_PROFILE", () => {
   const flow = fs.readFileSync(path.join(root, "references/protocols/initialization-flow.md"), "utf8");
   assert.match(flow, /本文件只负责采访流程本身/);
   assert.match(flow, /Step 1：确认人类用户的 MBTI/);
   assert.match(flow, /Step 5：补齐用户侧稳定信息/);
   assert.match(flow, /Step 6：只锁定年龄/);
   assert.match(flow, /Step 8：完成提示/);
-  assert.match(flow, /锁定单一 `interview_language`/);
-  assert.match(flow, /不允许中文问题配英文选项/);
-  assert.match(flow, /只问用户自己的 MBTI，不追加测试服务/);
-  assert.match(flow, /在起草阶段才去读取模板包与 MBTI 资产/);
-  assert.match(flow, /node scripts\/mbti-lookup\.js <human_mbti>/);
-  assert.match(flow, /Step 3 的 lookup 输入只能来自 Step 1 刚刚锁定的 `human_mbti`/);
-  assert.match(flow, /不允许沿用当前运行人格、旧 `CANON`、旧 `SOUL` 或任何现有人格残留里的 MBTI/);
-  assert.match(flow, /如果展示给用户的“人类 MBTI”与 Step 1 不一致，说明本轮推荐已被污染/);
+  assert.match(flow, /旧 `PERSONA_PROFILE`、旧 `SOUL`/);
+  assert.match(flow, /其他 `PERSONA_PROFILE` 事实都留到起草阶段再推导/);
+  assert.match(flow, /已更新 `persona\/PERSONA_PROFILE\.md`、`SOUL\.md`、`MEMORY\.md`、`IDENTITY\.md`、`USER\.md`/);
   assert.doesNotMatch(flow, /当前轮事实账本|五文件合同|自检与回炉/);
-  assert.doesNotMatch(flow, /companion|assistant|mentor|friend|关系角色|role slug/);
 });
 
-test("drafting spec owns social-needs generation execution and city strategy", () => {
+test("drafting spec owns profile normalization, PERSONA_PROFILE contract, and runtime boundaries", () => {
   const spec = fs.readFileSync(path.join(root, "references/protocols/drafting-spec.md"), "utf8");
   assert.match(spec, /本文件是人格初始化起草阶段的唯一执行规范/);
-  assert.match(spec, /`persona` 只能改变 OpenClaw 的语言风格与响应策略|persona 只能改变 OpenClaw 的语言风格与响应策略/);
-  assert.match(spec, /只关注与\*\*社交 \/ 沟通\*\*直接相关的部分/);
-  assert.match(spec, /social_friction_signature/);
-  assert.match(spec, /core_social_need/);
-  assert.match(spec, /ideal_counterparty_presence/);
-  assert.match(spec, /social_need_profile/);
-  assert.match(spec, /execution_trigger_protocol/);
-  assert.match(spec, /target_persona_spec/);
-  assert.match(spec, /name_resonance_profile/);
-  assert.match(spec, /从 `assets\/mbti\/mbti-index\.json` 的 `reverse_lookup` 锁定/);
-  assert.match(spec, /这个人格最难自然获得、却最渴望获得的社交体验/);
-  assert.match(spec, /对方要以什么样的存在方式说话、回应、靠近/);
-  assert.match(spec, /只保留最强的 4-6 个“社交摩擦 -> 对方存在方式 -> 情绪结果”链路/);
-  assert.match(spec, /把 MBTI 当成整个人生弱点修复清单/);
-  assert.match(spec, /城市抽样策略/);
-  assert.match(spec, /先锚定当前系统国家/);
-  assert.match(spec, /先抽子区域/);
-  assert.match(spec, /再从该子区域的公开城市池中抽城市/);
-  assert.match(spec, /# Persona Canon/);
-  assert.match(spec, /年龄不是摆设/);
-  assert.match(spec, /若年龄尚未到常规本科毕业年龄/);
-  assert.match(spec, /生命阶段优先级高于随机性/);
-  assert.match(spec, /名字带来的文化联想、时代感与第一印象/);
-  assert.match(spec, /生命阶段 -> 目标人物画像 -> 名字气质微调 -> 城市环境 -> 受约束随机化/);
-  assert.match(spec, /可外化、可被其他 skill 消费的人物事实/);
-  assert.match(spec, /不要把 `CANON` 写成大段“为什么她会这样”的解释文/);
-  assert.match(spec, /尽量使用带字段名的短条目/);
-  assert.match(spec, /`Memory Weaving Anchors` 应优先使用具体、可感知、可引用的锚点/);
-  assert.match(spec, /## 1\. Relationship State/);
-  assert.match(spec, /若旧托管块已存在，必须先删除，再插入新块/);
-  assert.match(spec, /若 `## Vibe` 已存在，替换整个 `Vibe` 区段/);
-  assert.match(spec, /新托管块必须重新插入到文件最顶部/);
-  assert.match(spec, /自检与回炉/);
-  assert.doesNotMatch(spec, /pair_contrast_axis|human_need_profile/);
-  assert.doesNotMatch(spec, /companion|assistant|mentor|friend|结合 `role`/);
-  assert.doesNotMatch(spec, /典型触发口令|initialize persona|run persona initialization/);
+  assert.match(spec, /profile normalization/);
+  assert.match(spec, /persona\/PERSONA_PROFILE\.md/);
+  assert.match(spec, /# PERSONA_PROFILE/);
+  assert.match(spec, /## Appearance Tendencies/);
+  assert.match(spec, /## Constraint Rules/);
+  assert.match(spec, /## Relationship Signals/);
+  assert.match(spec, /## Retrieval Units/);
+  assert.match(spec, /### must/);
+  assert.match(spec, /home_country`、`home_timezone` 必须由 `home_city` 反推/);
+  assert.match(spec, /不允许写当前时间判断、即时事件、季节结论、当天状态/);
+  assert.match(spec, /允许比 `PERSONA_PROFILE` 更强烈、更有互动导向，但不得违反其稳定事实边界/);
+  assert.match(spec, /不要写成第二份人物档案或第二份 `PERSONA_PROFILE`/);
+  assert.doesNotMatch(spec, /# Persona Canon|persona\/CANON\.md/);
 });
 
-test("template pack only owns templates, examples, and anti-pattern reminders", () => {
+test("template pack owns PERSONA_PROFILE templates, examples, and anti-pattern reminders", () => {
   const pack = fs.readFileSync(path.join(root, "references/runtime-context/template-pack.md"), "utf8");
-  assert.match(pack, /本文件只提供模板、推导方法与校准示例/);
-  assert.match(pack, /`persona\/CANON\.md` 结构模板/);
-  assert.match(pack, /结构化底层设定/);
-  assert.match(pack, /不做长篇人格剖析/);
-  assert.match(pack, /带字段名的短条目/);
-  assert.match(pack, /让其他 skill 不做复杂推理，也能较稳定地提取/);
-  assert.match(pack, /年龄必须真正影响生命阶段、行为纹理、关系姿态与日常节律/);
-  assert.match(pack, /如果年龄还没到常规毕业年龄，人物资料默认应落在学生身份或强学生阶段语境里/);
-  assert.match(pack, /名字在英文文化语境中的联想只能做气质微调/);
-  assert.match(pack, /背景、职业与生活细节要有随机性/);
-  assert.match(pack, /随机性不能压过生命阶段/);
-  assert.match(pack, /execution_trigger_protocol/);
-  assert.match(pack, /core_social_need/);
-  assert.match(pack, /ideal_counterparty_presence/);
-  assert.match(pack, /desired_emotional_impact/);
-  assert.match(pack, /高价值种子/);
+  assert.match(pack, /`persona\/PERSONA_PROFILE\.md` 结构模板/);
+  assert.match(pack, /# PERSONA_PROFILE/);
+  assert.match(pack, /- schema_version:/);
+  assert.match(pack, /- default_home_style:/);
+  assert.match(pack, /- change_triggers:/);
+  assert.match(pack, /### must/);
+  assert.match(pack, /### unit: identity\.home_base/);
   assert.match(pack, /示例 A：`INTJ` 人类 × `ENFP` 人格/);
-  assert.match(pack, /示例 B：`ENFP` 人类 × `INTJ` 人格/);
-  assert.match(pack, /示例 A：固定结构下的外化属性，既可读也可解析/);
-  assert.match(pack, /- Life Stage:| - Life Stage:/);
-  assert.match(pack, /- Register:| - Register:/);
-  assert.match(pack, /- Trust Pattern:| - Trust Pattern:/);
-  assert.match(pack, /- Reusable Scenes:| - Reusable Scenes:/);
-  assert.match(pack, /不需要先把自己修圆润，才配被热烈靠近|真正动人的不是“我尊重你所以等你开口”/);
-  assert.match(pack, /一句话里只剩结论没有温度|把在意藏进分析、把受伤藏进批评/);
-  assert.match(pack, /热烈不是需要被降噪的东西，而是值得被稳稳放住的东西|郑重承接、稳定珍惜、把热烈当回事/);
-  assert.match(pack, /一个是解冻点亮，一个是锚定收束/);
-  assert.match(pack, /不要把这里的完整成句、具体事实、关系表述或角色设定直接复制进输出文件/);
-  assert.doesNotMatch(pack, /Role:/);
-  assert.doesNotMatch(pack, /companion|assistant|mentor|friend/);
-  assert.doesNotMatch(pack, /只允许写入|必须写入|写入前必须|触发后起点|Step 1：/);
+  assert.match(pack, /为什么这份 `PERSONA_PROFILE` 片段是好的/);
+  assert.match(pack, /把 `MEMORY` 写成第二份 `PERSONA_PROFILE`/);
+  assert.doesNotMatch(pack, /persona\/CANON\.md|# Persona Canon/);
 });
 
-test("README files describe the reduced architecture and no longer use role as a project concept", () => {
+test("persona profile consumption guide defines how downstream skills should read PERSONA_PROFILE", () => {
+  const guide = fs.readFileSync(
+    path.join(root, "references/runtime-context/persona-profile-consumption-guide.md"),
+    "utf8",
+  );
+  assert.match(guide, /`persona\/PERSONA_PROFILE\.md`/);
+  assert.match(guide, /`SOUL\.md` 提供即时互动规则/);
+  assert.match(guide, /`Appearance Tendencies`/);
+  assert.match(guide, /`Constraint Rules`/);
+  assert.match(guide, /推荐读取顺序/);
+  assert.match(guide, /运行时以 `SOUL\.md` 为准/);
+  assert.match(guide, /不要试图让 `PERSONA_PROFILE\.md` 一份文件承担全部运行时文件的工作/);
+});
+
+test("README files describe the PERSONA_PROFILE architecture and downstream usage", () => {
   const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
   const readmeZh = fs.readFileSync(path.join(root, "README_ZH.md"), "utf8");
-  assert.match(readme, /social_friction_signature/);
-  assert.match(readme, /core_social_need/);
-  assert.match(readme, /ideal_counterparty_presence/);
-  assert.doesNotMatch(readme, /× role|role-specific psychological guidance|all roles/);
-  assert.match(readmeZh, /social_friction_signature/);
-  assert.match(readmeZh, /core_social_need/);
-  assert.match(readmeZh, /ideal_counterparty_presence/);
-  assert.match(readmeZh, /结构化底层设定|其他 skill/);
-  assert.match(readme, /structured ground truth|downstream skills/);
-  assert.doesNotMatch(readmeZh, /× role|角色化心理指导语料/);
+  assert.match(readme, /persona\/PERSONA_PROFILE\.md/);
+  assert.match(readme, /persona spec -> PERSONA_PROFILE -> runtime file projection/);
+  assert.match(readme, /downstream skills and Timeline/);
+  assert.match(readmeZh, /persona\/PERSONA_PROFILE\.md/);
+  assert.match(readmeZh, /固定结构下的外化属性与短条目/);
+  assert.match(readmeZh, /appearance、scene 与 constraint/);
+  assert.doesNotMatch(readme, /persona\/CANON\.md|# Persona Canon/);
 });
 
-test("publish checklist matches the new architecture and step numbering", () => {
+test("publish checklist matches the PERSONA_PROFILE migration", () => {
   const checklist = fs.readFileSync(path.join(root, "docs", "clawhub-publish-checklist.md"), "utf8");
-  assert.match(checklist, /references\/protocols\/drafting-spec\.md/);
-  assert.match(checklist, /references\/runtime-context\/template-pack\.md/);
-  assert.match(checklist, /旧文件已移除/);
-  assert.match(checklist, /验证 Step 5 只补称呼\/代词\/长期备注/);
-  assert.match(checklist, /验证 Step 6 只问年龄/);
+  assert.match(checklist, /persona-profile-consumption-guide\.md/);
+  assert.match(checklist, /canon-consumption-guide\.md/);
+  assert.match(checklist, /`persona\/PERSONA_PROFILE\.md` 包含 `Meta \/ Appearance Tendencies \/ Constraint Rules \/ Retrieval Units`/);
+  assert.match(checklist, /Step 6 只问年龄/);
 });
 
 test("machine-facing MBTI metadata stays English-first and no longer ships compatibility_matrix", () => {
@@ -219,12 +179,12 @@ test("machine-facing MBTI metadata stays English-first and no longer ships compa
 test("template-pack examples stay aligned with the recommendation matrix", () => {
   const index = JSON.parse(fs.readFileSync(path.join(root, "assets/mbti/mbti-index.json"), "utf8"));
   const pack = fs.readFileSync(path.join(root, "references/runtime-context/template-pack.md"), "utf8");
-  assert.match(pack, /示例 B：`ENFP` 人类 × `INTJ` 人格/);
+  assert.match(pack, /示例 A：`INTJ` 人类 × `ENFP` 人格/);
   assert.equal(index.reverse_lookup.ENFP.recommended, "INTJ");
   assert.match(index.reverse_lookup.ENFP.reason, /稳定|深度|可靠感/);
 });
 
-test("MBTI reference assets align with the canon-plus-runtime model", () => {
+test("MBTI reference assets align with the persona-profile-plus-runtime model", () => {
   const mbtiDir = path.join(root, "references", "mbti");
   const files = fs.readdirSync(mbtiDir).filter((name) => name.endsWith(".md"));
 
@@ -238,7 +198,12 @@ test("MBTI reference assets align with the canon-plus-runtime model", () => {
     assert.match(
       text,
       /生成辅助层|角色档案与运行时人格文件生成/,
-      `${fileName} should describe the current canon-plus-runtime usage`,
+      `${fileName} should describe the current persona-profile-plus-runtime usage`,
+    );
+    assert.match(
+      text,
+      /persona\/PERSONA_PROFILE\.md/,
+      `${fileName} should mention PERSONA_PROFILE as the structured profile output`,
     );
     assert.match(
       text,
@@ -254,25 +219,21 @@ test("package.json test script uses the tests directory for cross-platform disco
   assert.equal(pkg.scripts["smoke:persona"], "node ./scripts/smoke-persona-openclaw.mjs");
 });
 
-test("smoke runner still guards the runtime outputs and interview shape", () => {
+test("smoke runner guards the PERSONA_PROFILE outputs and interview shape", () => {
   const smoke = fs.readFileSync(path.join(root, "scripts", "smoke-persona-openclaw.mjs"), "utf8");
-  assert.match(smoke, /"叫我泛舟，代词用他。"/);
-  assert.match(smoke, /Interview does not proactively ask for timezone in the default path/);
-  assert.match(smoke, /Step 5 only fills addressing fields and optional durable notes in the default path/);
-  assert.match(smoke, /Step 6 prompt asks only for age instead of broader canon facts/);
-  assert.match(smoke, /Chinese initialization path keeps interview prompts and options in Chinese/);
-  assert.match(smoke, /CANON uses the full persona canon contract/);
-  assert.match(smoke, /CANON avoids low-signal Species and Birthplace filler/);
-  assert.match(smoke, /CANON prefers labeled externalized attributes beyond the identity card/);
-  assert.match(smoke, /CANON avoids turning major sections into long personality prose/);
-  assert.match(smoke, /MEMORY includes the new authorization sentence/);
-  assert.match(smoke, /MEMORY emphasizes communicative attunement instead of passive support/);
-  assert.match(smoke, /SOUL foregrounds pair-core value instead of generic support/);
-  assert.match(smoke, /MEMORY operationalizes pair-core value into communication repair and resonance/);
-  assert.match(smoke, /SOUL and MEMORY avoid old-persona patching failures/);
+  assert.match(smoke, /const smokeScenarios = \{/);
+  assert.match(smoke, /mature:/);
+  assert.match(smoke, /student:/);
+  assert.match(smoke, /persona\/PERSONA_PROFILE\.md/);
+  assert.match(smoke, /Step 6 prompt asks only for age instead of broader profile facts/);
+  assert.match(smoke, /PERSONA_PROFILE uses the timeline contract/);
+  assert.match(smoke, /PERSONA_PROFILE includes geo anchors and machine-facing meta/);
+  assert.match(smoke, /PERSONA_PROFILE includes explicit constraint groups/);
+  assert.match(smoke, /PERSONA_PROFILE avoids current-time and event claims/);
+  assert.match(smoke, /MEMORY stays relationship-focused instead of mirroring PERSONA_PROFILE sections/);
   assert.match(smoke, /PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN/);
   assert.match(smoke, /PERSONA-SKILL:MEMORY:BEGIN/);
-  assert.doesNotMatch(smoke, /A\.\s*Companion|B\.\s*Assistant|C\.\s*Mentor|D\.\s*Friend|A\.\s*伴侣|B\.\s*助手|C\.\s*导师|D\.\s*朋友/);
+  assert.doesNotMatch(smoke, /persona\/CANON\.md|# Persona Canon/);
 });
 
 test("repository metadata files exist", () => {
@@ -299,6 +260,9 @@ test("SKILL.md frontmatter keeps homepage metadata and does not duplicate the pa
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 
   assert.match(frontmatter, /^name: persona-skill$/m);
-  assert.match(frontmatter, /^metadata:\n(?:.*\n)*?  openclaw:\n(?:.*\n)*?    homepage: https:\/\/github\.com\/tower1229\/Zhuang-Yan$/m);
+  assert.match(
+    frontmatter,
+    /^metadata:\n(?:.*\n)*?  openclaw:\n(?:.*\n)*?    homepage: https:\/\/github\.com\/tower1229\/Zhuang-Yan$/m,
+  );
   assert.doesNotMatch(frontmatter, new RegExp(String(pkg.version).replace(/\./g, "\\."), "m"));
 });

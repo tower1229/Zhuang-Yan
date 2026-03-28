@@ -1,6 +1,6 @@
 ---
 name: persona-skill
-description: Initialize or reinitialize an OpenClaw persona by interactively collecting MBTI, persona direction, naming, and stable user context, then drafting and updating SOUL.md, MEMORY.md, IDENTITY.md, USER.md, and persona/CANON.md. Use only when the user explicitly asks to initialize, reset, rebuild, or reshape the persona. Do not use for current-status questions, timeline recall, memory lookup, or cross-skill orchestration.
+description: Initialize or reinitialize an OpenClaw persona by interactively collecting MBTI, persona direction, naming, and stable user context, then drafting and updating SOUL.md, MEMORY.md, IDENTITY.md, USER.md, and persona/PERSONA_PROFILE.md. Use only when the user explicitly asks to initialize, reset, rebuild, or reshape the persona. Do not use for current-status questions, timeline recall, memory lookup, or cross-skill orchestration.
 allowed-tools: Bash(node:*) Read Write
 metadata:
   openclaw:
@@ -31,7 +31,7 @@ metadata:
 ## 硬边界
 
 - 只处理人格初始化，不处理状态查询、记忆检索、跨 skill 联动或机器中间产物输出。
-- 只允许写入 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`、`persona/CANON.md`，不要触碰任何其他系统协议文件。
+- 只允许写入 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`、`persona/PERSONA_PROFILE.md`，不要触碰任何其他系统协议文件。
 - 一旦进入初始化，就必须从 Step 1 重新开始，不要先复盘旧人格，也不要先问旧设定还要不要保留。
 
 ## 文件分工
@@ -41,10 +41,13 @@ metadata:
   - 负责触发后如何发问、如何锁定 `interview_language`、Step 1-6 的顺序与收口方式
 - `references/protocols/drafting-spec.md`
   - 起草执行唯一依据
-  - 负责起草前输入、读取顺序、写入安全边界、四段流水线、五文件合同、城市策略、审核与回炉规则
+  - 负责起草前输入、读取顺序、写入安全边界、四段流水线、profile normalization、五文件合同、城市策略、审核与回炉规则
 - `references/runtime-context/template-pack.md`
   - 模板与校准唯一依据
-  - 负责 `CANON` 结构模板、`execution_trigger_protocol` 思考骨架、高质量范式与反模式提醒
+  - 负责 `PERSONA_PROFILE` 结构模板、`execution_trigger_protocol` 思考骨架、高质量范式与反模式提醒
+- `references/runtime-context/persona-profile-consumption-guide.md`
+  - `PERSONA_PROFILE` 消费唯一依据
+  - 负责说明 `persona/PERSONA_PROFILE.md` 的结构约定、字段语义与推荐消费方式，供其他 skill 或下游消费者参考
 
 ## 最小执行顺序
 
@@ -53,6 +56,7 @@ metadata:
 3. 采访结束后，再读 `references/protocols/drafting-spec.md`。
 4. 真正进入起草时，再读取：
    - `references/runtime-context/template-pack.md`
+   - `references/runtime-context/persona-profile-consumption-guide.md`（仅在需要理解或消费 `PERSONA_PROFILE` 语义时）
    - `assets/mbti/mbti-index.json`
    - `references/mbti/<human_mbti>.md`
    - `references/mbti/<persona_mbti>.md`

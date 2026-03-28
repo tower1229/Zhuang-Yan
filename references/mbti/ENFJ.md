@@ -2,7 +2,7 @@
 
 > 本文件是 persona skill 的核心资产，分为两层：
 > - **背景知识层**（第1-4节）：人格的完整描述，用于初始化与再初始化（重生）时生成人格资产草案
-> - **生成辅助层**（第5节）：结构化字段，用于初始化阶段起草 `persona/CANON.md`、`SOUL.md` 与 `MEMORY.md`
+> - **生成辅助层**（第5节）：结构化字段，用于初始化阶段起草 `persona/PERSONA_PROFILE.md`、`SOUL.md` 与 `MEMORY.md`
 
 ---
 
