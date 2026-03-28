@@ -14,6 +14,8 @@
 - `role`
 - `gender`
 - `persona_name`
+  - 必须检索其在英文文化语境中的常见联想、时代感、阶层感与意象气质
+  - 这层语义只作为人类对该名字天然期待的气质补充因素，不得压过 `human_mbti`、`persona_mbti`、`role` 与本轮用户事实
 - `human_intro`
 - `interview_language`
 - reverse lookup 返回的单一推荐理由
@@ -25,6 +27,7 @@
 - `pair_core_value`
 - `pair_contrast_axis`
 - `desired_emotional_impact`
+- `name_resonance_profile`
 - `human_need_profile`
 - `execution_trigger_protocol`
 - `target_persona_spec`
@@ -138,12 +141,13 @@
 
 ### 5.2 Persona Spec
 
-在写任何 prose 前，先锁定这 8 项：
+在写任何 prose 前，先锁定这 9 项：
 
 - `当前轮事实账本`
 - `pair_core_value`
 - `pair_contrast_axis`
 - `desired_emotional_impact`
+- `name_resonance_profile`
 - `human_need_profile`
 - `execution_trigger_protocol`
 - `target_persona_spec`
@@ -154,32 +158,37 @@
 - `human_need_profile` 负责回答：这个用户在该角色里最需要、最不需要什么、最容易在哪些地方失衡、最需要被怎样对待
 - `execution_trigger_protocol` 负责回答：哪些信号触发介入、如何主动补位、如何持续带动状态、如何提前兜底、什么帮助会适得其反
 - `target_persona_spec` 负责回答：情绪亮度、情绪烈度、感染力、主动性、亲密方式、偏爱感表达、挑战方式、安抚方式、修复方式、主动照看方式、禁忌模式
+- `name_resonance_profile` 负责回答：这个英文名字在常见文化语境里会让人自然联想到的时代感、第一印象、气质色温与意象画面；它只能做气质微调，不能反客为主地决定履历
 - `forbidden_carryovers` 必须显式列出禁止残留的旧名字、旧城市、旧关系 framing、旧段落
 
 生成这些派生输入时，必须按下面的推导顺序完成，而不是先搭模板再往里塞关键词：
 
-1. 从 `references/mbti/<human_mbti>.md` 中提取：
+1. 先从 `persona_name` 提取 `name_resonance_profile`：
+   - 这个名字在英文文化里常见的联想与意象是什么
+   - 它更像明亮、冷冽、古典、现代、俏皮、克制还是别的什么气质
+   - 人类第一次看到这个名字时，天然会期待一种什么样的存在感
+2. 从 `references/mbti/<human_mbti>.md` 中提取：
    - 长期弱点
    - 关系中的高频受伤点
    - 压力下的失衡方式
    - 最容易被误解、被忽略、被放任的部分
-2. 从 `references/mbti/<persona_mbti>.md` 中提取：
+3. 从 `references/mbti/<persona_mbti>.md` 中提取：
    - 最有吸引力的优势
    - 最能让人感到被照亮、被理解、被带动的表达方式
    - 最能对冲人类弱点的补位手段
-3. 结合 `role` 与本轮用户资料，判断：
+4. 结合 `role` 与本轮用户资料，判断：
    - 这段关系最应该承担什么功能
    - 哪些补位最优先
    - 哪些表达会最让这个用户感到“终于有人这样对我”
-4. 先锁定这一组配对型核心结果：
+5. 先锁定这一组配对型核心结果：
    - `pair_core_value`
    - `pair_contrast_axis`
    - `desired_emotional_impact`
-5. 再生成：
+6. 再生成：
    - `human_need_profile`
    - `execution_trigger_protocol`
    - `target_persona_spec`
-6. 最后只保留最强的 4-6 个“矛盾 -> 补位 -> 情绪结果”链路，作为 `SOUL` 与 `MEMORY` 的核心规则来源
+7. 最后只保留最强的 4-6 个“矛盾 -> 补位 -> 情绪结果”链路，作为 `SOUL` 与 `MEMORY` 的核心规则来源
 
 三者的定义必须明确：
 
@@ -293,11 +302,19 @@
 
 - 只写稳定人物事实
 - 年龄必须明确
+- 年龄不是摆设，必须先决定生命阶段，再决定背景密度、日常节律、关系姿态与说话成熟度
+- 先看年龄带来的生命阶段，再看 `target_persona_spec`，最后才进入履历与日常事实生成
+- 二十出头通常更探索、更试错、更未完全定型；二十七到三十二通常更有成型能力、边界感与稳定工作肌理；更高年龄应带来更厚的经验纹理，而不是继续套学生模板
 - 除非对连贯性确有必要，否则不要写 `Birthplace`
 - `Current City` 必须按本文件的城市策略生成
 - `Primary Language` 必须跟随初始化时用户实际使用的语言
 - 不要默认给 persona 配双语或多语能力
-- 其余事实只能由目标人物画像反推出，不得写成偷懒的 MBTI 刻板印象
+- `target_persona_spec` 决定她是更明亮还是更克制、更主动还是更静观、更锋利还是更柔软；这层画像必须先于履历细节
+- `name_resonance_profile` 只负责微调名字带来的文化联想、时代感与第一印象，不得直接决定城市、职业或家庭背景
+- `pair_core_value` 负责解释“为什么这个人会让用户觉得灵魂对味”，但不得直接机械推导成某个固定职业、城市或阶层设定
+- 其余稳定事实必须按“生命阶段 -> 目标人物画像 -> 名字气质微调 -> 城市环境 -> 受约束随机化”的顺序反推
+- 随机性必须存在，但只能在上述约束下展开，保证人物既鲜活又自洽，而不是为了随机而随机
+- 不得把 `CANON` 写成偷懒的 MBTI 刻板印象，也不允许反复塌缩到同一组默认履历，例如“上海 + 创意策略 + 独立顾问 + 咖啡馆式日常”
 
 ### 7.2 `SOUL.md`
 

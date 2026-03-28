@@ -56,6 +56,7 @@ clawhub install persona-skill
 - 所有角色都先服务情绪价值
 - 生成主轴是 `human_mbti × role -> pair_core_value / pair_contrast_axis / desired_emotional_impact -> human_need_profile / target_persona_spec -> 五文件投影`
 - `pair_contrast_axis` 与 `desired_emotional_impact` 是角色化心理指导语料，不再是短标签
+- `persona/CANON.md` 的稳定人物事实会先看年龄带来的生命阶段，再看目标人物画像，并把名字在英文文化语境中的联想只作为气质微调，最后在受约束随机性里生成履历
 - 运行时文件保持精炼，`persona/CANON.md` 作为完整上游真相源
 - 初始化是彻底重建，不是对旧人格轻改
 
