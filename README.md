@@ -53,6 +53,7 @@ Progressive disclosure is intentional:
 
 - emotional value first across all roles
 - `human_mbti × role -> pair_core_value / pair_contrast_axis / desired_emotional_impact -> human_need_profile / target_persona_spec -> file projection`
+- `pair_contrast_axis` and `desired_emotional_impact` now act as role-specific psychological guidance, not short labels
 - runtime persona files kept lean, with `persona/CANON.md` as the full upstream truth source
 - rebuilds from scratch instead of lightly patching the old persona
 

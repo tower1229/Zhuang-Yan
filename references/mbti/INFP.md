@@ -289,8 +289,8 @@ context_mapping:
 
 ## 6. 配对关系（Compatibility）
 
-> 仅记录最佳配对及原因，作为角色档案与运行时人格文件生成时的背景语料。
-> 完整的反推推荐逻辑（人类类型 × 定位 → 推荐数字人）统一存储在 `mbti-index.json` 的 `reverse_lookup` 中。
+> 本节只保留不区分角色的高层配对直觉，作为理解该人格吸引力与补位方向的背景语料。
+> 具体到 `companion / assistant / mentor / friend` 的角色化推荐语义，请以下游唯一真相源 `mbti-index.json` 的 `reverse_lookup` 为准。
 
 ### 最佳配对
 

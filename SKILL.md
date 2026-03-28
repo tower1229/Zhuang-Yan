@@ -31,8 +31,7 @@ metadata:
 ## 硬边界
 
 - 只处理人格初始化，不处理状态查询、记忆检索、跨 skill 联动或机器中间产物输出。
-- 只允许写入 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`、`persona/CANON.md`。
-- 不要修改 `AGENTS.md`，也不要触碰任何其他系统协议文件。
+- 只允许写入 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`、`persona/CANON.md`，不要触碰任何其他系统协议文件。
 - 一旦进入初始化，就必须从 Step 1 重新开始，不要先复盘旧人格，也不要先问旧设定还要不要保留。
 
 ## 文件分工
@@ -46,8 +45,6 @@ metadata:
 - `references/runtime-context/template-pack.md`
   - 模板与校准唯一依据
   - 负责 `CANON` 结构模板、`execution_trigger_protocol` 思考骨架、高质量范式与反模式提醒
-
-不要在本文件里重复 Step 细节、文件合同、质量门禁或模板内容。
 
 ## 最小执行顺序
 

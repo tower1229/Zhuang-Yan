@@ -120,8 +120,11 @@ test("drafting spec owns generation execution, quality logic, and city strategy"
   assert.match(spec, /从 `references\/mbti\/<human_mbti>\.md` 中提取/);
   assert.match(spec, /从 `references\/mbti\/<persona_mbti>\.md` 中提取/);
   assert.match(spec, /先锁定这一组配对型核心结果/);
-  assert.match(spec, /这个人格最该用什么特质对冲这个用户最痛的那一面/);
+  assert.match(spec, /这个人格最该用什么方式去中和、牵引、软化或收束这个用户最痛的那一面/);
   assert.match(spec, /这个用户应该从这段关系里最终感到什么/);
+  assert.match(spec, /角色化心理指导语料/);
+  assert.match(spec, /不是简陋的短对词标签/);
+  assert.match(spec, /不是几个并列的抽象词/);
   assert.match(spec, /只保留最强的 4-6 个“矛盾 -> 补位 -> 情绪结果”链路/);
   assert.match(spec, /直接从 `human_mbti` 弱点跳到支持规则，中间缺少 `pair_core_value`/);
   assert.match(spec, /先写一个通用填空模板，再把 MBTI 关键词往里塞/);
@@ -161,6 +164,8 @@ test("template pack only owns templates, examples, and anti-pattern reminders", 
   assert.match(pack, /pair_core_value/);
   assert.match(pack, /pair_contrast_axis/);
   assert.match(pack, /desired_emotional_impact/);
+  assert.match(pack, /角色化心理指导语料/);
+  assert.match(pack, /高价值种子消费/);
   assert.match(pack, /`SOUL\.md` 高质量示例/);
   assert.match(pack, /`MEMORY\.md` 高质量示例/);
   assert.match(pack, /`persona\/CANON\.md` 高质量片段示例/);
@@ -189,9 +194,11 @@ test("README files describe the reduced architecture", () => {
   const readmeZh = fs.readFileSync(path.join(root, "README_ZH.md"), "utf8");
   assert.match(readme, /references\/protocols\/drafting-spec\.md/);
   assert.match(readme, /references\/runtime-context\/template-pack\.md/);
+  assert.match(readme, /role-specific psychological guidance/);
   assert.doesNotMatch(readme, /docs\/persona-generation-strategy\.md/);
   assert.match(readmeZh, /references\/protocols\/drafting-spec\.md/);
   assert.match(readmeZh, /references\/runtime-context\/template-pack\.md/);
+  assert.match(readmeZh, /角色化心理指导语料/);
   assert.doesNotMatch(readmeZh, /docs\/persona-generation-strategy\.md/);
 });
 
@@ -243,6 +250,11 @@ test("MBTI reference assets align with the canon-plus-runtime model", () => {
       text,
       /生成辅助层|角色档案与运行时人格文件生成/,
       `${fileName} should describe the current canon-plus-runtime usage`,
+    );
+    assert.match(
+      text,
+      /不区分角色的高层配对直觉|以下游唯一真相源 `mbti-index\.json` 的 `reverse_lookup` 为准/,
+      `${fileName} should describe compatibility as a high-level overview with reverse_lookup as the role-specific source of truth`,
     );
   }
 });

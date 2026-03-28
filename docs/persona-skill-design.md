@@ -111,6 +111,7 @@
 - 模板包负责提供推导方法与高质量示例，不负责提供可直接套用的标准答案
 - 具体生成规则、质量目标、文件合同与城市策略都集中收口在 `drafting-spec.md`
 - `SOUL` 与 `MEMORY` 的高价值内容必须优先围绕 `pair_core_value` 展开，而不是平均分配给一组泛优点
+- `pair_contrast_axis` 与 `desired_emotional_impact` 必须保持角色化、可消费、可放大的心理语义密度，不能退回成简短标签
 
 ## 6. 对外维护文档
 
