@@ -10,3 +10,4 @@ sandbox/
 .idea/
 .DS_Store
 **/.DS_Store
+tests/stella/

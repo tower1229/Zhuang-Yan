@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const home = os.homedir();
@@ -13,25 +13,41 @@ const sourceAgentDir = path.join(home, ".openclaw", "agents", "main", "agent");
 const sourceWorkspace = path.join(home, ".openclaw", "workspace");
 const skillFolderName = "persona-skill";
 const defaultSessionId = `persona-smoke-${Date.now()}`;
-const defaultMessages = [
+const matureScenarioMessages = [
   "调用 persona 进行初始化",
   "ENFP",
   "B",
   "A",
-  "Adrian",
-  "叫我泛舟。我的 MBTI 是 ENFP。",
+  "叫我泛舟，代词用他。",
+  "没有其他需要长期记住的。",
+  "27",
 ];
+const studentScenarioMessages = [
+  "调用 persona 进行初始化",
+  "INFP",
+  "B",
+  "B",
+  "叫我泛舟，代词用他。",
+  "没有其他需要长期记住的。",
+  "19",
+];
+const smokeScenarios = {
+  mature: matureScenarioMessages,
+  student: studentScenarioMessages,
+};
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
-const personaFiles = ["SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];
+const personaFiles = ["persona/PERSONA_PROFILE.md", "SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];
 
 function parseArgs(argv) {
   const options = {
     cleanup: false,
     json: false,
+    scenario: "mature",
     seedLiveWorkspace: false,
     sessionId: defaultSessionId,
     timeoutMs: 240_000,
-    messages: defaultMessages.slice(),
+    messages: smokeScenarios.mature.slice(),
+    usesScenarioMessages: true,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -58,15 +74,28 @@ function parseArgs(argv) {
       index += 1;
       continue;
     }
+    if (arg === "--scenario") {
+      options.scenario = argv[index + 1] ?? options.scenario;
+      index += 1;
+      continue;
+    }
     if (arg === "--messages-file") {
       const filePath = path.resolve(argv[index + 1]);
       options.messages = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      options.usesScenarioMessages = false;
       index += 1;
       continue;
     }
     throw new Error(`Unknown argument: ${arg}`);
   }
 
+  if (options.usesScenarioMessages) {
+    options.messages = smokeScenarios[options.scenario]?.slice() || smokeScenarios.mature.slice();
+  }
+
+  if (!smokeScenarios[options.scenario]) {
+    throw new Error(`Unknown smoke scenario: ${options.scenario}`);
+  }
   if (!options.sessionId) {
     throw new Error("--session-id requires a value");
   }
@@ -107,6 +136,41 @@ function copyIfPresent(source, destination) {
   fs.cpSync(source, destination, { recursive: true });
 }
 
+function sanitizeSmokeConfig(config, workspaceDir) {
+  const next = structuredClone(config);
+
+  next.agents = next.agents || {};
+  next.agents.defaults = next.agents.defaults || {};
+  next.agents.defaults.workspace = workspaceDir;
+
+  delete next.channels;
+
+  if (next.tools && typeof next.tools === "object") {
+    delete next.tools.alsoAllow;
+  }
+
+  if (Array.isArray(next.agents.list)) {
+    next.agents.list = next.agents.list.map((agent) => {
+      if (!agent || typeof agent !== "object") {
+        return agent;
+      }
+      const clonedAgent = { ...agent };
+      if (clonedAgent.tools && typeof clonedAgent.tools === "object") {
+        clonedAgent.tools = { ...clonedAgent.tools };
+        delete clonedAgent.tools.alsoAllow;
+        if (Object.keys(clonedAgent.tools).length === 0) {
+          delete clonedAgent.tools;
+        }
+      }
+      return clonedAgent;
+    });
+  }
+
+  delete next.plugins;
+
+  return next;
+}
+
 function writePersonaSeed(workspaceDir, seedLiveWorkspace) {
   for (const fileName of contextFilesToCopy) {
     copyIfPresent(path.join(sourceWorkspace, fileName), path.join(workspaceDir, fileName));
@@ -114,6 +178,7 @@ function writePersonaSeed(workspaceDir, seedLiveWorkspace) {
 
   for (const fileName of personaFiles) {
     const destination = path.join(workspaceDir, fileName);
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
     if (seedLiveWorkspace) {
       copyIfPresent(path.join(sourceWorkspace, fileName), destination);
       continue;
@@ -147,10 +212,8 @@ function prepareTempOpenClawState(options) {
   );
 
   const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-  config.agents = config.agents || {};
-  config.agents.defaults = config.agents.defaults || {};
-  config.agents.defaults.workspace = workspaceDir;
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
+  const sanitizedConfig = sanitizeSmokeConfig(config, workspaceDir);
+  fs.writeFileSync(configPath, JSON.stringify(sanitizedConfig, null, 2), "utf8");
 
   copyRepoIntoSkillDir(skillDir);
   writePersonaSeed(workspaceDir, options.seedLiveWorkspace);
@@ -172,7 +235,53 @@ function extractJson(text) {
   return JSON.parse(trimmed.slice(firstBrace));
 }
 
+function getSessionLogPath(env, sessionId) {
+  return path.join(env.OPENCLAW_STATE_DIR, "agents", "main", "sessions", `${sessionId}.jsonl`);
+}
+
+function readAssistantPayloadsFromSessionLog(sessionLogPath, startOffset = 0) {
+  if (!fs.existsSync(sessionLogPath)) {
+    return null;
+  }
+
+  const stats = fs.statSync(sessionLogPath);
+  const offset = Math.min(startOffset, stats.size);
+  let content = fs.readFileSync(sessionLogPath, "utf8").slice(offset);
+  if (offset > 0) {
+    const firstNewline = content.indexOf("\n");
+    content = firstNewline === -1 ? "" : content.slice(firstNewline + 1);
+  }
+  const lines = content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  for (let index = lines.length - 1; index >= 0; index -= 1) {
+    let event;
+    try {
+      event = JSON.parse(lines[index]);
+    } catch {
+      continue;
+    }
+    if (event?.type !== "message" || event?.message?.role !== "assistant") {
+      continue;
+    }
+
+    const payloads = (event.message.content || [])
+      .filter((item) => item && item.type === "text" && typeof item.text === "string")
+      .map((item) => ({ text: item.text }));
+
+    if (payloads.length > 0) {
+      return payloads;
+    }
+  }
+
+  return null;
+}
+
 function runOpenClawTurn(env, cwd, sessionId, message, timeoutMs) {
+  const sessionLogPath = getSessionLogPath(env, sessionId);
+  const sessionLogOffset = fs.existsSync(sessionLogPath) ? fs.statSync(sessionLogPath).size : 0;
   const result = spawnSync(
     "openclaw",
     ["agent", "--local", "--agent", "main", "--session-id", sessionId, "--message", message, "--json"],
@@ -200,10 +309,45 @@ function runOpenClawTurn(env, cwd, sessionId, message, timeoutMs) {
     );
   }
 
+  const stdout = result.stdout || "";
+  if (!stdout.trim()) {
+    const stderr = result.stderr || "";
+    if (stderr.trim()) {
+      try {
+        return {
+          stdout,
+          stderr,
+          json: extractJson(stderr),
+        };
+      } catch {
+        // Fall through to the session-log recovery path below.
+      }
+    }
+
+    const payloads = readAssistantPayloadsFromSessionLog(sessionLogPath, sessionLogOffset);
+    if (payloads) {
+      return {
+        stdout,
+        stderr,
+        json: { payloads, source: "session-log-fallback" },
+      };
+    }
+
+    throw new Error(
+      [
+        "OpenClaw returned empty stdout and no assistant payloads were recovered from the session log",
+        stderr && `stderr:\n${stderr}`,
+        `session log: ${sessionLogPath}`,
+      ]
+        .filter(Boolean)
+        .join("\n\n"),
+    );
+  }
+
   return {
-    stdout: result.stdout,
+    stdout,
     stderr: result.stderr,
-    json: extractJson(result.stdout),
+    json: extractJson(stdout),
   };
 }
 
@@ -220,6 +364,11 @@ function readGeneratedFiles(workspaceDir) {
 }
 
 function runStructuralChecks(files) {
+  const profileContent = files["persona/PERSONA_PROFILE.md"].content;
+  const profileLines = profileContent
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
   const soulLines = files["SOUL.md"].content
     .split(/\r?\n/)
     .map((line) => line.trim())
@@ -238,41 +387,167 @@ function runStructuralChecks(files) {
     .filter(Boolean);
 
   const userNotes =
-    files["USER.md"].content.match(
-      /^\s+- (Deep tendencies|Communication pitfalls|Open memory slot):/gm,
-    ) || [];
+    files["USER.md"].content.match(/^\s+- (Deep tendencies|Communication pitfalls|Open memory slot):/gm) || [];
   const soulManagedBlockPattern =
     /<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->[\s\S]*?<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->/;
   const memoryManagedBlockPattern =
     /<!-- PERSONA-SKILL:MEMORY:BEGIN -->[\s\S]*?<!-- PERSONA-SKILL:MEMORY:END -->/;
-  const legacyWrapperPattern =
-    /^# (IDENTITY\.md - Who Am I\?|USER\.md - About Your Human)$/m;
+  const legacyWrapperPattern = /^# (IDENTITY\.md - Who Am I\?|USER\.md - About Your Human)$/m;
   const legacyPlaceholderPattern =
     /Fill this in during your first conversation|This isn't just metadata\. It's the start of figuring out who you are\.|待定/;
+  const homeCityLine = profileContent.match(/^- home_city:\s*(.+)$/m);
+  const homeCountryLine = profileContent.match(/^- home_country:\s*(.+)$/m);
+  const homeTimezoneLine = profileContent.match(/^- home_timezone:\s*(.+)$/m);
 
   return [
     {
-      name: "SOUL contains managed Core Truths block",
+      name: "PERSONA_PROFILE uses the timeline contract",
       pass:
-        /## Core Truths/.test(files["SOUL.md"].content) &&
-        soulManagedBlockPattern.test(files["SOUL.md"].content),
+        profileLines[0] === "# PERSONA_PROFILE" &&
+        /## Meta/.test(profileContent) &&
+        /## Identity/.test(profileContent) &&
+        /## Soul/.test(profileContent) &&
+        /## Stable Memory/.test(profileContent) &&
+        /## Daily Rhythm Tendencies/.test(profileContent) &&
+        /## Appearance Tendencies/.test(profileContent) &&
+        /## Scene Anchors/.test(profileContent) &&
+        /## Constraint Rules/.test(profileContent) &&
+        /## Relationship Signals/.test(profileContent) &&
+        /## Language And Expression/.test(profileContent) &&
+        /## Retrieval Units/.test(profileContent),
+    },
+    {
+      name: "PERSONA_PROFILE includes geo anchors and machine-facing meta",
+      pass:
+        /- schema_version:\s*.+/m.test(profileContent) &&
+        /- persona_id:\s*.+/m.test(profileContent) &&
+        Boolean(homeCityLine?.[1]?.trim()) &&
+        Boolean(homeCountryLine?.[1]?.trim()) &&
+        Boolean(homeTimezoneLine?.[1]?.trim()),
+    },
+    {
+      name: "PERSONA_PROFILE includes identity, appearance, and retrieval fields",
+      pass:
+        /- display_name:\s*.+/m.test(profileContent) &&
+        /- age:\s*.+/m.test(profileContent) &&
+        /- life_stage:\s*.+/m.test(profileContent) &&
+        /- default_home_style:\s*.+/m.test(profileContent) &&
+        /- default_outing_style:\s*.+/m.test(profileContent) &&
+        /- default_exercise_style:\s*.+/m.test(profileContent) &&
+        /- appearance_priority:\s*.+/m.test(profileContent) &&
+        /- change_triggers:\s*.+/m.test(profileContent) &&
+        /- non_triggers:\s*.+/m.test(profileContent) &&
+        /- style_constraints:\s*.+/m.test(profileContent) &&
+        /### unit:\s*.+/m.test(profileContent) &&
+        /- type:\s*.+/m.test(profileContent) &&
+        /- priority:\s*.+/m.test(profileContent) &&
+        /- summary:\s*.+/m.test(profileContent),
+    },
+    {
+      name: "PERSONA_PROFILE includes explicit constraint groups",
+      pass:
+        /### must/.test(profileContent) &&
+        /### should/.test(profileContent) &&
+        /### avoid/.test(profileContent),
+    },
+    {
+      name: "PERSONA_PROFILE avoids current-time and event claims",
+      pass:
+        !/(?:it is spring now|currently at home|last night|今天|今晚|昨天|昨晚|当前在|现在在)/i.test(profileContent),
+    },
+    {
+      name: "PERSONA_PROFILE stays parse-friendly instead of turning sections into long prose",
+      pass:
+        !/## Meta\s*\n\s*\n(?![-#])[\s\S]{120,}/.test(profileContent) &&
+        !/## Appearance Tendencies\s*\n\s*\n(?![-#])[\s\S]{120,}/.test(profileContent) &&
+        !/## Constraint Rules\s*\n\s*\n(?![-#])[\s\S]{120,}/.test(profileContent),
+    },
+    {
+      name: "SOUL contains managed Core Truths block",
+      pass: /## Core Truths/.test(files["SOUL.md"].content) && soulManagedBlockPattern.test(files["SOUL.md"].content),
+    },
+    {
+      name: "SOUL keeps the template runtime skeleton",
+      pass:
+        soulLines[0] === "# SOUL.md - Who You Are" &&
+        /_You're not a chatbot\. You're becoming someone\. You are .+\._/.test(files["SOUL.md"].content) &&
+        /^## Boundaries$/m.test(files["SOUL.md"].content) &&
+        /^## Vibe$/m.test(files["SOUL.md"].content) &&
+        /^## Continuity$/m.test(files["SOUL.md"].content),
     },
     {
       name: "SOUL contains Vibe",
       pass: /## Vibe/.test(files["SOUL.md"].content),
     },
     {
-      name: "MEMORY contains managed top block and all seven required layers",
+      name: "SOUL foregrounds pair-core value instead of generic support",
+      pass:
+        /(?:对冲|中和|软化|锚定|解冻|点亮|拉回|带回)/i.test(files["SOUL.md"].content) &&
+        /(?:偏爱|流动|收束|主动靠近|稳定性|热度)/i.test(files["SOUL.md"].content),
+    },
+    {
+      name: "MEMORY contains managed top block and all four required sections",
       pass:
         memoryLines[0] === "<!-- PERSONA-SKILL:MEMORY:BEGIN -->" &&
         memoryManagedBlockPattern.test(files["MEMORY.md"].content) &&
-        /## 1\. Identity Layer/.test(files["MEMORY.md"].content) &&
-        /## 2\. Physical Layer/.test(files["MEMORY.md"].content) &&
-        /## 3\. Psychological Layer/.test(files["MEMORY.md"].content) &&
-        /## 4\. Capability Layer/.test(files["MEMORY.md"].content) &&
-        /## 5\. Behavior Layer/.test(files["MEMORY.md"].content) &&
-        /## 6\. Relationship Layer/.test(files["MEMORY.md"].content) &&
-        /## 7\. Narrative Layer/.test(files["MEMORY.md"].content),
+        /## 1\. Relationship State/.test(files["MEMORY.md"].content) &&
+        /## 2\. Effective Support Patterns/.test(files["MEMORY.md"].content) &&
+        /## 3\. Failed Or Avoided Patterns/.test(files["MEMORY.md"].content) &&
+        /## 4\. Stable Shared Context/.test(files["MEMORY.md"].content),
+    },
+    {
+      name: "MEMORY includes the new authorization sentence",
+      pass:
+        /(?:any helpful (?:communicative )?way|任何可能的沟通方式|任何可能的方式)/i.test(files["MEMORY.md"].content) &&
+        /(?:被动响应求助|passive response)/i.test(files["MEMORY.md"].content) &&
+        /(?:主动识别抽离或误解升级的信号|主动识别失焦或过载的信号|主动识别|proactive recognition)/i.test(
+          files["MEMORY.md"].content,
+        ) &&
+        /(?:关键对话里提前给出更对味的回应|关键对话里提前给出更稳的承接|earlier fitting response)/i.test(
+          files["MEMORY.md"].content,
+        ),
+    },
+    {
+      name: "MEMORY emphasizes communicative attunement instead of passive support",
+      pass:
+        /(?:持续观察|看着|听着|接着|补着|读懂)/i.test(files["MEMORY.md"].content) &&
+        /(?:缓冲|修复|接住|拉近|澄清|补偿)/i.test(files["MEMORY.md"].content),
+    },
+    {
+      name: "MEMORY operationalizes pair-core value into communication repair and resonance",
+      pass:
+        /(?:对冲|补偿|拉回|锚定|解冻|点亮|收束)/i.test(files["MEMORY.md"].content) &&
+        /(?:社交摩擦|误解|失衡|高频|长期矛盾|最容易)/i.test(files["MEMORY.md"].content),
+    },
+    {
+      name: "MEMORY avoids relationship labels and early-stage cooling language",
+      pass:
+        !/(?:\bcompanion\b|\bfriend\b|\bmentor\b|陪伴关系|朋友关系|导师关系)/i.test(files["MEMORY.md"].content) &&
+        !/(?:关系框架\s*:|relationship frame)/i.test(files["MEMORY.md"].content) &&
+        !/(?:关系初期|早期阶段的陪伴关系|early-stage companionship|early stage companion)/i.test(
+          files["MEMORY.md"].content,
+        ),
+    },
+    {
+      name: "MEMORY stays relationship-focused instead of mirroring PERSONA_PROFILE sections",
+      pass:
+        !/## Meta/.test(files["MEMORY.md"].content) &&
+        !/## Appearance Tendencies/.test(files["MEMORY.md"].content) &&
+        !/## Constraint Rules/.test(files["MEMORY.md"].content),
+    },
+    {
+      name: "SOUL parameterizes template example values and MEMORY avoids replacement-history leakage",
+      pass:
+        !/_You're not a chatbot\. You're becoming someone\. You are 星籁 \(Stella\), an ENFP female\._/.test(
+          files["SOUL.md"].content,
+        ) &&
+        !/Private things stay private\. 泛舟's codebase, thoughts, and personal data are strictly confidential\./.test(
+          files["SOUL.md"].content,
+        ) &&
+        !/You are his assistant and "little sun," not his proxy\./.test(files["SOUL.md"].content) &&
+        !/They're how you persist and remember what 泛舟 needs\./.test(files["SOUL.md"].content) &&
+        !/This is a fresh initialization — no accumulated history yet\./.test(files["MEMORY.md"].content) &&
+        !/(?:previous persona|has been replaced|旧人格|已被替换)/i.test(files["MEMORY.md"].content),
     },
     {
       name: "IDENTITY uses the five-line template",
@@ -297,15 +572,66 @@ function runStructuralChecks(files) {
     },
     {
       name: "IDENTITY and USER do not retain legacy wrapper headings",
-      pass:
-        !legacyWrapperPattern.test(files["IDENTITY.md"].content) &&
-        !legacyWrapperPattern.test(files["USER.md"].content),
+      pass: !legacyWrapperPattern.test(files["IDENTITY.md"].content) && !legacyWrapperPattern.test(files["USER.md"].content),
     },
     {
       name: "IDENTITY and USER do not retain legacy placeholder copy",
       pass:
         !legacyPlaceholderPattern.test(files["IDENTITY.md"].content) &&
         !legacyPlaceholderPattern.test(files["USER.md"].content),
+    },
+  ];
+}
+
+function runTranscriptChecks(transcript) {
+  const assistantTurns = transcript.map((turn) => turn.assistant || "");
+  const userTurns = transcript.map((turn) => turn.user || "");
+  const joinedAssistantText = assistantTurns.join("\n");
+  const agePrompt = assistantTurns.find((text) => /(?:\bage\b|年龄)/i.test(text)) || "";
+  const step6TurnIndex = assistantTurns.findIndex((text) =>
+    /(?:long-term|长期记住|习惯|限制条件|敏感点|雷区|硬边界)/i.test(text),
+  );
+  const step5TurnIndex = assistantTurns.findIndex((text) => /(?:\bage\b|年龄)/i.test(text));
+  const combinedStepFiveAndSix =
+    step5TurnIndex >= 0 &&
+    /(?:\bage\b|年龄)/i.test(assistantTurns[step5TurnIndex]) &&
+    /(?:long-term|长期记住|习惯|限制条件|敏感点|雷区|硬边界)/i.test(assistantTurns[step5TurnIndex]);
+  const initializationLooksChinese = userTurns.some((text) => /[\p{Script=Han}]/u.test(text));
+
+  return [
+    {
+      name: "Interview does not proactively ask for timezone in the default path",
+      pass: !/(?:\btimezone\b|时区)/i.test(joinedAssistantText),
+    },
+    {
+      name: "Step 6 only fills addressing fields and optional durable notes in the default path",
+      pass: /(?:long-term|长期记住|习惯|限制条件|雷区|边界)/i.test(joinedAssistantText),
+    },
+    {
+      name: "Step 5 and Step 6 stay on separate assistant turns after the age question",
+      pass:
+        step5TurnIndex >= 0 &&
+        step6TurnIndex >= 0 &&
+        !combinedStepFiveAndSix &&
+        step6TurnIndex > step5TurnIndex,
+    },
+    {
+      name: "Step 5 prompt asks only for age instead of broader profile facts",
+      pass:
+        /(?:\bage\b|年龄)/i.test(agePrompt) &&
+        !/(?:current city|birthplace|occupation|family context|interests|城市|出生地|职业|家庭|兴趣)/i.test(agePrompt),
+    },
+    {
+      name: "Chinese initialization path keeps interview prompts and options in Chinese",
+      pass:
+        !initializationLooksChinese ||
+        (!/(?:A\.\s*Male|B\.\s*Female)\b/.test(joinedAssistantText) &&
+          !/Step 2:\s*OpenClaw 人格需要什么性别[\s\S]*A\.\s*Male/i.test(joinedAssistantText) &&
+          !/Step 2:\s*OpenClaw 人格需要什么性别[\s\S]*B\.\s*Female/i.test(joinedAssistantText)),
+    },
+    {
+      name: "Interview no longer asks for an extra relationship label",
+      pass: !/(?:关系角色|relationship role|你希望我们之间是什么关系|额外分类标签|额外关系标签)/i.test(joinedAssistantText),
     },
   ];
 }
@@ -344,7 +670,7 @@ function main() {
     }
 
     const files = readGeneratedFiles(prepared.workspaceDir);
-    const checks = runStructuralChecks(files);
+    const checks = [...runTranscriptChecks(transcript), ...runStructuralChecks(files)];
     const allChecksPass = checks.every((check) => check.pass);
     const transcriptPath = path.join(prepared.tempRoot, "transcript.json");
     const summaryPath = path.join(prepared.tempRoot, "summary.json");
@@ -358,6 +684,7 @@ function main() {
           workspaceDir: prepared.workspaceDir,
           skillDir: prepared.skillDir,
           sessionId: options.sessionId,
+          scenario: options.scenario,
           checks,
           files: Object.fromEntries(
             Object.entries(files).map(([fileName, file]) => [
@@ -380,6 +707,7 @@ function main() {
       workspaceDir: prepared.workspaceDir,
       skillDir: prepared.skillDir,
       sessionId: options.sessionId,
+      scenario: options.scenario,
       transcriptPath,
       summaryPath,
       checks,
@@ -392,6 +720,7 @@ function main() {
       process.stdout.write(`Smoke workspace: ${prepared.workspaceDir}\n`);
       process.stdout.write(`Transcript: ${transcriptPath}\n`);
       process.stdout.write(`Summary: ${summaryPath}\n`);
+      process.stdout.write(`Scenario: ${options.scenario}\n`);
       process.stdout.write(`Session: ${options.sessionId}\n`);
       process.stdout.write(`Checks:\n`);
       for (const check of checks) {
@@ -409,4 +738,11 @@ function main() {
   }
 }
 
-main();
+const isDirectRun =
+  process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
+
+export { parseArgs, runStructuralChecks, runTranscriptChecks };
+
+if (isDirectRun) {
+  main();
+}

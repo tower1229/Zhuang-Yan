@@ -1,205 +1,126 @@
-# Persona Skill — 设计文档
+# Persona Skill 设计文档
 
-> 更新时间：2026-03-23
-> 状态：v2（收敛为“仅初始化人格资产”）
+> 更新时间：2026-03-28
+> 当前架构：3 层核心 + 1 份模板包 + 2 类数据资产
 
----
+## 1. 设计目标
 
-## 1. 设计变更
+这次重构的目标只有三件事：
 
-`persona-skill` 不再承担“运行时人格表达层”的职责，也不作为其他工作流或其他 skill 的中间层。
+1. 用 `persona/PERSONA_PROFILE.md` 取代旧 `CANON` 合同
+2. 让 `PERSONA_PROFILE` 与 `SOUL / MEMORY / IDENTITY` 形成“共享 persona spec + 先档案后运行时”的协作关系
+3. 让模型按渐进式披露顺序读取信息，避免过早加载无关规范
 
-本项目现在只保留一条主线能力：
+## 2. 最终架构
 
-**用户通过明确关键词触发人格初始化，skill 以交互式流程收集信息，并最终修改 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 四份文件。**
+### 核心文件
 
----
+1. `SKILL.md`
+2. `references/protocols/initialization-flow.md`
+3. `references/protocols/drafting-spec.md`
+4. `references/runtime-context/template-pack.md`
+5. `references/runtime-context/persona-profile-consumption-guide.md`
 
-## 2. 职责边界
-
-### 2.1 负责什么
-
-`persona-skill` 负责：
-
-1. 识别明确的初始化意图
-2. 逐步收集人格生成所需信息
-3. 基于 MBTI 资产完成数字人人格反推
-4. 生成四份人格资产草案
-5. 草案完成后直接一次性写入四份文件
-
-### 2.2 不负责什么
-
-`persona-skill` 不负责：
-
-1. 查询 OpenClaw 当前状态
-2. 处理与人格初始化无关的运行时状态、回忆、编排或其他工作流请求
-3. 为下游工具输出 JSON、Prompt 或运行时上下文参数
-4. 修改 `AGENTS.md` 或任何人格资产之外的系统协议文件
-
----
-
-## 3. 最小架构
-
-当前架构只有两层：
-
-```text
-层1：初始化交互层
-  接收关键词触发
-  逐步提问
-  锁定人格参数
-
-层2：人格资产写入层
-  生成 SOUL.md
-  生成 MEMORY.md
-  生成 IDENTITY.md
-  生成 USER.md
-  直接写入并提示完成
-```
-
-项目中不再存在“运行时表达层”“事实层”“消费方 skill 集成层”等设计。
-
----
-
-## 4. 初始化触发规则
-
-只有在用户明确表达初始化意图时才允许启动流程，例如：
-
-- `调用 persona 进行初始化`
-- `初始化人格`
-- `重塑你的人格`
-- `重新生成人格设定`
-
-若用户只是讨论风格、抱怨对话口气，或随口说“你性格改一下”，不得直接进入写文件流程，必须要求更明确的初始化意图。
-
----
-
-## 5. 初始化流程
-
-### 5.1 交互原则
-
-- 一次只问一个问题
-- 优先使用 A/B/C/D 选项降低用户负担
-- 不允许把整套问卷一次性抛给用户
-- 四文件草案完成后直接写入，不再等待确认
-
-### 5.2 标准步骤
-
-```text
-Step 1：确认用户自己的 MBTI
-  - 允许用户直接输入
-  - 首问只直接询问 MBTI，不主动追加 MBTI 测试邀约
-  - 如果用户明确表示不确定，可以提供收敛式选项辅助确认
-
-Step 2：确认数字人的性别
-  - 例如 A. 男性 B. 女性
-
-Step 3：确认关系定位
-  - A. 伴侣 B. 助手 C. 导师 D. 朋友
-
-Step 4：根据 human_mbti × role 查 reverse_lookup
-  - 从 assets/mbti/mbti-index.json 读取单一最优推荐
-  - 输出推荐结果与推荐理由
-  - 输出后直接进入 Step 5，不再询问用户是否接受推荐
-
-Step 5：生成候选名字
-  - 提供 3 个候选项供用户选择
-  - 3 个候选必须全部为英文名
-  - 名字风格必须贴合人格性别、MBTI 气质与关系定位
-  - 不满意时允许刷新
-
-Step 6：采集用户侧信息
-  - 希望被如何称呼
-  - 有哪些习惯、偏好、雷区、限制条件需要记住
-
-Step 7：生成人格资产草案
-  - 生成 SOUL.md
-  - 生成 MEMORY.md
-  - 生成 IDENTITY.md
-  - 生成 USER.md
-
-Step 8：直接写入
-  - 读取现有四份文件
-  - 保留与人格无关的必要配置内容
-  - 一次性写入四份新内容
-
-Step 9：提示完成
-  - 告知用户初始化完成
-  - 说明四份文件已更新
-  - 如覆盖了现有人格，一并说明
-```
-
----
-
-## 6. 输入与资产来源
-
-初始化至少依赖以下输入：
-
-- `human_mbti`
-- `role`
-- `gender`
-- `persona_name`
-- `human_intro`
-
-初始化还依赖以下静态资产：
+### 数据资产
 
 - `assets/mbti/mbti-index.json`
 - `references/mbti/*.md`
-- `references/drafting-protocol.md`
 
-其中 `reverse_lookup` 是确定性映射，必须以资产文件内容为准，不应凭模型印象自由发挥。
+## 3. 各文件职责
 
----
+### `SKILL.md`
 
-## 7. 四份文件的职责分工
+只负责：
 
-| 文件 | 职责 |
-|------|------|
-| `SOUL.md` | 人格内核、价值观、语气边界、互动原则 |
-| `MEMORY.md` | 人物小传、关系背景、长期记忆底色 |
-| `IDENTITY.md` | 名字、身份、Vibe、头像等静态名片 |
-| `USER.md` | 对用户的称呼、已知偏好、沟通雷区、时区等 |
+- 是否允许启动初始化
+- 触发示例
+- 输出边界
+- 文件分工
+- 最小执行顺序
 
-这四份文件共同构成初始化结果，也是本 skill 唯一允许修改的核心目标。
+### `initialization-flow.md`
 
----
+只负责：
 
-## 8. 写入策略
+- 触发后采访流程
+- `interview_language` 锁定
+- Step 1-6 问法与跳转
+- Step 6 gap-check
+- Step 8 完成提示
 
-### 8.1 写入原则
+### `drafting-spec.md`
 
-- 采用**全量覆写人格内容**的方式生成四份文件
-- 覆写前先读取现有内容
-- 与人格无关的必要配置内容应保留
-- 生成前必须先把旧内容分成“人格相关待覆盖”与“非人格相关待保留”
-- 必须读取锁定后的 `references/mbti/<persona_mbti>.md`，不能只靠泛化的 MBTI 印象写稿
-- 必须按固定文件骨架起草，并在写入前做一次自检回炉
-- 草案完成后直接执行写盘
+只负责：
 
-### 8.2 安全边界
+- 起草前必备输入
+- 渐进式读取顺序
+- 写入安全边界
+- 当前轮事实账本
+- 四段流水线 + `profile normalization`
+- `SOUL / MEMORY` 专属规则推导方法
+- `social_friction_signature / core_social_need / ideal_counterparty_presence / pair_core_value / desired_emotional_impact`
+- 五文件合同
+- 城市抽样策略
+- 自检与回炉
 
-- **绝对不可覆写 `AGENTS.md`**
-- **绝对不可借初始化流程改写其他 skill 文档**
-- **绝对不可超出四份人格文件的写入范围**
+它是“怎么生成”的唯一主文档。
 
-如果四份文件已存在且内容非空，应将本次操作视为“再初始化（重生）”，并在完成后明确告知用户现有人格已被覆盖。
+### `template-pack.md`
 
----
+只负责：
 
-## 9. 决策记录
+- `PERSONA_PROFILE` 结构模板
+- `execution_trigger_protocol` 思考骨架
+- `SOUL / MEMORY / PERSONA_PROFILE` 推导方法与高质量示例
+- 反模式提醒
 
-| 主题 | 决策 |
-|------|------|
-| Skill 定位 | 仅保留人格初始化 |
-| 触发方式 | 必须由明确关键词触发 |
-| 交互方式 | 一问一答，渐进式收集 |
-| MBTI 推荐 | 读取 `reverse_lookup`，输出单一最优推荐 |
-| 写入对象 | 仅 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` |
-| 写入时机 | 四文件草案完成后直接写入 |
-| 运行时状态查询 | 不支持 |
-| 其他工作流联动 | 不支持 |
+它是“好稿长什么样”的唯一模板包。
 
----
+### `persona-profile-consumption-guide.md`
 
-## 10. 文档关系
+只负责：
 
-- [persona-generation-strategy.md](./persona-generation-strategy.md)：四份文件的生成规范与质量门禁
+- `persona/PERSONA_PROFILE.md` 的结构约定
+- 分段语义
+- 推荐读取顺序
+- 推荐消费方式
+- 与 `SOUL / MEMORY / IDENTITY / USER` 的边界
+
+它是“其他 skill 应该怎样读 `PERSONA_PROFILE`”的唯一指南。
+
+## 4. 渐进式披露顺序
+
+标准读取链固定为：
+
+1. 先读 `SKILL.md` 判断是否该启动
+2. 用户显式触发后，再读 `initialization-flow.md`
+3. 采访完成后，再读 `drafting-spec.md`
+4. 真正起草前，再读：
+   - `template-pack.md`
+   - `persona-profile-consumption-guide.md`
+   - `assets/mbti/mbti-index.json`
+   - `references/mbti/<human_mbti>.md`
+   - `references/mbti/<persona_mbti>.md`
+
+禁止提前读取后置文档。
+
+## 5. 关键生成原则
+
+- 初始化是全量重建，不是旧人格轻改
+- reverse lookup 只锁定人格骨架与核心社交需求命中包
+- 模板包负责提供推导方法与高质量示例，不负责提供可直接套用的标准答案
+- `profile normalization` 必须发生在 `persona spec` 锁定之后、文件投影之前
+- `PERSONA_PROFILE` 先落盘，再约束 `IDENTITY / MEMORY / SOUL / USER` 的一致性
+- `SOUL` 与 `MEMORY` 的高价值内容必须优先围绕 `core_social_need` 与 `pair_core_value` 展开，而不是平均分配给一组泛优点
+- `PERSONA_PROFILE` 的稳定事实不能直接从 MBTI 标签偷懒外推，而应先看年龄带来的生命阶段；如果尚未到常规毕业年龄，默认应落在学生身份或强学生阶段语境里。之后再看目标人物画像，用名字在英文文化语境中的联想做轻微气质微调，最后在受约束随机性里生成履历与生活细节
+- `PERSONA_PROFILE` 的职责是“结构化底层档案 + 下游可消费约束”，因此其主体应优先呈现固定结构下的外化属性，减少长篇解释性人格散文，方便其他 skill 解析和复用
+- 运行时互动行为冲突时，以 `SOUL / MEMORY` 为优先；稳定身份与生活事实冲突视为起草失败
+
+## 6. 对外维护文档
+
+- `README.md` / `README_ZH.md`
+  - 只介绍新架构、使用方式、依赖链和结果文件
+- `docs/clawhub-publish-checklist.md`
+  - 只检查新文件结构与发布前验证项
+
+本设计文档只保留高层架构，不再重复协议细节。

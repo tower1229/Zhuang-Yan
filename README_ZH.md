@@ -1,6 +1,8 @@
 # Zhuang-Yan（persona-skill）— [English README](./README.md)
 
-给你的 OpenClaw 一个真正合适的人格——由 MBTI 匹配、由关系角色塑形、直接写入它的核心文件。
+别再让 OpenClaw 的人格像一次性 prompt 一样忽明忽暗。
+
+`persona-skill` 不是给角色“贴一个 MBTI 标签”这么简单，而是通过一次简短但高密度的初始化采访，帮你把人格底稿真正搭起来：先理解用户最在意的相处感、陪伴感与情绪价值，再一次性写入 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 和 `persona/PERSONA_PROFILE.md`，让后续对话、记忆系统和下游 skill 都建立在同一套稳定设定上。
 
 ## 安装
 
@@ -8,60 +10,94 @@
 clawhub install persona-skill
 ```
 
-无需 API 密钥或环境变量。Skill 完全使用 OpenClaw 已有工具运行（`Read`、`Write`、`Bash(node:*)`）。
+无需额外 API Key，也不需要环境变量。装好就能进入初始化流程。
+
+## 它解决的，不只是“人设不稳定”
+
+- 不是零碎修补，而是完整重建：显式触发后，从头采访、从头起草、从头落盘，不对旧人格做模糊打补丁。
+- 不是先决定性格，再强行往里塞细节：它会先锁定用户真正想要的互动体验，再反推更合适的人格方向。
+- 不是只有一段可读文案：它会同时生成可运行的五份上下文文件，以及给其他 skill 消费的结构化档案 `persona/PERSONA_PROFILE.md`。
+- 不是只为“当前聊天”服务：这套档案会成为后续记忆、场景锚点、身份约束与表达风格的共同基座。
 
 ## 使用方式
 
-安装完成后，用明确口令触发初始化。语言不限，只要意图清晰即可：
+用明确的初始化指令触发，例如：
 
 - `调用 persona 进行初始化`
 - `初始化人格`
-- `重塑你的人格`
 - `initialize persona`
-- `rebuild the persona`
+- `rebuild persona`
+- `run persona initialization`
 
-Skill 会引导你完成一问一答式的访谈，然后将结果直接写入 OpenClaw 的人格文件。
+未显式触发时，Skill 不会介入普通对话。
 
-Skill 仅在明确收到初始化请求时启动，不会影响普通对话。
+一旦进入流程，它会以一问一答的方式完成初始化采访，然后重写：
 
-进入起草阶段后，Skill 会读取锁定后的 MBTI 资产，按固定的四文件骨架生成内容，只保留确有必要的非人格内容，并在写入前先回炉失败稿。
+- `persona/PERSONA_PROFILE.md`
+- `SOUL.md`
+- `MEMORY.md`
+- `IDENTITY.md`
+- `USER.md`
 
-## 初始化过程
+## 这套初始化为什么更“像一个真正的人”
 
-访谈会依次收集五项信息：
+`persona-skill` 的主轴不是泛泛而谈的“性格分析”，而是围绕用户真正的关系需求来建模：
 
-1. **你的 MBTI** — 用于匹配或互补人格方向
-2. **人格性别** — 男性或女性
-3. **关系角色** — 四选一：
-   - `companion`（伴侣）— 情绪承接、陪伴感、安全感
-   - `assistant`（助手）— 执行支持、清晰沟通、高可靠
-   - `mentor`（导师）— 挑战盲点、推动成长、直接反馈
-   - `friend`（朋友）— 低压陪伴、轻松自然、无压力
-4. **人格名字** — 从三个英文名候选中选择，或请求重新生成
-5. **你的偏好** — 如何被称呼、习惯、边界、沟通需求
+`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> 五文件投影`
 
-访谈完成后，Skill 生成并写入四份核心人格文件：
+这意味着它生成的不是一个“看起来像 AI 人设”的空壳，而是一个更懂得该如何陪伴、回应、表达、记住和延续关系语境的角色底盘。
 
-| 文件 | 内容 |
-|------|------|
-| `SOUL.md` | 人格内核、价值观、语气边界、互动原则 |
-| `MEMORY.md` | 人物小传、关系背景、长期行为底色 |
-| `IDENTITY.md` | 名字、身份、气质、头像引用 |
-| `USER.md` | 称呼方式、已知偏好、沟通雷区 |
+尤其是这几个环节，会直接决定产物质量：
 
-这四份文件立即生效，并在此后所有对话中持续起作用。
+- `social_friction_signature`：识别用户在人际关系里最容易被消耗、误解或失望的地方。
+- `core_social_need`：提炼用户最希望被满足的核心相处需求。
+- `ideal_counterparty_presence`：定义理想陪伴者应该如何出现、如何说话、如何让人安心。
+- `pair_core_value` 与 `desired_emotional_impact`：把人格从“设定”推进到“实际相处体验”。
 
-## 为什么比直接写 Prompt 更有效
+## 档案先行，运行时跟随
 
-- **MBTI 确定性推荐，不是随机发挥**：Skill 使用确定性反查表找到最适合你的人格方向，而不是让模型即兴猜测。
-- **结构化写入策略**：每份文件都有明确定位。`SOUL.md` 以高优先级人格注入方式写成；`MEMORY.md` 构建的是一个有心理机制、行为模式和情绪底色的连贯人物，而非几句空洞设定。
-- **长期生效，不是临时 Prompt**：结果写入 OpenClaw 核心文件，在后续每一次对话中持续影响语气、关系感和沟通方式。
-- **支持重新初始化**：再次用同样口令触发即可重建人格。覆盖已有人格前 Skill 会明确提示。
+这个项目的新架构重点很明确：
+
+1. 先产出 `persona/PERSONA_PROFILE.md` 作为结构化底层档案
+2. 再让 `SOUL / MEMORY / IDENTITY / USER` 统一投影这份档案
+3. 让其他 skill 和 Timeline 有稳定、可消费、可复用的人设事实源
+
+相比把所有设定都揉进一堆 prose 里，这种做法的优势是：
+
+- 人设事实更稳定，不容易在长对话里漂移
+- 下游技能更容易读取身份、外观、背景、场景锚点与约束
+- `persona/PERSONA_PROFILE.md` 应优先使用固定结构下的外化属性与短条目，而不是长篇人格剖析
+- `persona/PERSONA_PROFILE.md` 负责沉淀稳定 persona、appearance、scene 与 constraint 语义
+- 运行时文件可以更精炼，把“该怎么互动”和“这个人是谁”分层管理
+
+## 渐进式披露架构
+
+初始化链路已经收敛成一条清晰的最小读取顺序：
+
+1. `SKILL.md`
+2. `references/protocols/initialization-flow.md`
+3. `references/protocols/drafting-spec.md`
+4. `references/runtime-context/template-pack.md`
+5. `references/runtime-context/persona-profile-consumption-guide.md`
+
+数据资产保持独立：
+
+- `assets/mbti/mbti-index.json`
+- `references/mbti/*.md`
+
+读取顺序遵循渐进式披露：
+
+1. `SKILL.md` 先判断是否应该启动
+2. 进入采访后才读取 `initialization-flow.md`
+3. 采访完成后才读取 `drafting-spec.md`
+4. 真正起草时才读取模板包、消费指南和 MBTI 资产
+
+这样做的意义很简单：模型只在需要的时候读需要的文档，避免过早加载无关规范，也避免初始化过程被杂讯拖偏。
 
 ## 文档
 
-- `docs/persona-skill-design.md` — 初始化流程、职责边界与写入策略
-- `docs/persona-generation-strategy.md` — 四份人格文件的权威生成规范
+- `docs/persona-skill-design.md`：整体架构、文件边界与依赖顺序
+- `references/runtime-context/persona-profile-consumption-guide.md`：`persona/PERSONA_PROFILE.md` 的结构约定、字段语义与推荐消费顺序
 
 ## 项目信息
 

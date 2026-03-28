@@ -1,7 +1,7 @@
 {
   "name": "persona-skill",
-  "description": "Initialize an OpenClaw persona through an MBTI-guided interview and write SOUL.md, MEMORY.md, IDENTITY.md, and USER.md.",
-  "version": "0.1.5",
+  "description": "Initialize an OpenClaw persona through an MBTI-guided interview and write SOUL.md, MEMORY.md, IDENTITY.md, USER.md, and persona/PERSONA_PROFILE.md.",
+  "version": "0.2.0",
   "private": true,
   "author": "tower1229",
   "license": "MIT-0",
