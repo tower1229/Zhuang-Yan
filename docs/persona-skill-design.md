@@ -113,6 +113,7 @@
 - `SOUL` 与 `MEMORY` 的高价值内容必须优先围绕 `core_social_need` 与 `pair_core_value` 展开，而不是平均分配给一组泛优点
 - `social_friction_signature / core_social_need / ideal_counterparty_presence / desired_emotional_impact` 必须保持可消费、可放大的心理语义密度，不能退回成简短标签
 - `CANON` 的稳定事实不能直接从 MBTI 标签偷懒外推，而应先看年龄带来的生命阶段；如果尚未到常规毕业年龄，默认应落在学生身份或强学生阶段语境里。之后再看目标人物画像，用名字在英文文化语境中的联想做轻微气质微调，最后在受约束随机性里生成履历与生活细节
+- `CANON` 的职责是“可读的小传 + 可消费的底层设定”，因此其主体应优先呈现固定结构下的外化属性，减少长篇解释性人格散文，方便其他 skill 解析和复用
 
 ## 6. 对外维护文档
 

@@ -125,6 +125,10 @@ test("drafting spec owns social-needs generation execution and city strategy", (
   assert.match(spec, /生命阶段优先级高于随机性/);
   assert.match(spec, /名字带来的文化联想、时代感与第一印象/);
   assert.match(spec, /生命阶段 -> 目标人物画像 -> 名字气质微调 -> 城市环境 -> 受约束随机化/);
+  assert.match(spec, /可外化、可被其他 skill 消费的人物事实/);
+  assert.match(spec, /不要把 `CANON` 写成大段“为什么她会这样”的解释文/);
+  assert.match(spec, /尽量使用带字段名的短条目/);
+  assert.match(spec, /`Memory Weaving Anchors` 应优先使用具体、可感知、可引用的锚点/);
   assert.match(spec, /## 1\. Relationship State/);
   assert.match(spec, /若旧托管块已存在，必须先删除，再插入新块/);
   assert.match(spec, /若 `## Vibe` 已存在，替换整个 `Vibe` 区段/);
@@ -139,6 +143,10 @@ test("template pack only owns templates, examples, and anti-pattern reminders", 
   const pack = fs.readFileSync(path.join(root, "references/runtime-context/template-pack.md"), "utf8");
   assert.match(pack, /本文件只提供模板、推导方法与校准示例/);
   assert.match(pack, /`persona\/CANON\.md` 结构模板/);
+  assert.match(pack, /结构化底层设定/);
+  assert.match(pack, /不做长篇人格剖析/);
+  assert.match(pack, /带字段名的短条目/);
+  assert.match(pack, /让其他 skill 不做复杂推理，也能较稳定地提取/);
   assert.match(pack, /年龄必须真正影响生命阶段、行为纹理、关系姿态与日常节律/);
   assert.match(pack, /如果年龄还没到常规毕业年龄，人物资料默认应落在学生身份或强学生阶段语境里/);
   assert.match(pack, /名字在英文文化语境中的联想只能做气质微调/);
@@ -151,6 +159,11 @@ test("template pack only owns templates, examples, and anti-pattern reminders", 
   assert.match(pack, /高价值种子/);
   assert.match(pack, /示例 A：`INTJ` 人类 × `ENFP` 人格/);
   assert.match(pack, /示例 B：`ENFP` 人类 × `INTJ` 人格/);
+  assert.match(pack, /示例 A：固定结构下的外化属性，既可读也可解析/);
+  assert.match(pack, /- Life Stage:| - Life Stage:/);
+  assert.match(pack, /- Register:| - Register:/);
+  assert.match(pack, /- Trust Pattern:| - Trust Pattern:/);
+  assert.match(pack, /- Reusable Scenes:| - Reusable Scenes:/);
   assert.match(pack, /不需要先把自己修圆润，才配被热烈靠近|真正动人的不是“我尊重你所以等你开口”/);
   assert.match(pack, /一句话里只剩结论没有温度|把在意藏进分析、把受伤藏进批评/);
   assert.match(pack, /热烈不是需要被降噪的东西，而是值得被稳稳放住的东西|郑重承接、稳定珍惜、把热烈当回事/);
@@ -171,6 +184,8 @@ test("README files describe the reduced architecture and no longer use role as a
   assert.match(readmeZh, /social_friction_signature/);
   assert.match(readmeZh, /core_social_need/);
   assert.match(readmeZh, /ideal_counterparty_presence/);
+  assert.match(readmeZh, /结构化底层设定|其他 skill/);
+  assert.match(readme, /structured ground truth|downstream skills/);
   assert.doesNotMatch(readmeZh, /× role|角色化心理指导语料/);
 });
 
@@ -248,6 +263,8 @@ test("smoke runner still guards the runtime outputs and interview shape", () => 
   assert.match(smoke, /Chinese initialization path keeps interview prompts and options in Chinese/);
   assert.match(smoke, /CANON uses the full persona canon contract/);
   assert.match(smoke, /CANON avoids low-signal Species and Birthplace filler/);
+  assert.match(smoke, /CANON prefers labeled externalized attributes beyond the identity card/);
+  assert.match(smoke, /CANON avoids turning major sections into long personality prose/);
   assert.match(smoke, /MEMORY includes the new authorization sentence/);
   assert.match(smoke, /MEMORY emphasizes communicative attunement instead of passive support/);
   assert.match(smoke, /SOUL foregrounds pair-core value instead of generic support/);

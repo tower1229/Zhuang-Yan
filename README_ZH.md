@@ -57,6 +57,7 @@ clawhub install persona-skill
 - 生成主轴是 `human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> 五文件投影`
 - `social_friction_signature / core_social_need / ideal_counterparty_presence` 是新的高价值指导语料，用来定义“这个人最想被怎样对待”
 - `persona/CANON.md` 的稳定人物事实会先看年龄带来的生命阶段；若尚未到常规毕业年龄，默认应落在学生身份或强学生阶段语境里。之后再看目标人物画像，并把名字在英文文化语境中的联想只作为气质微调，最后在受约束随机性里生成履历
+- `persona/CANON.md` 更适合作为结构化底层设定来写：除了给人类阅读，也要方便其他 skill 稳定提取身份、背景、表达风格与关系属性，因此应优先使用固定结构下的外化属性与短条目，而不是长篇人格剖析
 - 运行时文件保持精炼，`persona/CANON.md` 作为完整上游真相源
 - 初始化是彻底重建，不是对旧人格轻改
 

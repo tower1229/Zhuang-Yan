@@ -55,6 +55,7 @@ Progressive disclosure is intentional:
 - `human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> file projection`
 - `social_friction_signature`, `core_social_need`, and `ideal_counterparty_presence` now act as the main psychological guidance package
 - stable `persona/CANON.md` facts are derived from life stage first; if the age is still below the usual graduation threshold, the persona should default into a student or strongly student-stage context. Only then does persona spec guide the profile, with English-culture name connotations used as a light vibe adjustment inside constrained randomness
+- `persona/CANON.md` should function as structured ground truth for both humans and downstream skills, so it should prefer fixed sections, externally visible attributes, and short labeled entries over long personality essays
 - runtime persona files kept lean, with `persona/CANON.md` as the full upstream truth source
 - rebuilds from scratch instead of lightly patching the old persona
 

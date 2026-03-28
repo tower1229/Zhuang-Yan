@@ -407,6 +407,26 @@ function runStructuralChecks(files) {
         !/^- Birthplace:\s*.+$/m.test(files["persona/CANON.md"].content),
     },
     {
+      name: "CANON prefers labeled externalized attributes beyond the identity card",
+      pass:
+        /- (?:Life Stage|Education|Work \/ Study Status|Living Situation|Family Structure|Growth Path):/m.test(
+          files["persona/CANON.md"].content,
+        ) &&
+        /- (?:Register|Conversational Pace|Directness|Humor Style|Care Through Speech):/m.test(
+          files["persona/CANON.md"].content,
+        ) &&
+        /- (?:Trust Pattern|Closeness Pace|Care Style|Conflict Style|Boundary Style):/m.test(
+          files["persona/CANON.md"].content,
+        ),
+    },
+    {
+      name: "CANON avoids turning major sections into long personality prose",
+      pass:
+        !/## 2\. Background\s*\n\s*\n(?!- )[\s\S]{120,}/.test(files["persona/CANON.md"].content) &&
+        !/## 4\. Language And Expression\s*\n\s*\n(?!- )[\s\S]{120,}/.test(files["persona/CANON.md"].content) &&
+        !/## 5\. Psychology And Values\s*\n\s*\n(?!- )[\s\S]{120,}/.test(files["persona/CANON.md"].content),
+    },
+    {
       name: "CANON does not assign a default Secondary Language",
       pass: !/^- Secondary Language:\s*.+$/m.test(files["persona/CANON.md"].content),
     },
