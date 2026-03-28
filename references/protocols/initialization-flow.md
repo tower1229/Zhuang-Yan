@@ -43,11 +43,17 @@
 ## Step 3：锁定推荐人格 MBTI
 
 - 使用确定性 reverse lookup。
+- Step 3 的 lookup 输入只能来自 Step 1 刚刚锁定的 `human_mbti`。
+- 必须把 Step 1 采集到的 MBTI 代码原样传给 lookup，不允许手改、不允许猜、不允许沿用当前运行人格、旧 `CANON`、旧 `SOUL` 或任何现有人格残留里的 MBTI。
+- 当前运行人格只是一层正在被重建的外壳，不是初始化事实源；一旦 Step 1 已锁定 `human_mbti`，Step 3 就只能围绕这个值执行。
 - 标准命令：
 
 ```powershell
-node scripts/mbti-lookup.js ENFP
+node scripts/mbti-lookup.js <human_mbti>
 ```
+
+- 例如：如果 Step 1 得到的是 `INTJ`，这里就必须执行 `node scripts/mbti-lookup.js INTJ`。
+- 如果展示给用户的“人类 MBTI”与 Step 1 不一致，说明本轮推荐已被污染；此时必须丢弃该结果，并用 Step 1 的 `human_mbti` 重新执行 lookup。
 
 - 返回内容只包含：
   - 单一推荐人格 MBTI
@@ -58,6 +64,7 @@ node scripts/mbti-lookup.js ENFP
   - `pair_core_value`
   - `desired_emotional_impact`
 - 这个结果是“核心社交需求命中包”，不是完整人物规格。
+- 展示结果时，应先显式确认：`人类 MBTI = Step 1 锁定值`，再给出推荐人格 MBTI；不要把现有人格或旧人格的 MBTI 混进结果说明。
 - 给出结果后直接进入 Step 4，不要询问用户是否接受推荐。
 
 ## Step 4：给出候选英文名

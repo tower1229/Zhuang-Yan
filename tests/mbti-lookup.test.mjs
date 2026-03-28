@@ -59,3 +59,10 @@ test("representative pairings expose the intended social direction", () => {
   assert.match(index.reverse_lookup.ISTP.core_social_need, /被轻松地拉近|重新感到关系有温度/);
   assert.match(index.reverse_lookup.ISTP.desired_emotional_impact, /被唤醒|被暖到/);
 });
+
+test("INTJ lookup stays bound to the human MBTI instead of mirroring the current persona", () => {
+  const result = lookupRecommendation("INTJ", loadIndex());
+  assert.equal(result.human_mbti, "INTJ");
+  assert.equal(result.recommended, "ENFP");
+  assert.match(result.reason, /INTJ 常因直接、重实质、轻虚礼而被误读/);
+});

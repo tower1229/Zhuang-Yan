@@ -90,7 +90,10 @@ test("initialization flow only owns the interview", () => {
   assert.match(flow, /不允许中文问题配英文选项/);
   assert.match(flow, /只问用户自己的 MBTI，不追加测试服务/);
   assert.match(flow, /在起草阶段才去读取模板包与 MBTI 资产/);
-  assert.match(flow, /node scripts\/mbti-lookup\.js ENFP/);
+  assert.match(flow, /node scripts\/mbti-lookup\.js <human_mbti>/);
+  assert.match(flow, /Step 3 的 lookup 输入只能来自 Step 1 刚刚锁定的 `human_mbti`/);
+  assert.match(flow, /不允许沿用当前运行人格、旧 `CANON`、旧 `SOUL` 或任何现有人格残留里的 MBTI/);
+  assert.match(flow, /如果展示给用户的“人类 MBTI”与 Step 1 不一致，说明本轮推荐已被污染/);
   assert.doesNotMatch(flow, /当前轮事实账本|五文件合同|自检与回炉/);
   assert.doesNotMatch(flow, /companion|assistant|mentor|friend|关系角色|role slug/);
 });
