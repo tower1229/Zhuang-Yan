@@ -143,6 +143,10 @@ test("drafting spec owns generation execution, quality logic, and city strategy"
   assert.match(spec, /# Persona Canon/);
   assert.match(spec, /年龄不是摆设/);
   assert.match(spec, /先看年龄带来的生命阶段，再看 `target_persona_spec`/);
+  assert.match(spec, /若年龄尚未到常规本科毕业年龄/);
+  assert.match(spec, /则默认人物处于学生身份或强学生阶段语境/);
+  assert.match(spec, /不得硬写成成熟职场人士/);
+  assert.match(spec, /生命阶段优先级高于随机性/);
   assert.match(spec, /名字带来的文化联想、时代感与第一印象/);
   assert.match(spec, /生命阶段 -> 目标人物画像 -> 名字气质微调 -> 城市环境 -> 受约束随机化/);
   assert.match(spec, /不允许反复塌缩到同一组默认履历/);
@@ -171,8 +175,10 @@ test("template pack only owns templates, examples, and anti-pattern reminders", 
   assert.match(pack, /本文件只提供模板、推导方法与校准示例/);
   assert.match(pack, /`persona\/CANON\.md` 结构模板/);
   assert.match(pack, /年龄必须真正影响生命阶段、行为纹理、关系姿态与日常节律/);
+  assert.match(pack, /如果年龄还没到常规毕业年龄，人物资料默认应落在学生身份或强学生阶段语境里/);
   assert.match(pack, /名字在英文文化语境中的联想只能做气质微调/);
   assert.match(pack, /背景、职业与生活细节要有随机性/);
+  assert.match(pack, /随机性不能压过生命阶段/);
   assert.match(pack, /又一次塌缩成同一套默认履历/);
   assert.match(pack, /execution_trigger_protocol/);
   assert.match(pack, /pair_core_value/);
