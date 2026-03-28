@@ -51,9 +51,9 @@ Progressive disclosure is intentional:
 
 ## What the Skill Optimizes For
 
-- emotional value first across all roles
-- `human_mbti × role -> pair_core_value / pair_contrast_axis / desired_emotional_impact -> human_need_profile / target_persona_spec -> file projection`
-- `pair_contrast_axis` and `desired_emotional_impact` now act as role-specific psychological guidance, not short labels
+- emotional value first through the user's core social need
+- `human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> file projection`
+- `social_friction_signature`, `core_social_need`, and `ideal_counterparty_presence` now act as the main psychological guidance package
 - stable `persona/CANON.md` facts are derived from life stage first; if the age is still below the usual graduation threshold, the persona should default into a student or strongly student-stage context. Only then does persona spec guide the profile, with English-culture name connotations used as a light vibe adjustment inside constrained randomness
 - runtime persona files kept lean, with `persona/CANON.md` as the full upstream truth source
 - rebuilds from scratch instead of lightly patching the old persona

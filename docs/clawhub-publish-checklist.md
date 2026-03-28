@@ -53,11 +53,12 @@ npm run publish:clawhub
 - 会话中输入：`调用 persona 进行初始化`
 - 验证 Skill 是否按一问一答进入采访
 - 验证采访语言是否全程锁定，不混用中英文
-- 验证 Step 6 只补称呼/代词/长期备注
-- 验证 Step 7 只问年龄
+- 验证 Step 5 只补称呼/代词/长期备注
+- 验证 Step 6 只问年龄
 - 验证起草结果仍只写五个目标文件
 - 验证 `MEMORY.md` 不含旧人格残留
 - 验证 `CANON.md` 不含默认 `Species: Human` / `Birthplace`
+- 验证初始化不再询问额外分类标签
 
 ## ClawHub 当前格式要点
 

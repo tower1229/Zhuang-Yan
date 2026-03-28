@@ -2,7 +2,7 @@
 
 本文件只负责采访流程本身。
 
-- 负责：触发后的采访起点、提问顺序、选项呈现、`interview_language` 锁定、Step 6 gap-check、完成提示。
+- 负责：触发后的采访起点、提问顺序、选项呈现、`interview_language` 锁定、Step 5 gap-check、完成提示。
 - 不负责：起草读取顺序、文件合同、四段流水线、freshness audit、写入安全边界、模板内容。
 
 ## 触发后起点
@@ -21,7 +21,7 @@
 - 锁定后：
   - 全部提问、选项正文、补充说明、过渡语都使用同一语言
   - 不允许中文问题配英文选项，也不允许英文问题配中文选项
-  - MBTI 代码与内部 role slug 可以继续保持规范化值
+  - MBTI 代码可以继续保持规范化值
 
 ## Step 1：确认人类用户的 MBTI
 
@@ -40,44 +40,35 @@
   - 中文：`A. 男性` / `B. 女性`
   - 英文：`A. Male` / `B. Female`
 
-## Step 3：确认关系角色
-
-- 必须明确是在问用户与 OpenClaw 人格之间的关系定位。
-- 标准角色只允许四类：
-  - `companion`
-  - `assistant`
-  - `mentor`
-  - `friend`
-- 示例展示：
-  - 中文：`A. 伴侣` / `B. 助手` / `C. 导师` / `D. 朋友`
-  - 英文：`A. Companion` / `B. Assistant` / `C. Mentor` / `D. Friend`
-- 最终内部值标准化到上述四个 slug。
-
-## Step 4：锁定推荐人格 MBTI
+## Step 3：锁定推荐人格 MBTI
 
 - 使用确定性 reverse lookup。
 - 标准命令：
 
 ```powershell
-node scripts/mbti-lookup.js ENFP companion
+node scripts/mbti-lookup.js ENFP
 ```
 
 - 返回内容只包含：
   - 单一推荐人格 MBTI
-  - 对应理由
-  - 若可用，则携带 `pair_core_value / pair_contrast_axis / desired_emotional_impact` 作为后续起草种子
-- 这个结果只是人格骨架与配对型核心价值种子，不是完整人物规格。
-- 给出结果后直接进入 Step 5，不要询问用户是否接受推荐。
+  - 对应推荐理由
+  - `social_friction_signature`
+  - `core_social_need`
+  - `ideal_counterparty_presence`
+  - `pair_core_value`
+  - `desired_emotional_impact`
+- 这个结果是“核心社交需求命中包”，不是完整人物规格。
+- 给出结果后直接进入 Step 4，不要询问用户是否接受推荐。
 
-## Step 5：给出候选英文名
+## Step 4：给出候选英文名
 
 - 生成 3 个候选名。
 - 3 个都必须是英文名。
-- 名字气质要与已锁定的人格性别、人格方向和关系角色一致。
+- 名字气质要与已锁定的人格性别、人格方向和社交存在方式一致。
 - 名字本身保持英文，但解释文字、选项说明、刷新提示仍必须使用锁定的 `interview_language`。
 - 如果用户不满意，就刷新 3 个新名字。
 
-## Step 6：补齐用户侧稳定信息
+## Step 5：补齐用户侧稳定信息
 
 开始前先查看已有 `USER.md`，仅用于 gap-check。
 
@@ -101,14 +92,14 @@ node scripts/mbti-lookup.js ENFP companion
 
 如果 `Pronouns` 本轮仍为空，且你还没有明确问过，就不能直接结束初始化。
 
-## Step 7：只锁定年龄
+## Step 6：只锁定年龄
 
 - 进入起草前，必须明确询问人格年龄。
-- Step 7 只允许问年龄，不允许顺带再问城市、职业、家庭、兴趣等其他 canon 事实。
+- Step 6 只允许问年龄，不允许顺带再问城市、职业、家庭、兴趣等其他 canon 事实。
 - 年龄必须锁死，不能跳过、不能留白。
 - 其他 canon 事实都留到起草阶段再推导。
 
-## Step 8：交给起草规范
+## Step 7：交给起草规范
 
 采访完成后：
 
@@ -116,7 +107,7 @@ node scripts/mbti-lookup.js ENFP companion
 - 按其中定义的读取顺序、写入边界、城市策略、审核与回炉规则执行
 - 在起草阶段才去读取模板包与 MBTI 资产
 
-## Step 9：完成提示
+## Step 8：完成提示
 
 写入完成后必须明确告知：
 

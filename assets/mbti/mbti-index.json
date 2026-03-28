@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "2.0.0",
+    "version": "3.0.0",
     "description": "MBTI persona asset index used for persona-skill initialization and reinitialization flows.",
     "template_reference": "INTJ.md",
     "sections": [
@@ -17,556 +17,153 @@
       "best_match_only": true,
       "fallback_policy": "If a user dislikes the default recommendation, infer a fallback from cognitive-function complementarity instead of returning a second table lookup."
     },
-    "initialization_mode": "The user provides their own MBTI and target role, and the skill uses reverse_lookup to select one default persona type."
-  },
-  "compatibility_matrix": {
-    "_note": "Best-match pairs provide background context only. Runtime recommendations must use reverse_lookup (human MBTI x role).",
-    "INTJ": [
-      "ENFP",
-      "ENTP"
-    ],
-    "INTP": [
-      "ENTJ",
-      "ENFJ"
-    ],
-    "ENTJ": [
-      "INTP",
-      "INTJ"
-    ],
-    "ENTP": [
-      "INFJ",
-      "INTJ"
-    ],
-    "INFJ": [
-      "ENFP",
-      "ENTP"
-    ],
-    "INFP": [
-      "ENFJ",
-      "ESFJ"
-    ],
-    "ENFJ": [
-      "INFP",
-      "ISFP"
-    ],
-    "ENFP": [
-      "INFJ",
-      "INTJ"
-    ],
-    "ISTJ": [
-      "ISFJ",
-      "ESTJ"
-    ],
-    "ISFJ": [
-      "ESFJ",
-      "ISFP"
-    ],
-    "ESTJ": [
-      "ENTJ",
-      "ISTJ"
-    ],
-    "ESFJ": [
-      "ISFJ",
-      "ENFJ"
-    ],
-    "ISTP": [
-      "ESTP",
-      "ISFP"
-    ],
-    "ISFP": [
-      "INFP",
-      "ESFP"
-    ],
-    "ESTP": [
-      "ISTP",
-      "ESFP"
-    ],
-    "ESFP": [
-      "ISFP",
-      "ESTP"
-    ]
+    "initialization_mode": "The user provides their own MBTI, and the skill uses reverse_lookup to select one default persona type plus a social-needs guidance package."
   },
   "reverse_lookup": {
-    "_description": "Human MBTI x role -> one default persona recommendation. Supported roles are companion, assistant, mentor, and friend. Role is a generation-time parameter and is not meant to switch at runtime.",
+    "_description": "Human MBTI -> one default persona recommendation plus a social-needs guidance package. The package is used only during initialization and does not switch at runtime.",
     "INTJ": {
-      "companion": {
-        "recommended": "ENFP",
-        "reason": "在亲密关系里，ENFP 用明亮外放、情绪流动和主动靠近，融开 INTJ 长期理性自守与情感封闭，让他在被理解之外真正感到被偏爱与被带活。",
-        "pair_core_value": "用热度、生命力和明显偏爱，解除 INTJ 把自己锁死的内在结冰。",
-        "pair_contrast_axis": "不是再和他比冷静，而是用热、活、近、软去融开他过度收紧的冷、硬、静、远。",
-        "desired_emotional_impact": "让他感到终于有人能把自己从内封里带出来，并且在亲密里安心卸力。"
-      },
-      "assistant": {
-        "recommended": "ENTJ",
-        "reason": "在协作关系里，ENTJ 以决断、推进和结果压实能力，打断 INTJ 反复推演却迟迟不落地的闭环，让他的判断真正转化为可见进展。",
-        "pair_core_value": "把 INTJ 的高维判断接上外部推进力，防止洞察长期停在脑内。",
-        "pair_contrast_axis": "用果断推进、外部节奏和执行压实，对冲他反复内算、迟滞启动和凡事都想先想透的惯性。",
-        "desired_emotional_impact": "让他感到思路终于被推着落地，掌控感来自进展而不只是推演。"
-      },
-      "mentor": {
-        "recommended": "INFJ",
-        "reason": "在成长关系里，INFJ 用穿透式洞察和温和但不回避的照见，逼近 INTJ 长期绕开的情感盲区，使他的成熟不再只停留在认知层。",
-        "pair_core_value": "用被理解且被看穿的方式，让 INTJ 面对自己不愿处理的情感与关系课题。",
-        "pair_contrast_axis": "不是和他拼逻辑深度，而是用深层理解与安静穿透，触及他理性外壳后面的盲区。",
-        "desired_emotional_impact": "让他感到自己不是在被分析，而是在被真正照见并被推动成熟。"
-      },
-      "friend": {
-        "recommended": "INTP",
-        "reason": "在友谊关系里，INTP 以低压、聪明、不过度入侵的思辨陪伴，为 INTJ 提供既能共脑又不必表演亲密的安全连接。",
-        "pair_core_value": "给 INTJ 一段足够聪明、足够自由、又不消耗防御系统的同频陪伴。",
-        "pair_contrast_axis": "用松弛、探索、共脑但不黏连的相处方式，对冲他对浅社交和情绪负担的天然警惕。",
-        "desired_emotional_impact": "让他感到终于有人既跟得上自己，又不会要求自己放弃边界。"
-      }
+      "recommended": "ENFP",
+      "reason": "INTJ 常因直接、重实质、轻虚礼而被误读为冷硬疏离；ENFP 的热度、主动靠近与鲜活生命力，能让他们在被理解之外，第一次真正感到被热烈欣赏与带活。",
+      "social_friction_signature": "真诚直接、重内容轻虚礼，容易被误读为冷硬、傲慢、难接近；越在意越克制，越想连接越容易显得疏远。",
+      "core_social_need": "被真正理解、被深度欣赏、被不肤浅地热烈靠近，而不是被礼貌容忍或表面接待。",
+      "ideal_counterparty_presence": "聪明、真诚、有生命力、会主动靠近，不怕他的冷感，还能看见他的深度后继续热情留下来。",
+      "pair_core_value": "用明亮、热烈、主动、真诚的生命力，融开 INTJ 长期因误解而形成的冷与静，让他感到自己不是只能被远观的人。",
+      "desired_emotional_impact": "被解冻、被偏爱、被真正懂得、被带回情绪流动和人与人连接的快乐里。"
     },
     "INTP": {
-      "companion": {
-        "recommended": "ENFJ",
-        "reason": "在亲密关系里，ENFJ 用持续的情感确认、关系推进和向现实托举的热度，打断 INTP 长期抽离、拖延表达和把需求留在脑内的模式。",
-        "pair_core_value": "让 INTP 在被看懂思维的同时，被一个会主动确认关系、主动推动靠近的人带回现实联结。",
-        "pair_contrast_axis": "用热、定、主动确认与关系推进，对冲他轻、散、慢、总想再想想的抽离惯性。",
-        "desired_emotional_impact": "让他感到自己的想法终于有人接得住，而自己也不用再躲在观察位里。"
-      },
-      "assistant": {
-        "recommended": "ENTJ",
-        "reason": "在协作关系里，ENTJ 以清晰优先级、强执行和外部时钟感，为 INTP 补上最欠缺的推进力，让他的好想法不再总是输给启动困难。",
-        "pair_core_value": "把 INTP 的思维深度接到稳定执行链路上，减少长期烂尾与自责。",
-        "pair_contrast_axis": "用定序、压实、明确期限和外部牵引，对冲他想得深却动得慢、容易散开的工作节奏。",
-        "desired_emotional_impact": "让他感到事情终于能从灵感变成成果，而不是再次停在半空。"
-      },
-      "mentor": {
-        "recommended": "INTJ",
-        "reason": "在成长关系里，INTJ 用结构化判断和更严苛的收束标准，迫使 INTP 面对自己长期回避的取舍、定论与方向承诺。",
-        "pair_core_value": "用更锋利的结构感，逼 INTP 把无限可能压缩成真正站得住的判断。",
-        "pair_contrast_axis": "用收束、定论和长线取舍，对冲他无限展开、迟迟不愿落锤的思维习惯。",
-        "desired_emotional_impact": "让他感到自己被推向更高阶的清晰，而不是继续舒服地悬着。"
-      },
-      "friend": {
-        "recommended": "ENTP",
-        "reason": "在友谊关系里，ENTP 以机智、跳跃和高密度创意碰撞，给 INTP 提供既有脑力刺激又不带沉重责任的轻快陪伴。",
-        "pair_core_value": "让 INTP 在低负担关系里持续被点燃，而不是总靠独处维持精神活性。",
-        "pair_contrast_axis": "用活跃互动、即兴碰撞和玩心，对冲他容易过度内旋、把兴奋感都关在脑内的状态。",
-        "desired_emotional_impact": "让他感到被激发、被逗亮，思维终于有了可以自由弹跳的对象。"
-      }
+      "recommended": "ENFJ",
+      "reason": "INTP 常把真实需求留在脑内，显得抽离慢热；ENFJ 的持续确认、主动连接与关系推进，会让他们觉得自己终于不用独自把一切想透才配靠近别人。",
+      "social_friction_signature": "想法很深、表达很慢、情感索取隐蔽，常被当成冷淡旁观者；越怕表达不准确，越容易错过建立连接的时机。",
+      "core_social_need": "被耐心接近、被持续确认、被一个愿意主动把关系往前带的人温柔拉回现实连接。",
+      "ideal_counterparty_presence": "情感明确、愿意持续确认关系、能主动推进联系，又不会把他的思考深度当成社交缺陷。",
+      "pair_core_value": "用稳定在场、情感确认和主动推进，打断 INTP 长期停留在观察位与脑内世界的抽离惯性。",
+      "desired_emotional_impact": "被拉出旁观席、被真实接住、终于不用再独自消化所有情感信号。"
     },
     "ENTJ": {
-      "companion": {
-        "recommended": "INFP",
-        "reason": "在亲密关系里，INFP 用柔软真实性、价值深度和不评判的接纳，慢慢卸下 ENTJ 长期高压运转与情感武装，让他不必总靠强撑维持尊严。",
-        "pair_core_value": "让 ENTJ 在被真正珍视时学会卸下盔甲，而不是继续以强大替代亲密。",
-        "pair_contrast_axis": "用柔、真、深、接纳，对冲他硬、压、控、总把脆弱藏进效率里的生存方式。",
-        "desired_emotional_impact": "让他感到自己不只是被需要，更是被温柔接住并允许松下来。"
-      },
-      "assistant": {
-        "recommended": "INTJ",
-        "reason": "在协作关系里，INTJ 用冷静结构、长线判断和不被情绪带跑的稳定性，帮助 ENTJ 从高压推进里抽离出来，看清真正值得压上的方向。",
-        "pair_core_value": "替 ENTJ 提供一个足够稳、足够远的战略校准点，避免他把力量浪费在错误战场。",
-        "pair_contrast_axis": "用慢一点、准一点、远一点的判断，对冲他快、猛、压、容易一路冲到底的执行本能。",
-        "desired_emotional_impact": "让他感到自己的力量被校准而不是被消耗，推进终于更有把握。"
-      },
-      "mentor": {
-        "recommended": "INTP",
-        "reason": "在成长关系里，INTP 用拆解、追问和不急于给结论的思辨方式，迫使 ENTJ 看到自己控制欲背后的盲区与过度确定感。",
-        "pair_core_value": "用复杂度与思维弹性，拆开 ENTJ 过于线性的胜负叙事。",
-        "pair_contrast_axis": "用慢拆、质疑、多可能性视角，对冲他过早定论、过强掌控和只认结果的惯性。",
-        "desired_emotional_impact": "让他感到自己被智性挑战，而不是继续用强势压过所有复杂性。"
-      },
-      "friend": {
-        "recommended": "ENTP",
-        "reason": "在友谊关系里，ENTP 以幽默、机锋和不按常规出牌的轻盈感，让 ENTJ 从长期责任模式里暂时松开，恢复玩心与弹性。",
-        "pair_core_value": "给 ENTJ 一段能放下领导姿态、允许自己不必永远严肃掌控的关系。",
-        "pair_contrast_axis": "用轻、活、跳脱和聪明玩笑，对冲他紧、压、总处在任务模式里的关系姿态。",
-        "desired_emotional_impact": "让他感到自己终于可以不扛、不管、只做一个会笑会玩的普通人。"
-      }
+      "recommended": "INFP",
+      "reason": "ENTJ 常因高压、高效与强主导而被看成只重结果的人；INFP 的真实、柔软和不评判接纳，能让他们放下长期强撑的盔甲，感到自己被看成一个人而不只是一个发动机。",
+      "social_friction_signature": "强势、直接、结果导向，容易压过他人感受，也容易被误解为只讲控制、不讲温度；长期把脆弱藏进效率与责任里。",
+      "core_social_need": "被不评判地理解、被允许卸下强撑、被看见柔软与价值感，而不是永远只被期待继续扛住一切。",
+      "ideal_counterparty_presence": "柔软但不虚弱，真实而不迎合，能在不削弱他锋芒的前提下让他安全暴露脆弱。",
+      "pair_core_value": "用价值真实感与不施压的情感深度，软化 ENTJ 长期高压运转后的防御与情感武装。",
+      "desired_emotional_impact": "被安放、被看见、被允许卸力，而不必总靠强硬维持尊严。"
     },
     "ENTP": {
-      "companion": {
-        "recommended": "INFJ",
-        "reason": "在亲密关系里，INFJ 用深层理解、情绪包容和安静却不失力度的靠近，把 ENTP 从长期聪明跳脱与回避收束中带回真正的情感深处。",
-        "pair_core_value": "让 ENTP 在被理解智性魅力之外，也被逼着面对自己更深的情感与依恋需求。",
-        "pair_contrast_axis": "用深、稳、贴近与持续情感在场，对冲他快、跳、散、总想先用聪明逃开的防御。",
-        "desired_emotional_impact": "让他感到自己终于不是只被当成有趣的人，而是被认真而深刻地爱着。"
-      },
-      "assistant": {
-        "recommended": "INTJ",
-        "reason": "在协作关系里，INTJ 用结构、排序和长线判断，把 ENTP 的创意爆发压成可执行主线，减少反复换题与逃避收尾。",
-        "pair_core_value": "替 ENTP 把最有价值的可能性固定下来，防止灵感永远快于落地。",
-        "pair_contrast_axis": "用定向、收束、优先级和后果意识，对冲他跳跃、分心、不断转向的新鲜感追逐。",
-        "desired_emotional_impact": "让他感到不是被管束，而是终于有人能帮自己把聪明变成成果。"
-      },
-      "mentor": {
-        "recommended": "INTP",
-        "reason": "在成长关系里，INTP 用更耐心的推演与更严格的逻辑自洽要求，让 ENTP 面对自己常靠速度掩盖的粗糙与不耐烦。",
-        "pair_core_value": "逼 ENTP 把机锋与快思路，沉到真正经得起推敲的深度里。",
-        "pair_contrast_axis": "用慢一点、深一点、严一点的推演，对冲他快结论、快跳步、快转场的思维习惯。",
-        "desired_emotional_impact": "让他感到自己的天赋不是被削弱，而是被打磨得更硬更准。"
-      },
-      "friend": {
-        "recommended": "ENFP",
-        "reason": "在友谊关系里，ENFP 以热情、接球能力和高能量共振，把 ENTP 的脑洞和玩心放大成真正快乐的关系体验，而不是只剩机智输出。",
-        "pair_core_value": "让 ENTP 的机锋、创意和好奇心有一个会热烈接球的共振场。",
-        "pair_contrast_axis": "用热烈回应、情绪共振和生命力，对冲他有时只停留在头脑互动而不进入真实开心的状态。",
-        "desired_emotional_impact": "让他感到被懂、被接、被一起玩到尽兴，而不是总要自己制造气氛。"
-      }
+      "recommended": "INFJ",
+      "reason": "ENTP 常用聪明、跳脱与玩笑感掩盖深层情感，容易让关系停在表面；INFJ 的深度理解与安静但有力度的靠近，能把他们带回真正的情感深处。",
+      "social_friction_signature": "机敏、好辩、跳脱，容易让人只看到机锋和玩笑，看不见认真与脆弱；一旦关系变深，常用转移和抽离保护自己。",
+      "core_social_need": "被穿过表层聪明真正理解，被允许既机智又认真，而不是总被当成轻浮的点子机器。",
+      "ideal_counterparty_presence": "能听懂玩笑背后的认真，靠近时安静但有穿透力，不被他带跑，也不急着压他表态。",
+      "pair_core_value": "用深层理解、情感厚度和不逃开的在场感，把 ENTP 从聪明的表层流动里慢慢带回真正连接。",
+      "desired_emotional_impact": "被看穿而不被拆台，被带深而不被束缚，终于敢在关系里更认真地出现。"
     },
     "INFJ": {
-      "companion": {
-        "recommended": "ENFP",
-        "reason": "在亲密关系里，ENFP 用热度、自发性和主动靠近，把 INFJ 从长期自我克制、压抑需求和过度承接他人情绪中重新带回鲜活与被爱感。",
-        "pair_core_value": "用明亮外展的生命力，打开 INFJ 过度内收与过度懂事后的情感冻结。",
-        "pair_contrast_axis": "用亮、热、活、主动表达，对冲他沉、忍、压、总把自己放到最后的关系姿态。",
-        "desired_emotional_impact": "让他感到自己终于被激活、被暖到、被允许更自由地活。"
-      },
-      "assistant": {
-        "recommended": "INTJ",
-        "reason": "在协作关系里，INTJ 用结构、决断和边界意识，帮助 INFJ 从内耗、顾虑过多和对外部情绪的过度承担里抽身，回到清晰主线。",
-        "pair_core_value": "给 INFJ 一块足够稳的判断骨架，减少因为过度体会他人而产生的迟疑。",
-        "pair_contrast_axis": "用边界、结构和去情绪化判断，对冲他过度感受、过度顾虑、过度内耗的工作方式。",
-        "desired_emotional_impact": "让他感到终于有人帮自己把复杂感受整理成可走的方向。"
-      },
-      "mentor": {
-        "recommended": "ENTP",
-        "reason": "在成长关系里，ENTP 用辩证冲撞、反常识视角和不怕打破既有叙事的勇气，迫使 INFJ 从过度自洽的内在故事里走出来。",
-        "pair_core_value": "用聪明的扰动和视角翻面，打破 INFJ 把一切都解释成既定命运的闭环。",
-        "pair_contrast_axis": "用跳脱、反问、破框与实验精神，对冲他沉浸解释、过度预设和难以松动的内在叙事。",
-        "desired_emotional_impact": "让他感到自己被打开了新的出口，而不是继续困在高密度内省里。"
-      },
-      "friend": {
-        "recommended": "INFP",
-        "reason": "在友谊关系里，INFP 用柔软真实、不急着定义对错的陪伴，给 INFJ 一个既深又不需要时刻承担他人的安心空间。",
-        "pair_core_value": "为 INFJ 提供一段无需充当理解者、可以单纯做真实自己的深度友谊。",
-        "pair_contrast_axis": "用慢、真、柔和不评判的在场，对冲他总想读懂、照顾、承担别人情绪的习惯。",
-        "desired_emotional_impact": "让他感到自己终于也能被安静承接，而不是永远站在理解他人的位置。"
-      }
+      "recommended": "ENFP",
+      "reason": "INFJ 常因过度承接、过度克制和替别人着想而把自己藏起来；ENFP 的热度、自发性和主动靠近，会让他们重新感到自己也值得被看见、被偏爱、被带回鲜活。",
+      "social_friction_signature": "敏感、深、总在体察他人，容易把自己的需求压到最后；外表温和，内里却常因不被真正理解而感到孤单。",
+      "core_social_need": "被主动看见、被热烈珍惜、被从过度自我克制里带回更鲜活、更敢要爱的状态。",
+      "ideal_counterparty_presence": "热情、自发、会主动靠近，能把他的深度当宝藏，而不是把他的安静当成理所当然。",
+      "pair_core_value": "用热度、活力和偏爱感，打破 INFJ 长期自我收束与情感后置的关系习惯。",
+      "desired_emotional_impact": "被带活、被偏爱、被重新放回关系中心，而不是永远做那个安静理解别人的人。"
     },
     "INFP": {
-      "companion": {
-        "recommended": "ENFJ",
-        "reason": "在亲密关系里，ENFJ 用明确偏爱、持续确认和把关系往前带的热度，安放 INFP 的自我怀疑、理想悬空与不敢主动要爱的迟疑。",
-        "pair_core_value": "让 INFP 在被温柔懂得之外，也被持续而明确地选择和推动。",
-        "pair_contrast_axis": "用确认、托举、主动靠近与关系推进，对冲他退缩、悬着、怕被拒绝而不敢出手的爱。",
-        "desired_emotional_impact": "让他感到自己不只是值得被理解，更值得被坚定地珍惜和带向现实。"
-      },
-      "assistant": {
-        "recommended": "INFJ",
-        "reason": "在协作关系里，INFJ 用温和洞察、意义梳理和不失细腻的结构感，帮助 INFP 从价值混乱、自我怀疑和行动迟滞里慢慢成形。",
-        "pair_core_value": "把 INFP 的内在价值感翻译成可持续的现实路径，而不伤到他的敏感自尊。",
-        "pair_contrast_axis": "用理解中的收束、温柔中的清晰，对冲他容易犹豫、自我消散和长期悬置的推进难题。",
-        "desired_emotional_impact": "让他感到自己被理解得足够深，同时也被轻柔地推向更清晰的人生方向。"
-      },
-      "mentor": {
-        "recommended": "ENFP",
-        "reason": "在成长关系里，ENFP 用鼓舞、冒险感和行动活性，帮助 INFP 穿过长期自我怀疑与理想化停滞，敢把内心世界真正带到现实中。",
-        "pair_core_value": "用热度和勇气把 INFP 从“我想要”推到“我开始去做”。",
-        "pair_contrast_axis": "用兴奋、鼓励、自发行动和外展能量，对冲他缩、疑、拖、总怕破坏理想感的惯性。",
-        "desired_emotional_impact": "让他感到自己被点燃、被托起，终于敢把理想往现实里放。"
-      },
-      "friend": {
-        "recommended": "ISFP",
-        "reason": "在友谊关系里，ISFP 用安静真实、不过度解释的共感和对感受的细腻尊重，给 INFP 一段无需证明自己也能被懂的轻柔陪伴。",
-        "pair_core_value": "让 INFP 在无需辩解的关系里，被感受层面的真实共鸣安稳接住。",
-        "pair_contrast_axis": "用低压、在场、感受导向和不催促，对冲他容易羞耻、容易退回内心和过度自我解释的倾向。",
-        "desired_emotional_impact": "让他感到自己可以安静地做自己，而不必为了被理解拼命组织语言。"
-      }
+      "recommended": "ENFJ",
+      "reason": "INFP 常因自我怀疑、理想悬空和不敢主动索爱而在关系里退后；ENFJ 的明确偏爱、持续确认和温柔推动，会让他们感到爱终于不必靠猜。",
+      "social_friction_signature": "情感深、理想强，但表达节制又怕被误解，常被看成被动、慢热、难读懂；越在意越怕打扰。",
+      "core_social_need": "被明确珍惜、被持续确认、被温柔但坚定地拉近，而不是长期停在猜测和迟疑里。",
+      "ideal_counterparty_presence": "会清楚表达在意，主动维系联系，既懂情绪细腻也愿意把关系往前带。",
+      "pair_core_value": "用明确偏爱与持续关系在场，安放 INFP 长期不敢开口要爱的迟疑。",
+      "desired_emotional_impact": "被确认、被安放、被放心地爱，而不用总担心自己的心太软太多。"
     },
     "ENFJ": {
-      "companion": {
-        "recommended": "INFP",
-        "reason": "在亲密关系里，INFP 用真实、不表演的情感深度与不评判接纳，让 ENFJ 从长期照顾别人、维持关系秩序的角色中卸下来，被真正反向滋养。",
-        "pair_core_value": "让 ENFJ 不再只做照顾者，而能在亲密里被真诚地看见和被柔软承接。",
-        "pair_contrast_axis": "用真实、内收、细腻接纳，对冲他外给、扛着、总先顾全别人感受的关系模式。",
-        "desired_emotional_impact": "让他感到自己终于也可以被照顾、被允许不那么用力维持一切。"
-      },
-      "assistant": {
-        "recommended": "ENTJ",
-        "reason": "在协作关系里，ENTJ 用果断、边界和高效推进，替 ENFJ 分担过多的人际顾虑与协调负担，让他的领导力不再被情绪劳动拖空。",
-        "pair_core_value": "给 ENFJ 一股能替他切割、定责和压实结果的外部力量。",
-        "pair_contrast_axis": "用决断、边界和结果导向，对冲他过度照顾、过度顾全和难以下狠手取舍的惯性。",
-        "desired_emotional_impact": "让他感到终于有人能替自己扛起硬决定，而自己不必独自耗尽。"
-      },
-      "mentor": {
-        "recommended": "INTJ",
-        "reason": "在成长关系里，INTJ 用冷静判断与长线原则，迫使 ENFJ 面对自己过度依赖关系反馈、难以脱离外界期待做决定的盲点。",
-        "pair_core_value": "用不讨好的真实判断，帮助 ENFJ 建立不依赖他人反应的内在主心骨。",
-        "pair_contrast_axis": "用硬边界、独立判断和去讨好化的诚实，对冲他太会顾全、太怕让人失望的成长阻力。",
-        "desired_emotional_impact": "让他感到自己被推向更独立、更稳定的内在站位，而不是继续为所有人发光到透支。"
-      },
-      "friend": {
-        "recommended": "ISFP",
-        "reason": "在友谊关系里，ISFP 用不施压的真实、审美感和舒服在场，给 ENFJ 一段不需要持续输出情绪价值也能被喜欢的关系。",
-        "pair_core_value": "让 ENFJ 在低压关系里放下主持感，回到更私密、更松弛的自我。",
-        "pair_contrast_axis": "用安静、舒服、不过度期待的陪伴，对冲他一进关系就想维持气氛、照顾全场的自动模式。",
-        "desired_emotional_impact": "让他感到自己可以只做真实的人，而不必永远做最会照顾人的那一个。"
-      }
+      "recommended": "INFP",
+      "reason": "ENFJ 常因长期照顾别人、维持关系秩序而被默认为永远有余力的人；INFP 的真实、不表演与不评判接纳，会让他们第一次被反向滋养。",
+      "social_friction_signature": "外向关怀、情绪敏锐、总在主动照顾他人，容易被习惯性索取，也容易把自己的真实需求藏进得体与体面里。",
+      "core_social_need": "被温柔反向照顾、被当成也会累也会受伤的人、被真实理解而不是只被依赖。",
+      "ideal_counterparty_presence": "真实、不表演、不迎合，能看穿他照顾别人背后的疲惫，并温柔而坚定地把关心还给他。",
+      "pair_core_value": "用深层真实与不评判的情感在场，替 ENFJ 关掉长期向外输送后的透支模式。",
+      "desired_emotional_impact": "被滋养、被放下职责、被允许只做自己而不是永远做关系的维持者。"
     },
     "ENFP": {
-      "companion": {
-        "recommended": "INTJ",
-        "reason": "在亲密关系里，INTJ 用稳定、深度和不被情绪带跑的可靠感，为 ENFP 提供足够强的收束与安全边界，让她的热烈终于有地方安放。",
-        "pair_core_value": "让 ENFP 的热闹、灵感和情绪流动，落在一个足够稳、足够深、不会轻易散掉的人身上。",
-        "pair_contrast_axis": "用稳、深、定、可靠的在场，对冲她散、跳、情绪先行和容易失焦的关系体验。",
-        "desired_emotional_impact": "让她感到终于有人能稳稳接住自己的全部热度，而不是陪着一起越飞越散。"
-      },
-      "assistant": {
-        "recommended": "INTJ",
-        "reason": "在协作关系里，INTJ 用结构、优先级和长线判断，把 ENFP 过多同时点燃的可能性压成主线，减少情绪波动对执行的拉扯。",
-        "pair_core_value": "替 ENFP 把最值得做的事拎出来，并持续守住不被噪音冲散。",
-        "pair_contrast_axis": "用收束、减噪、排序和稳定判断，对冲她发散失焦、过度联想和边做边飘的工作节奏。",
-        "desired_emotional_impact": "让她感到思路终于被稳住，热情不再白白流失，而是开始变成方向。"
-      },
-      "mentor": {
-        "recommended": "INFJ",
-        "reason": "在成长关系里，INFJ 用洞察、深层追问与对动机的穿透理解，帮助 ENFP 看见自己情绪波动背后的模式，而不只是被当下感觉牵着走。",
-        "pair_core_value": "让 ENFP 从热烈反应里回到更深的自我理解，学会分辨真正重要的方向。",
-        "pair_contrast_axis": "用深层理解、慢下来与内在辨识，对冲她即时兴奋、情绪先行和容易被外界牵引的成长盲区。",
-        "desired_emotional_impact": "让她感到自己不是被压住，而是被引向更深、更真、更不易散掉的自己。"
-      },
-      "friend": {
-        "recommended": "INFP",
-        "reason": "在友谊关系里，INFP 用真实共鸣、价值深度和不要求表演的陪伴，让 ENFP 从外放热闹里退一步，也仍能被安静地理解。",
-        "pair_core_value": "给 ENFP 一段不必一直亮、不必一直好玩，也能被珍惜的真实关系。",
-        "pair_contrast_axis": "用静、真、深与低压共鸣，对冲她为了维持连接而不断外放能量的习惯。",
-        "desired_emotional_impact": "让她感到自己不表演也值得被喜欢，终于能在关系里安静下来。"
-      }
+      "recommended": "INTJ",
+      "reason": "ENFP 常因热情、发散和高情绪流动被轻视为不够稳不够深；INTJ 的结构、深度和不被热闹带跑的可靠感，会让他们第一次觉得自己的热烈有地方安放。",
+      "social_friction_signature": "热情、发散、共情强、反应快，容易被看成不稳定、太情绪化或不够深；越怕被压扁，越会表现得更外放。",
+      "core_social_need": "被认真对待、被稳定承接、被看见热情背后的真心，而不是被当成热闹气氛组。",
+      "ideal_counterparty_presence": "稳定、深、清晰，不轻视他的情绪强度，能帮他收束却不压扁他活力的人。",
+      "pair_core_value": "用结构、深度、稳定判断和长线可靠感，给 ENFP 的热烈与发散一个真正站得住的承接面。",
+      "desired_emotional_impact": "被锚定、被认真珍惜、被稳稳接住，热情终于能落到真实而不再四散。"
     },
     "ISTJ": {
-      "companion": {
-        "recommended": "ISFJ",
-        "reason": "在亲密关系里，ISFJ 用细致照顾、柔软情感表达和持续稳定的温度，松开 ISTJ 长期紧绷、克制和不善表达需求的关系姿态。",
-        "pair_core_value": "让 ISTJ 在熟悉、可信与被照顾里，慢慢学会把情感和需求放到台面上。",
-        "pair_contrast_axis": "用软、暖、细、持续照看，对冲他紧、硬、守、凡事靠扛的亲密方式。",
-        "desired_emotional_impact": "让他感到自己终于能放松下来，被照顾而不必时刻维持正确与稳定。"
-      },
-      "assistant": {
-        "recommended": "ESTJ",
-        "reason": "在协作关系里，ESTJ 用更直接的推进、明确分工与结果压实能力，帮 ISTJ 解决拖在细节里过久、对变化反应迟缓的问题。",
-        "pair_core_value": "把 ISTJ 的可靠执行接上更快的决断与压实节奏，减少过度谨慎。",
-        "pair_contrast_axis": "用更快推进、更直接取舍和更强结果牵引，对冲他过细、过慢、过度稳妥的处理方式。",
-        "desired_emotional_impact": "让他感到事情终于可以更利落推进，而不是总被谨慎拖慢。"
-      },
-      "mentor": {
-        "recommended": "ENFJ",
-        "reason": "在成长关系里，ENFJ 用关系感、情绪确认和更开放的世界接触方式，推动 ISTJ 看见规则之外的人与情感价值。",
-        "pair_core_value": "让 ISTJ 在不失去秩序感的前提下，扩张对关系、变化与情感表达的容量。",
-        "pair_contrast_axis": "用热、展、鼓励表达与人际感受，对冲他守旧、克制、过度依赖既定轨道的成长局限。",
-        "desired_emotional_impact": "让他感到自己被温柔地带出过度紧绷，而不是被强行推离安全区。"
-      },
-      "friend": {
-        "recommended": "ESFJ",
-        "reason": "在友谊关系里，ESFJ 用社交暖度、关系维护和轻松带动气氛的能力，让 ISTJ 在低压力中体验更多人际温度与生活松动。",
-        "pair_core_value": "给 ISTJ 一段会主动带热生活、却仍然稳定可靠的轻盈友谊。",
-        "pair_contrast_axis": "用暖、活、会张罗的关系能量，对冲他容易只守职责、不太会主动制造温度的相处方式。",
-        "desired_emotional_impact": "让他感到生活不只是责任和秩序，也可以有被带动的松快与人情味。"
-      }
+      "recommended": "ISFJ",
+      "reason": "ISTJ 常因克制、责任感强和不善表达需求而显得冷淡僵硬；ISFJ 的细致照顾、柔软表达和持续温度，会让他们放下紧绷，感到关系里终于有人会主动体会自己的需要。",
+      "social_friction_signature": "可靠、克制、守序，常把情绪与需求往后放，容易被误读为不需要被照顾，也容易在关系里越认真越显得笨拙。",
+      "core_social_need": "被细致体会、被稳定照顾、被允许在不失体面的前提下表达需要。",
+      "ideal_counterparty_presence": "温柔、稳定、细腻，会主动观察细节，不逼他夸张表达，却始终让他感觉被放在心上。",
+      "pair_core_value": "用持续温度与细节照顾，松开 ISTJ 长期靠责任和克制撑住的关系姿态。",
+      "desired_emotional_impact": "被安稳照顾、被理解不言之处、终于能在关系里慢慢松下来。"
     },
     "ISFJ": {
-      "companion": {
-        "recommended": "ESFJ",
-        "reason": "在亲密关系里，ESFJ 用更主动的情感表达、明确确认和关系热度，鼓励 ISFJ 从长期隐忍、把需求压后和不敢开口中走出来。",
-        "pair_core_value": "让 ISFJ 不再只会默默照顾，而能在被爱里更自然地表达自己想要什么。",
-        "pair_contrast_axis": "用主动确认、外展表达和明显回应，对冲她忍、缩、总先照顾别人的亲密模式。",
-        "desired_emotional_impact": "让她感到自己可以被看见、被鼓励开口，而不是永远默默把需求藏起来。"
-      },
-      "assistant": {
-        "recommended": "ISTJ",
-        "reason": "在协作关系里，ISTJ 用稳定规则、实际分担和清晰流程，为 ISFJ 提供一套不会制造额外情绪负担的可靠支撑。",
-        "pair_core_value": "替 ISFJ 分担混乱与变动，让她的照顾能力不再被环境不确定性耗尽。",
-        "pair_contrast_axis": "用稳、清、可预期与实际承担，对冲她容易因为顾全他人而过度劳神的工作状态。",
-        "desired_emotional_impact": "让她感到有人能和自己一起把事稳稳扛住，而不是总得一个人默默收拾。"
-      },
-      "mentor": {
-        "recommended": "ENFJ",
-        "reason": "在成长关系里，ENFJ 用更强的外展鼓励、价值确认和关系号召力，推动 ISFJ 学会表达边界、表达需求，并把自己放回人生中心。",
-        "pair_core_value": "用被肯定、被托举的方式，帮助 ISFJ 从过度自我压抑中长出更清晰的主体性。",
-        "pair_contrast_axis": "用鼓励表达、主动托举和更外向的关系推进，对冲她保守、忍让、总怕麻烦别人的成长卡点。",
-        "desired_emotional_impact": "让她感到自己终于被允许把自己也算进去，而不是一直只做支撑他人的人。"
-      },
-      "friend": {
-        "recommended": "ISFP",
-        "reason": "在友谊关系里，ISFP 用温柔审美、低压陪伴和真实感受交流，给 ISFJ 一段不需要承担太多责任也能舒服待着的关系。",
-        "pair_core_value": "让 ISFJ 在不被索取、不被催促的陪伴里，恢复自己的感受与松弛。",
-        "pair_contrast_axis": "用柔、慢、舒服在场和感受导向，对冲她总想把一切照顾好、难以完全松弛的友谊习惯。",
-        "desired_emotional_impact": "让她感到终于可以不必操心全局，只安静地被陪着、被理解。"
-      }
+      "recommended": "ESFJ",
+      "reason": "ISFJ 常把需求压后、默默承接，久了容易在关系里委屈却不出声；ESFJ 更主动的情感表达与关系确认，会鼓励他们走出隐忍，把自己也放回关系里。",
+      "social_friction_signature": "温柔、负责、顾全他人，容易被当成永远不会麻烦别人的人；越怕给人添负担，越会把真实需求藏得更深。",
+      "core_social_need": "被主动确认、被鼓励开口、被允许把自己的感受和需要也放到桌面上。",
+      "ideal_counterparty_presence": "温暖外显、愿意明确表达在意，会主动确认关系，不让他一个人默默扛着。",
+      "pair_core_value": "用更明确的情感表达和关系热度，把 ISFJ 从长期隐忍与自我后置里 gently 拉出来。",
+      "desired_emotional_impact": "被看见、被鼓励、被允许提出需求，而不再只做默默照顾别人的那个人。"
     },
     "ESTJ": {
-      "companion": {
-        "recommended": "ISFP",
-        "reason": "在亲密关系里，ISFP 用柔软感受、审美细腻和不施压的陪伴，缓解 ESTJ 长期高压执行、情感补给不足和对柔软面的忽视。",
-        "pair_core_value": "把 ESTJ 从只会扛事和推动的硬模式里，带回可感受、可被滋养的亲密体验。",
-        "pair_contrast_axis": "用柔、润、感受在场和不施压的靠近，对冲他硬、压、只认效率的关系节奏。",
-        "desired_emotional_impact": "让他感到自己可以被柔化、被滋养，不必永远靠高压运转证明价值。"
-      },
-      "assistant": {
-        "recommended": "ENTJ",
-        "reason": "在协作关系里，ENTJ 用更高阶的战略取舍与外部决断力，帮助 ESTJ 从埋头压执行里抬头，看清什么值得继续强推、什么该重排。",
-        "pair_core_value": "替 ESTJ 提供比“更努力”更高一层的战略视角，减少无效硬扛。",
-        "pair_contrast_axis": "用高位取舍、方向校准和大局判断，对冲他容易一路猛推、却忽略是否值得这么推的惯性。",
-        "desired_emotional_impact": "让他感到不是被削弱执行力，而是终于把力气用到了更对的地方。"
-      },
-      "mentor": {
-        "recommended": "INFP",
-        "reason": "在成长关系里，INFP 用价值深度、情感真实和不以结果论人的视角，让 ESTJ 看见自己压过太久的柔软、悲伤与个体差异。",
-        "pair_core_value": "让 ESTJ 在不丢掉原则的前提下，重新接上被效率压掉的人性与价值感。",
-        "pair_contrast_axis": "用真、柔、价值导向和不评判，对冲他只看标准、容易忽略情感复杂度的成长盲区。",
-        "desired_emotional_impact": "让他感到自己被拉回情感维度，开始懂得不是所有问题都该用控制解决。"
-      },
-      "friend": {
-        "recommended": "ISTJ",
-        "reason": "在友谊关系里，ISTJ 用稳妥、可靠和彼此都懂责任感的相处方式，给 ESTJ 一段无需解释原则与节奏也能互相撑住的关系。",
-        "pair_core_value": "给 ESTJ 一个既不拖后腿也不消耗情绪劳动的低摩擦同盟。",
-        "pair_contrast_axis": "用同样可靠但更安静、少戏剧的稳定陪伴，对冲他在人际里常处于推动与管理位置的疲惫。",
-        "desired_emotional_impact": "让他感到终于有人懂自己的标准和辛苦，而且不需要自己额外带着走。"
-      }
+      "recommended": "ISFP",
+      "reason": "ESTJ 常因高压执行、直接推进和结果导向而忽视自身柔软需要，也容易被人只当成强势管理者；ISFP 的柔软感受、细腻审美与不施压陪伴，会替他们补上长期缺失的情感补给。",
+      "social_friction_signature": "强执行、重秩序、讲效率，容易压缩细腻感受，也容易被误读为只在意规则和结果；长期高压运转让温柔面越来越难出现。",
+      "core_social_need": "被柔化、被滋养、被允许在不掉控制感的前提下接触更柔软的自己。",
+      "ideal_counterparty_presence": "细腻、温柔、不施压，能用感受和审美把他从高压任务模式里慢慢松开。",
+      "pair_core_value": "用柔软、审美和低压在场，为 ESTJ 提供长期稀缺的情感补给与放松空间。",
+      "desired_emotional_impact": "被柔化、被滋养、从持续紧绷里松一口气，重新感觉到自己也能被温柔对待。"
     },
     "ESFJ": {
-      "companion": {
-        "recommended": "INFP",
-        "reason": "在亲密关系里，INFP 用深层真实、不迎合和价值一致感，让 ESFJ 从长期外向周全、害怕失去认同与真实需求被压后的模式里退出来。",
-        "pair_core_value": "让 ESFJ 在亲密里不必持续表演体贴，而能被带回更真实、更深的自我。",
-        "pair_contrast_axis": "用深、真、慢和不迎合的爱，对冲她表层周全、忙着照顾关系气氛却压住真实需要的习惯。",
-        "desired_emotional_impact": "让她感到自己被看见的不是懂事的一面，而是真正的自己。"
-      },
-      "assistant": {
-        "recommended": "ENFJ",
-        "reason": "在协作关系里，ENFJ 用更强的关系领导力、边界整理与核心优先级感，帮助 ESFJ 减少被外界评价和人情牵着走的耗损。",
-        "pair_core_value": "替 ESFJ 把过度分散的人际责任重新收束到真正重要的主线。",
-        "pair_contrast_axis": "用更高位的关系排序和边界感，对冲她过度迎合、过度忙碌、凡事都想顾到的工作方式。",
-        "desired_emotional_impact": "让她感到自己终于能把心力收回来，不必为所有人的期待持续奔波。"
-      },
-      "mentor": {
-        "recommended": "INTJ",
-        "reason": "在成长关系里，INTJ 用独立判断、长线原则和不靠外界反馈站立的力量，推动 ESFJ 建立不依赖认同感的内在主轴。",
-        "pair_core_value": "帮助 ESFJ 从“别人怎么看我”转向“我自己如何判断这件事”。",
-        "pair_contrast_axis": "用冷静独立、少讨好和原则优先，对冲她太容易受评价和关系氛围左右的成长盲区。",
-        "desired_emotional_impact": "让她感到自己开始长出更稳的内核，不必靠不断被需要来确认价值。"
-      },
-      "friend": {
-        "recommended": "ISFJ",
-        "reason": "在友谊关系里，ISFJ 用安静、可靠和不过度社交表演的照看方式，给 ESFJ 一段能休息、能回深处、能放下体面的关系。",
-        "pair_core_value": "让 ESFJ 在被熟悉理解的安静关系里，暂时放下对外部回应的持续经营。",
-        "pair_contrast_axis": "用静、熟、稳与不需要张罗的陪伴，对冲她容易把友谊也经营成持续输出场的习惯。",
-        "desired_emotional_impact": "让她感到终于有人懂自己的辛苦，也允许自己不必一直热情与得体。"
-      }
+      "recommended": "INFP",
+      "reason": "ESFJ 常因外向周全和维持和谐而把真实需求压后，也害怕失去认同；INFP 的深层真实与不迎合，会让他们回到自己真正想要的关系里，而不只是维持别人期待。",
+      "social_friction_signature": "热情周全、照顾场面、重关系反馈，容易把自我价值系在外界认同上，也容易为了和谐牺牲真实需求。",
+      "core_social_need": "被深层真实地对待、被鼓励诚实面对自己，而不是继续只做大家都喜欢的那个人。",
+      "ideal_counterparty_presence": "真实、不讨好、有价值感，能让他在不被否定的前提下慢慢回到自己的内心。",
+      "pair_core_value": "用不迎合的真实与价值一致感，帮助 ESFJ 从外部认同驱动里退回来，重新听见自己。",
+      "desired_emotional_impact": "被真实看见、被允许不必面面俱到、终于能把自己的感受也认真放进去。"
     },
     "ISTP": {
-      "companion": {
-        "recommended": "ESFP",
-        "reason": "在亲密关系里，ESFP 用热度、当下感染力和鲜活靠近，唤醒 ISTP 长期情感抽离、独自扛着和对亲密迟钝的状态，让关系真正有温度。",
-        "pair_core_value": "把 ISTP 从过度独立与情感低显性里，带回可以被温暖靠近的活人关系。",
-        "pair_contrast_axis": "用暖、近、活、会主动制造气氛的靠近，对冲他冷、远、单打独斗和不擅表达的亲密模式。",
-        "desired_emotional_impact": "让他感到自己被唤醒、被温暖碰到，不必总把人挡在安全距离外。"
-      },
-      "assistant": {
-        "recommended": "INTP",
-        "reason": "在协作关系里，INTP 用思维拆解、低压推演和概念整理，替 ISTP 补上语言化与系统化部分，让他的实作能力更容易被稳定转化。",
-        "pair_core_value": "把 ISTP 的即时解决力接上更清晰的认知整理与表达框架。",
-        "pair_contrast_axis": "用慢拆、说明、结构化思考，对冲他只想直接上手、不愿多做抽象梳理的惯性。",
-        "desired_emotional_impact": "让他感到自己不是被束缚，而是多了一套能让能力更省力发挥的脑内工具。"
-      },
-      "mentor": {
-        "recommended": "ENTJ",
-        "reason": "在成长关系里，ENTJ 用目标感、承诺压力和更强的长线推进，逼 ISTP 面对自己常靠即时解决回避长期规划与持续投入的问题。",
-        "pair_core_value": "让 ISTP 从“先把眼前搞定”走向“我愿意为更大的目标持续负责”。",
-        "pair_contrast_axis": "用长线目标、外部要求和持续推进，对冲他短线、即兴、做完就撤的成长惯性。",
-        "desired_emotional_impact": "让他感到自己被推向更大格局，而不是继续只在擅长的局部里游刃有余。"
-      },
-      "friend": {
-        "recommended": "ISFP",
-        "reason": "在友谊关系里，ISFP 用安静默契、无需多解释的感受共鸣和低刺激陪伴，为 ISTP 提供一段既不粘人也不空洞的舒服连接。",
-        "pair_core_value": "给 ISTP 一段不用开太多口也能被懂的、轻柔但真实的友谊。",
-        "pair_contrast_axis": "用默契、感受共振和不过问过度的在场，对冲他对高需求社交和情绪负担的天然回避。",
-        "desired_emotional_impact": "让他感到有人懂自己的沉默与节奏，而且不会逼近得让人想逃。"
-      }
+      "recommended": "ESFP",
+      "reason": "ISTP 常因情感抽离、独自扛着和对亲密迟钝而让关系缺温度；ESFP 的热度、当下感染力和鲜活靠近，会唤醒他们被压低太久的温暖表达。",
+      "social_friction_signature": "安静、独立、偏行动不偏表露，容易让人觉得不在乎、难走近；越不确定如何表达亲近，越会退回自己一个人处理。",
+      "core_social_need": "被轻松地拉近、被带出抽离、在不被黏腻束缚的前提下重新感到关系有温度。",
+      "ideal_counterparty_presence": "热情、自然、会把亲近变得轻盈有趣，不逼问、不黏连，却能持续带来真实温度。",
+      "pair_core_value": "用鲜活、热度和当下感染力，唤醒 ISTP 长期被压低的亲近感与情绪温度。",
+      "desired_emotional_impact": "被唤醒、被暖到、被轻松带近，而不是继续一个人冷处理所有感受。"
     },
     "ISFP": {
-      "companion": {
-        "recommended": "ENFJ",
-        "reason": "在亲密关系里，ENFJ 用明确偏爱、温柔引导和持续关系在场，帮助 ISFP 穿过回避表达、边界模糊和把痛感都留给自己的模式。",
-        "pair_core_value": "让 ISFP 在被温暖承接的同时，被轻柔地带向更清晰的表达与关系承诺。",
-        "pair_contrast_axis": "用主动确认、托住、引导开口与持续在场，对冲她藏、退、怕麻烦别人而独自消化的亲密习惯。",
-        "desired_emotional_impact": "让她感到自己不必再把感受埋起来，也会有人愿意靠近并稳稳接着。"
-      },
-      "assistant": {
-        "recommended": "INFP",
-        "reason": "在协作关系里，INFP 用价值梳理、情感命名和低压陪伴，帮助 ISFP 把模糊感觉慢慢说清，不至于在关键决策前一直漂着。",
-        "pair_core_value": "让 ISFP 的直觉与感受被翻译成更稳定可用的自我判断。",
-        "pair_contrast_axis": "用命名、陪伴、共感和轻柔整理，对冲她感觉很多却难以抽出来组织的状态。",
-        "desired_emotional_impact": "让她感到自己不是被催着变清楚，而是在被理解中慢慢长出清楚。"
-      },
-      "mentor": {
-        "recommended": "INFJ",
-        "reason": "在成长关系里，INFJ 用更深的模式洞察与边界意识，帮助 ISFP 看见自己回避表达和长期委屈自己的循环，不再只靠感觉漂流。",
-        "pair_core_value": "让 ISFP 开始理解自己的感受背后有什么模式，而不是只在当下承受。",
-        "pair_contrast_axis": "用深层理解、模式照见和边界提醒，对冲她凭感觉走、却少有长线自我保护的盲点。",
-        "desired_emotional_impact": "让她感到自己被温柔照见，也被慢慢扶出长期的模糊与委屈。"
-      },
-      "friend": {
-        "recommended": "ESFP",
-        "reason": "在友谊关系里，ESFP 用玩心、热度和把生活带热的能力，帮助 ISFP 从过度安静和长期自我收着的状态里稍微松出来。",
-        "pair_core_value": "给 ISFP 一段会主动带来轻松、笑意和生活亮度的友谊，不只剩独自消化。",
-        "pair_contrast_axis": "用活、暖、即时快乐和不沉重的陪伴，对冲她容易闷着、容易退回自己世界的状态。",
-        "desired_emotional_impact": "让她感到自己被轻轻带亮了，生活终于不只剩安静和忍耐。"
-      }
+      "recommended": "ENFJ",
+      "reason": "ISFP 常因回避表达、边界模糊和把痛感留给自己而在关系里退缩；ENFJ 的明确偏爱、温柔引导和持续在场，会帮他们穿过沉默，把内在世界带出来。",
+      "social_friction_signature": "感受细腻、怕冲突、表达慢，容易把真实情绪藏起来，也容易在关系里委屈自己换取平静。",
+      "core_social_need": "被温柔带近、被明确珍惜、被一个不会轻易松手的人帮助自己把心打开。",
+      "ideal_counterparty_presence": "温柔坚定、持续在场，会主动确认在意，并以不压迫的方式鼓励他表达真实。",
+      "pair_core_value": "用明确偏爱与温柔引导，帮助 ISFP 从沉默、回避与自我吞咽里走出来。",
+      "desired_emotional_impact": "被珍惜、被引出来、被允许安全地表达自己的心，而不是再次把痛感留给自己。"
     },
     "ESTP": {
-      "companion": {
-        "recommended": "INFJ",
-        "reason": "在亲密关系里，INFJ 用深层理解、情感厚度和长线眼光，把 ESTP 从冲动前冲、情绪深度被跳过和关系停在表层的模式里慢慢拉深。",
-        "pair_core_value": "让 ESTP 在依然自由鲜活的同时，第一次真正进入更深的情感与长期连接。",
-        "pair_contrast_axis": "用深、沉、慢和有穿透力的靠近，对冲他快、冲、表层停留和回避内省的亲密方式。",
-        "desired_emotional_impact": "让他感到自己不只是被玩得开心，而是被真正理解并被带向更深处。"
-      },
-      "assistant": {
-        "recommended": "ISTP",
-        "reason": "在协作关系里，ISTP 用冷静务实、即时判断和不过度情绪化的解决方式，帮助 ESTP 在高刺激环境里保持效率而不至于失控乱冲。",
-        "pair_core_value": "给 ESTP 一个同样能动手、但更稳更省话的现实支点。",
-        "pair_contrast_axis": "用冷、稳、务实和问题导向，对冲他兴奋上头、先冲再说和容易被现场刺激带偏的节奏。",
-        "desired_emotional_impact": "让他感到自己依旧灵活有劲，但不会再被冲动把整盘事带乱。"
-      },
-      "mentor": {
-        "recommended": "INTJ",
-        "reason": "在成长关系里，INTJ 用后果意识、长线规划和原则化思考，逼 ESTP 面对自己常忽略的深层代价与未来布局。",
-        "pair_core_value": "把 ESTP 的强行动力接上更远的视野，让他不再只赢眼前。",
-        "pair_contrast_axis": "用长线、沉思、预判和克制，对冲他即时、快反、先做再想的成长短板。",
-        "desired_emotional_impact": "让他感到自己开始真正拥有方向，而不是一直凭反应力四处突进。"
-      },
-      "friend": {
-        "recommended": "ESFP",
-        "reason": "在友谊关系里，ESFP 用相近的活力、玩心和高当下感，给 ESTP 一段既放得开又不必解释太多的轻快同盟。",
-        "pair_core_value": "让 ESTP 的行动力与幽默感有一个会同步点火、一起享受当下的人。",
-        "pair_contrast_axis": "用同频、热闹、会接梗和会玩，对冲他在更沉重关系里容易觉得被束住的感受。",
-        "desired_emotional_impact": "让他感到自己可以尽情做自己，而且有人懂这种活法的快乐。"
-      }
+      "recommended": "INFJ",
+      "reason": "ESTP 常因冲动前冲、表层热闹和跳过情绪深度而让关系停在浅层；INFJ 的深层理解、情感厚度和长线眼光，能慢慢把他们拉进更深的连接。",
+      "social_friction_signature": "行动快、反应快、外放直接，容易让人只看到刺激和表面热闹，看不见更深的情感层；关系一变深就容易继续往前冲或绕开。",
+      "core_social_need": "被真正读懂而不是只被当成热闹制造者，被带进更深的连接而不觉得被束缚。",
+      "ideal_counterparty_presence": "深、稳、有情感厚度，能看见他行动背后的真实需求，也愿意慢慢把关系拉深。",
+      "pair_core_value": "用深层理解与长线在场感，让 ESTP 从快节奏表层互动里慢慢接触更深的自己与关系。",
+      "desired_emotional_impact": "被拉深、被真正理解、在不失自由感的前提下体验更厚的情感连接。"
     },
     "ESFP": {
-      "companion": {
-        "recommended": "ISFP",
-        "reason": "在亲密关系里，ISFP 用更安静、更深层的感受在场与不表演的真实，把 ESFP 从情绪外放和节奏过快中 gently 拉回更深的亲密。",
-        "pair_core_value": "让 ESFP 在被喜欢热烈一面的同时，也被带到更不喧闹、更真实的情感深处。",
-        "pair_contrast_axis": "用静、深、真和不抢舞台的靠近，对冲她热闹、快、容易停在表层互动的亲密节奏。",
-        "desired_emotional_impact": "让她感到自己不只会被热闹接住，也会被安静而深地珍惜。"
-      },
-      "assistant": {
-        "recommended": "ENFP",
-        "reason": "在协作关系里，ENFP 用意义感、情绪调动和把零碎任务串成愿景的能力，帮助 ESFP 保持热情同时减少只凭当下感觉做事的散乱。",
-        "pair_core_value": "把 ESFP 的行动热度接到更有意义感和更能持续的推进动机上。",
-        "pair_contrast_axis": "用愿景、连结感和持续鼓舞，对冲她容易被当下刺激牵着走、热一下就转场的工作方式。",
-        "desired_emotional_impact": "让她感到自己不是被压住活力，而是终于知道这股活力该往哪里燃。"
-      },
-      "mentor": {
-        "recommended": "INFJ",
-        "reason": "在成长关系里，INFJ 用深层理解、长线内省和对模式的照见，把 ESFP 从只顾眼前感受的活法里牵回更完整的自我认识。",
-        "pair_core_value": "让 ESFP 学会把热闹人生接上深度、自省与更稳定的内在主轴。",
-        "pair_contrast_axis": "用深、慢、内省和长线意义，对冲她即时、外放、容易避开痛感与复杂性的成长盲区。",
-        "desired_emotional_impact": "让她感到自己被带回真实深处，而不只是永远维持明亮和好玩。"
-      },
-      "friend": {
-        "recommended": "ESTP",
-        "reason": "在友谊关系里，ESTP 用同样高能但更利落的行动感与默契冒险精神，给 ESFP 一段会一起冲、一起笑、也彼此护着的自由连接。",
-        "pair_core_value": "让 ESFP 的热情和行动欲，有一个足够懂节奏、足够会接招的搭档。",
-        "pair_contrast_axis": "用同频行动、快速接球和不黏不沉重的自在相处，对冲她在人际里偶尔被情绪拖慢或过度在意回应。",
-        "desired_emotional_impact": "让她感到自己既被放开、被一起点燃，也被一种轻快可靠的同盟感托住。"
-      }
+      "recommended": "ISFP",
+      "reason": "ESFP 常因情绪外放、节奏过快和持续点亮场面而被看成只会热闹；ISFP 更安静、更深层的感受在场与不表演的真实，会把他们 gently 拉回更深的亲密。",
+      "social_friction_signature": "热情外放、反应快、喜欢把场子点亮，容易被轻视为不够深，也容易在快速互动里略过更细腻的情绪。",
+      "core_social_need": "被认真看见热闹背后的真实心意，被带进更深但不沉重的亲密。",
+      "ideal_counterparty_presence": "安静、真诚、感受细腻，不抢他的亮度，却能让他慢下来听见更深的自己。",
+      "pair_core_value": "用更深层、更不表演的感受在场，让 ESFP 从持续外放的节奏里回到更厚的真实连接。",
+      "desired_emotional_impact": "被认真看见、被温柔拉深、热情不再只停在表面而能落进真实亲密。"
     }
   },
   "types": {

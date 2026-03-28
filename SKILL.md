@@ -1,6 +1,6 @@
 ---
 name: persona-skill
-description: Initialize or reinitialize an OpenClaw persona by interactively collecting MBTI, relationship role, naming, and user preference details, then drafting and updating SOUL.md, MEMORY.md, IDENTITY.md, USER.md, and persona/CANON.md. Use only when the user explicitly asks to initialize, reset, rebuild, or reshape the persona. Do not use for current-status questions, timeline recall, memory lookup, or cross-skill orchestration.
+description: Initialize or reinitialize an OpenClaw persona by interactively collecting MBTI, persona direction, naming, and stable user context, then drafting and updating SOUL.md, MEMORY.md, IDENTITY.md, USER.md, and persona/CANON.md. Use only when the user explicitly asks to initialize, reset, rebuild, or reshape the persona. Do not use for current-status questions, timeline recall, memory lookup, or cross-skill orchestration.
 allowed-tools: Bash(node:*) Read Write
 metadata:
   openclaw:
@@ -38,7 +38,7 @@ metadata:
 
 - `references/protocols/initialization-flow.md`
   - 采访流程唯一依据
-  - 负责触发后如何发问、如何锁定 `interview_language`、Step 1-7 的顺序与收口方式
+  - 负责触发后如何发问、如何锁定 `interview_language`、Step 1-6 的顺序与收口方式
 - `references/protocols/drafting-spec.md`
   - 起草执行唯一依据
   - 负责起草前输入、读取顺序、写入安全边界、四段流水线、五文件合同、城市策略、审核与回炉规则

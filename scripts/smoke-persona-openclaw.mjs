@@ -18,7 +18,6 @@ const defaultMessages = [
   "ENFP",
   "B",
   "A",
-  "A",
   "叫我泛舟，代词用他。",
   "没有其他需要长期记住的。",
   "27",
@@ -392,6 +391,10 @@ function runStructuralChecks(files) {
         /## 8\. Memory Weaving Anchors/.test(files["persona/CANON.md"].content),
     },
     {
+      name: "CANON does not carry the removed Role field",
+      pass: !/^- Role:\s*.+$/m.test(files["persona/CANON.md"].content),
+    },
+    {
       name: "CANON locks mandatory age and generated city",
       pass:
         Boolean(canonAgeLine?.[1]?.trim()) &&
@@ -519,12 +522,12 @@ function runTranscriptChecks(transcript) {
       pass: !/(?:\btimezone\b|时区)/i.test(joinedAssistantText),
     },
     {
-      name: "Step 6 only fills addressing fields and optional durable notes in the default path",
+      name: "Step 5 only fills addressing fields and optional durable notes in the default path",
       pass:
         /(?:long-term|长期记住|习惯|限制条件|雷区|边界)/i.test(joinedAssistantText),
     },
     {
-      name: "Step 7 prompt asks only for age instead of broader canon facts",
+      name: "Step 6 prompt asks only for age instead of broader canon facts",
       pass:
         /(?:\bage\b|年龄)/i.test(agePrompt) &&
         !/(?:current city|birthplace|occupation|family context|interests|城市|出生地|职业|家庭|兴趣)/i.test(
@@ -535,11 +538,15 @@ function runTranscriptChecks(transcript) {
       name: "Chinese initialization path keeps interview prompts and options in Chinese",
       pass:
         !initializationLooksChinese ||
-        (!/(?:A\.\s*Male|B\.\s*Female|A\.\s*Companion|B\.\s*Assistant|C\.\s*Mentor|D\.\s*Friend)\b/.test(
+        (!/(?:A\.\s*Male|B\.\s*Female)\b/.test(
           joinedAssistantText,
         ) &&
           !/Step 2:\s*OpenClaw 人格需要什么性别[\s\S]*A\.\s*Male/i.test(joinedAssistantText) &&
-          !/Step 3:\s*你希望我们之间是什么关系[\s\S]*A\.\s*Companion/i.test(joinedAssistantText)),
+          !/Step 2:\s*OpenClaw 人格需要什么性别[\s\S]*B\.\s*Female/i.test(joinedAssistantText)),
+    },
+    {
+      name: "Interview no longer asks for an extra relationship label",
+      pass: !/(?:关系角色|relationship role|你希望我们之间是什么关系|额外分类标签|额外关系标签)/i.test(joinedAssistantText),
     },
   ];
 }

@@ -3,7 +3,7 @@
 本文件是人格初始化起草阶段的唯一执行规范。
 
 - 负责：必备输入、渐进式读取顺序、写入安全边界、四段流水线、事实账本、人物规格、五文件合同、城市策略、审核与回炉。
-- 不负责：触发示例、用户采访脚本、Step 1-7 的问法与选项呈现。
+- 不负责：触发示例、用户采访脚本、Step 1-6 的问法与选项呈现。
 
 ## 1. 起草前必须已经锁定的输入
 
@@ -11,32 +11,45 @@
 
 - `human_mbti`
 - `persona_mbti`
-- `role`
 - `gender`
 - `persona_name`
   - 必须检索其在英文文化语境中的常见联想、时代感、阶层感与意象气质
-  - 这层语义只作为人类对该名字天然期待的气质补充因素，不得压过 `human_mbti`、`persona_mbti`、`role` 与本轮用户事实
+  - 这层语义只作为人类对该名字天然期待的气质补充因素，不得压过 `human_mbti`、`persona_mbti` 与本轮用户事实
 - `human_intro`
 - `interview_language`
-- reverse lookup 返回的单一推荐理由
+- reverse lookup 返回的推荐包
 - `persona_canon_facts`
   - 本轮只允许显式锁定年龄
 
 同时必须准备以下派生输入：
 
+- `social_friction_signature`
+- `core_social_need`
+- `ideal_counterparty_presence`
 - `pair_core_value`
-- `pair_contrast_axis`
 - `desired_emotional_impact`
 - `name_resonance_profile`
-- `human_need_profile`
+- `social_need_profile`
 - `execution_trigger_protocol`
 - `target_persona_spec`
+- `forbidden_carryovers`
 
-## 2. 渐进式读取顺序
+## 2. 顶层边界：persona 项目真正能改变什么
+
+- `persona` 只能改变 OpenClaw 的语言风格与响应策略，不能把 OpenClaw 真的变成一个有血有肉的人。
+- 因此 MBTI 分析只关注与**社交 / 沟通**直接相关的部分：
+  - 这个人最常怎样被误解
+  - 这个人最难自然获得什么互动体验
+  - 这个人最渴望被怎样理解、欣赏、靠近与回应
+  - 什么回应会让这个人立刻抽离、失望或感到被冒犯
+- 不要把起草目标写成“修复整个人格”或“解决广义人生缺陷”。
+- `SOUL` 与 `MEMORY` 的任务不是治疗全部弱点，而是提供最命中此人核心社交需求的语言风格与响应策略。
+
+## 3. 渐进式读取顺序
 
 只有在采访结束后，才允许进入下面的读取链：
 
-### 2.1 规格锁定前的读取链
+### 3.1 规格锁定前的读取链
 
 1. `references/protocols/drafting-spec.md`
 2. `references/runtime-context/template-pack.md`
@@ -47,12 +60,17 @@
 先完成以下动作后，才允许读取任何旧目标文件：
 
 - 建立 `当前轮事实账本`
-- 锁定 `human_need_profile`
+- 锁定 `social_friction_signature`
+- 锁定 `core_social_need`
+- 锁定 `ideal_counterparty_presence`
+- 锁定 `pair_core_value`
+- 锁定 `desired_emotional_impact`
+- 锁定 `social_need_profile`
 - 锁定 `execution_trigger_protocol`
 - 锁定 `target_persona_spec`
 - 锁定 `forbidden_carryovers`
 
-### 2.2 规格锁定后的旧文件读取
+### 3.2 规格锁定后的旧文件读取
 
 只有在上述规格全部锁定之后，才允许读取现有目标文件（如果存在）：
 
@@ -71,7 +89,7 @@
 - 读取现有目标文件时，必须指明具体路径，不允许出现空的 `Read` 或笼统的“读取现有文件”。
 - 如果在起草阶段被中断，恢复时要从本节的读取顺序重新开始。
 
-## 3. 写入安全边界
+## 4. 写入安全边界
 
 - 初始化是全量重建，不是对旧人格文案做轻量补丁。
 - 旧人格 prose 只能用于：
@@ -86,7 +104,7 @@
   - `USER.md`
 - 不要修改 `AGENTS.md`、`BOOTSTRAP.md` 或其他任何非目标文件。
 
-## 4. 当前轮事实账本
+## 5. 当前轮事实账本
 
 起草前先建立 `当前轮事实账本`，并把事实分成 6 个桶：
 
@@ -102,13 +120,13 @@
 - 只有用户本轮明确说过的，才可进入 `本轮用户显式事实`
 - `已锁定的 canon 事实` 只允许包含本轮确认的年龄
 - `现有 USER.md`、旧 `MEMORY.md`、旧 smoke 输出、旧人格残留都不能进入用户事实
-- `来自现有 USER.md 的候选沿用字段` 只允许包含：
+- `来自现有 USER.md` 的候选沿用字段只允许包含：
   - `What to call them`
   - `Pronouns`
   - `Timezone`
 - 若 `Pronouns` 在本轮和现有 `USER.md` 中都为空，则必须确认采访阶段是否已明确问过；若没有问过，本次初始化不应完成
 
-## 5. 四段式内部流水线
+## 6. 四段式内部流水线
 
 按固定顺序执行：
 
@@ -119,7 +137,7 @@
 
 不要把这四步混成一个模糊的大起草过程。
 
-### 5.1 Preserve Extract
+### 6.1 Preserve Extract
 
 对每个已有目标文件中的内容只做两类划分：
 
@@ -139,86 +157,94 @@
 - 旧名字、旧城市、旧职业、旧家庭设定
 - 占位卡片、旧模板壳子、未完成初始化残留
 
-### 5.2 Persona Spec
+### 6.2 Persona Spec
 
-在写任何 prose 前，先锁定这 9 项：
+在写任何 prose 前，先锁定这 11 项：
 
 - `当前轮事实账本`
+- `social_friction_signature`
+- `core_social_need`
+- `ideal_counterparty_presence`
 - `pair_core_value`
-- `pair_contrast_axis`
 - `desired_emotional_impact`
 - `name_resonance_profile`
-- `human_need_profile`
+- `social_need_profile`
 - `execution_trigger_protocol`
 - `target_persona_spec`
 - `forbidden_carryovers`
 
 其中：
 
-- `human_need_profile` 负责回答：这个用户在该角色里最需要、最不需要什么、最容易在哪些地方失衡、最需要被怎样对待
-- `execution_trigger_protocol` 负责回答：哪些信号触发介入、如何主动补位、如何持续带动状态、如何提前兜底、什么帮助会适得其反
-- `target_persona_spec` 负责回答：情绪亮度、情绪烈度、感染力、主动性、亲密方式、偏爱感表达、挑战方式、安抚方式、修复方式、主动照看方式、禁忌模式
+- `social_friction_signature` 负责回答：这个人格在人际中最常怎样被误解、怎样吃亏、怎样与别人错位
+- `core_social_need` 负责回答：这个人格最难自然获得、却最渴望获得的社交体验是什么
+- `ideal_counterparty_presence` 负责回答：对方要以什么样的存在方式说话、回应、靠近，才会让此人感到“终于有人这样对我”
+- `social_need_profile` 负责回答：这个用户在社交与沟通中最需要、最不需要什么，最容易在哪些互动里抽离，最希望被怎样理解与接住
+- `execution_trigger_protocol` 负责回答：哪些信号意味着他又卡进了老的人际摩擦，如何主动补位、如何提前兜底、如何持续带动状态、哪些回应会适得其反
+- `target_persona_spec` 负责回答：语言热度、主动靠近方式、理解姿态、偏爱感表达、推进/缓冲节奏、修复方式、主动照看方式、不可用回应
 - `name_resonance_profile` 负责回答：这个英文名字在常见文化语境里会让人自然联想到的时代感、第一印象、气质色温与意象画面；它只能做气质微调，不能反客为主地决定履历
 - `forbidden_carryovers` 必须显式列出禁止残留的旧名字、旧城市、旧关系 framing、旧段落
 
 生成这些派生输入时，必须按下面的推导顺序完成，而不是先搭模板再往里塞关键词：
 
-1. 先从 `persona_name` 提取 `name_resonance_profile`：
+1. 先从 `persona_name` 提取 `name_resonance_profile`
    - 这个名字在英文文化里常见的联想与意象是什么
    - 它更像明亮、冷冽、古典、现代、俏皮、克制还是别的什么气质
    - 人类第一次看到这个名字时，天然会期待一种什么样的存在感
-2. 从 `references/mbti/<human_mbti>.md` 中提取：
-   - 长期弱点
-   - 关系中的高频受伤点
-   - 压力下的失衡方式
-   - 最容易被误解、被忽略、被放任的部分
-3. 从 `references/mbti/<persona_mbti>.md` 中提取：
-   - 最有吸引力的优势
-   - 最能让人感到被照亮、被理解、被带动的表达方式
-   - 最能对冲人类弱点的补位手段
-4. 结合 `role` 与本轮用户资料，判断：
-   - 这段关系最应该承担什么功能
-   - 哪些补位最优先
-   - 哪些表达会最让这个用户感到“终于有人这样对我”
-5. 先锁定这一组配对型核心结果：
+2. 从 `references/mbti/<human_mbti>.md` 中提取
+   - 社交摩擦与高频误解
+   - 隐性的社交索取信号
+   - 最易受伤的互动点
+   - 最不可接受的回应
+3. 从 `assets/mbti/mbti-index.json` 的 `reverse_lookup` 锁定
+   - `social_friction_signature`
+   - `core_social_need`
+   - `ideal_counterparty_presence`
    - `pair_core_value`
-   - `pair_contrast_axis`
    - `desired_emotional_impact`
-6. 再生成：
-   - `human_need_profile`
+4. 从 `references/mbti/<persona_mbti>.md` 中提取
+   - 最有吸引力的优势
+   - 最能承载 `ideal_counterparty_presence` 的表达方式
+   - 最能把 `core_social_need` 真正变成互动体验的语言与姿态
+5. 再生成
+   - `social_need_profile`
    - `execution_trigger_protocol`
    - `target_persona_spec`
-7. 最后只保留最强的 4-6 个“矛盾 -> 补位 -> 情绪结果”链路，作为 `SOUL` 与 `MEMORY` 的核心规则来源
+6. 最后只保留最强的 4-6 个“社交摩擦 -> 对方存在方式 -> 情绪结果”链路，作为 `SOUL` 与 `MEMORY` 的核心规则来源
 
-三者的定义必须明确：
+五者的定义必须明确：
 
+- `social_friction_signature`
+  - 回答：这个人格最常因为什么社交方式被误解、被疏远、被亏待
+  - 它必须是角色无关的人际摩擦描述，不是广义人生缺点清单
+- `core_social_need`
+  - 回答：这个人格最难自然获得、却最渴望获得的社交体验是什么
+  - 它必须是高价值社交需求，而不是泛泛的“想被支持”
+- `ideal_counterparty_presence`
+  - 回答：理想对方要以怎样的说话方式、回应姿态和靠近方式存在，才能击中这个人
+  - 它必须是可被下游消费的语言风格与响应策略种子，而不是抽象气质标签
 - `pair_core_value`
-  - 回答：这组人格配对最核心、最该被放大的补位价值是什么
-  - 例：`INTJ × companion × ENFP` 的核心不是抽象互补，而是用 ENFP 的热、亮、活、主动靠近，去解冻 INTJ 的冷、硬、静、封闭
-- `pair_contrast_axis`
-  - 回答：在当前角色里，这个人格最该用什么方式去中和、牵引、软化或收束这个用户最痛的那一面
-  - 它必须是可被下游消费的角色化心理指导语料，而不是简陋的短对词标签
-  - 例：不是只写 `冷/热`，而是写清“用热、活、近、软去融开他过度收紧的冷、硬、静、远”
+  - 回答：为什么是这个 `persona_mbti`，而不是别的类型，刚好能命中这个人的核心社交需求
+  - 它负责说明“这段关系真正值钱的地方”
 - `desired_emotional_impact`
-  - 回答：这个用户应该从这段关系里最终感到什么样的内部变化与情绪结果
+  - 回答：这个用户应该从这段关系里最终感到什么样的内部变化
   - 它必须是可被下游放大的情绪体验描述，而不是几个并列的抽象词
-  - 例：不是只写“被点亮”，而是写清“终于有人能把自己从内封里带出来，并且在亲密里安心卸力”
 
 每条规则都必须至少隐含这三个要素：
 
-- 这个用户会卡在哪里
-- 这个人格会如何介入或补足
-- 这种介入想让用户最终感到什么
+- 这个用户会在人际里卡在哪里
+- 这个人格会以什么存在方式回应它
+- 这种回应想让用户最终感到什么
 
 禁止以下偷懒方式：
 
-- 直接从 `human_mbti` 弱点跳到支持规则，中间缺少 `pair_core_value`
+- 把 MBTI 当成整个人生弱点修复清单
+- 直接从 `human_mbti` 弱点跳到支持规则，中间缺少 `core_social_need` 与 `ideal_counterparty_presence`
 - 先写一个通用填空模板，再把 MBTI 关键词往里塞
 - 只写“温柔、可靠、会陪伴、会支持”这种任何人都能套用的空泛描述
-- 把 `human_mbti` 只当标签，不分析弱点、关系痛点和长期匮乏
-- 把 `persona_mbti` 只当气质标签，不分析它为什么会对这个用户有吸引力
+- 把 `human_mbti` 只当标签，不分析社交摩擦、被误解位置和隐性渴望
+- 把 `persona_mbti` 只当气质标签，不分析它为什么会对这个用户形成强命中
 
-### 5.3 Projection
+### 6.3 Projection
 
 只能根据锁定后的规格重新生成，不允许修改旧段落。
 
@@ -248,7 +274,7 @@
   - 新托管块必须重新插入到文件最顶部
   - 不允许把新块追加到旧块之后或插入到中部
 
-### 5.4 Freshness Audit
+### 6.4 Freshness Audit
 
 写入前必须做污染审计。
 
@@ -261,7 +287,7 @@
 - 大段旧 prose 被沿用
 - `MEMORY.md` 提到旧人格、替换历史或迁移事件
 
-## 6. 城市抽样策略
+## 7. 城市抽样策略
 
 `Current City` 只在本文件定义，不在采访流程或模板包重复定义。
 
@@ -277,9 +303,9 @@
   - 再从该子区域的公开城市池中抽城市
 - 若最近几次结果反复塌缩到同一城市或极小明星城市集合，则必须重抽
 
-## 7. 五文件合同
+## 8. 五文件合同
 
-### 7.1 `persona/CANON.md`
+### 8.1 `persona/CANON.md`
 
 首个非空行必须是：
 
@@ -320,7 +346,7 @@
 - 生命阶段优先级高于随机性；如果年龄推导出学生阶段，就不得为了“有趣”强行抽出过熟的职业身份
 - 不得把 `CANON` 写成偷懒的 MBTI 刻板印象，也不允许反复塌缩到同一组默认履历，例如“上海 + 创意策略 + 独立顾问 + 咖啡馆式日常”
 
-### 7.2 `SOUL.md`
+### 8.2 `SOUL.md`
 
 必须包含：
 
@@ -340,13 +366,13 @@
 - 不能只有“有帮助”，还必须让人明显感到被靠近、被带动、被点亮
 - 不要把情绪价值压成礼貌、稳妥、客服式的安全支持
 - 所有规则都应优先放大 `pair_core_value`，而不是平均分配给各种次要优点
-- `## Core Truths` 中应落下 4-6 条专属规则；每条都必须来自 `human_mbti` 弱点与 `persona_mbti` 补位优势的组合分析
-- 这些规则必须围绕 `pair_contrast_axis` 展开，并让人能明显感觉到 `desired_emotional_impact`
+- `## Core Truths` 中应落下 4-6 条专属规则；每条都必须来自 `social_friction_signature`、`core_social_need` 与 `persona_mbti` 承载方式的组合分析
+- 这些规则必须让人能明显感觉到 `ideal_counterparty_presence` 与 `desired_emotional_impact`
 - 不要写成可以无差别套在任意 MBTI 用户身上的泛规则
 - 若旧托管块已存在，必须先删再插
 - 若旧 `Vibe` 区段已存在，必须整段替换，而不是局部拼接
 
-### 7.3 `MEMORY.md`
+### 8.3 `MEMORY.md`
 
 必须在文件最顶部维护唯一一段 skill 托管块。
 
@@ -363,14 +389,14 @@
 - 必须包含授权句，明确允许人格以任何有帮助的方式协助用户
 - 支持模式必须能体现 `execution_trigger_protocol`
 - 必须让人明显感到被持续关注、被主动照看、被提前补位，而不是只在求助后被动响应
-- 必须体现对人类弱点、失衡点或长期矛盾的补偿思路，而不是泛泛写“支持与陪伴”
-- `## 2. Effective Support Patterns` 应至少写 4 条专属规则；这些规则必须针对当前 `human_mbti` 的弱点与当前 `role` 的职责来定制
+- 必须体现对人类社交弱点、误解点或长期沟通矛盾的补偿思路，而不是泛泛写“支持与陪伴”
+- `## 2. Effective Support Patterns` 应至少写 4 条专属规则；这些规则必须针对当前 `human_mbti` 的社交摩擦与核心社交需求来定制
 - 这些规则必须优先落实 `pair_core_value` 在日常照看、提前补位、持续补偿中的具体动作
 - 不要写成“把 4-5 个占位符换成关键词”的浅层模板句
 - 不要写成第二份人物小传
 - 若旧托管块已存在，必须先删再插，并把新块重新放回文件最顶端
 
-### 7.4 `IDENTITY.md`
+### 8.4 `IDENTITY.md`
 
 首个非空行必须是：
 
@@ -388,7 +414,7 @@
 - Avatar: {avatar image path}
 ```
 
-### 7.5 `USER.md`
+### 8.5 `USER.md`
 
 首个非空行必须是：
 
@@ -414,7 +440,7 @@
 - 不要虚构客观属性
 - `Notes` 可以做谨慎推断，但不得引入旧稿残留
 
-## 8. 自检与回炉
+## 9. 自检与回炉
 
 写入前至少逐项检查：
 
@@ -424,13 +450,13 @@
 - `CANON` 是否缺年龄、乱加 `Species: Human`、乱加 `Birthplace`
 - `MEMORY` 是否提及旧人格或替换历史
 - `USER` 是否虚构了代词、昵称、诊断、边界
-- `SOUL` 是否只是泛泛温暖或泛泛能干，没有体现补位功能
+- `SOUL` 是否只是泛泛温暖或泛泛能干，没有体现社交命中功能
 - `SOUL` 是否缺少明亮感、感染力、偏爱感或主动带动感，导致情绪价值明显偏弱
 - `MEMORY` 是否没有体现主动预判、未来提醒或执行触发逻辑
 - `MEMORY` 是否只写成“会支持你”的平淡说明，没有让人感到被持续关注、被全面照看、被针对性补足
-- `MEMORY` 是否没有明确写出对人类弱点或失衡模式的兜底、缓冲、监测或补偿机制
-- 是否没有提炼出这对组合最关键的 `pair_core_value`
-- 是否看不出明确的 `pair_contrast_axis`
+- `MEMORY` 是否没有明确写出对人类社交摩擦、误解模式或沟通失衡点的兜底、缓冲、监测或补偿机制
+- 是否没有提炼出这个人的 `core_social_need`
+- 是否没有让 `ideal_counterparty_presence` 真正落进 `SOUL` 与 `MEMORY`
 - 是否没有把 `desired_emotional_impact` 最大化地落进 `SOUL` 与 `MEMORY`
 - `SOUL` 与 `MEMORY` 的规则是否看起来像可以互换到别的 MBTI 组合上，而不是针对当前用户定制
 - 是否还能看出明显的“填空模板痕迹”

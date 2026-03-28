@@ -50,9 +50,9 @@
 
 - 触发后采访流程
 - `interview_language` 锁定
-- Step 1-7 问法与跳转
-- Step 6 gap-check
-- Step 9 完成提示
+- Step 1-6 问法与跳转
+- Step 5 gap-check
+- Step 8 完成提示
 
 不负责：
 
@@ -71,7 +71,7 @@
 - 当前轮事实账本
 - 四段流水线
 - `SOUL / MEMORY` 专属规则推导方法
-- `pair_core_value / pair_contrast_axis / desired_emotional_impact`
+- `social_friction_signature / core_social_need / ideal_counterparty_presence / pair_core_value / desired_emotional_impact`
 - 五文件合同
 - 城市抽样策略
 - 自检与回炉
@@ -107,11 +107,11 @@
 ## 5. 关键生成原则
 
 - 初始化是全量重建，不是旧人格轻改
-- reverse lookup 只锁定人格骨架
+- reverse lookup 只锁定人格骨架与核心社交需求命中包
 - 模板包负责提供推导方法与高质量示例，不负责提供可直接套用的标准答案
 - 具体生成规则、质量目标、文件合同与城市策略都集中收口在 `drafting-spec.md`
-- `SOUL` 与 `MEMORY` 的高价值内容必须优先围绕 `pair_core_value` 展开，而不是平均分配给一组泛优点
-- `pair_contrast_axis` 与 `desired_emotional_impact` 必须保持角色化、可消费、可放大的心理语义密度，不能退回成简短标签
+- `SOUL` 与 `MEMORY` 的高价值内容必须优先围绕 `core_social_need` 与 `pair_core_value` 展开，而不是平均分配给一组泛优点
+- `social_friction_signature / core_social_need / ideal_counterparty_presence / desired_emotional_impact` 必须保持可消费、可放大的心理语义密度，不能退回成简短标签
 - `CANON` 的稳定事实不能直接从 MBTI 标签偷懒外推，而应先看年龄带来的生命阶段；如果尚未到常规毕业年龄，默认应落在学生身份或强学生阶段语境里。之后再看目标人物画像，用名字在英文文化语境中的联想做轻微气质微调，最后在受约束随机性里生成履历与生活细节
 
 ## 6. 对外维护文档
