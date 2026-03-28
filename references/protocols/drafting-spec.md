@@ -293,7 +293,6 @@
 
 - 只写稳定人物事实
 - 年龄必须明确
-- 不要写 `Species: Human`
 - 除非对连贯性确有必要，否则不要写 `Birthplace`
 - `Current City` 必须按本文件的城市策略生成
 - `Primary Language` 必须跟随初始化时用户实际使用的语言
