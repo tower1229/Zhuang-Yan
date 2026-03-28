@@ -66,6 +66,8 @@ clawhub install persona-skill
 
 - 人设事实更稳定，不容易在长对话里漂移
 - 下游技能更容易读取身份、外观、背景、场景锚点与约束
+- `persona/PERSONA_PROFILE.md` 应优先使用固定结构下的外化属性与短条目，而不是长篇人格剖析
+- `persona/PERSONA_PROFILE.md` 负责沉淀稳定 persona、appearance、scene 与 constraint 语义
 - 运行时文件可以更精炼，把“该怎么互动”和“这个人是谁”分层管理
 
 ## 渐进式披露架构
