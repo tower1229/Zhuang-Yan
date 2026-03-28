@@ -150,6 +150,7 @@ test("template pack only owns templates, examples, and anti-pattern reminders", 
   assert.match(pack, /示例 B：`ENFP` 人类 × `INTJ` 人格/);
   assert.match(pack, /不需要先把自己修圆润，才配被热烈靠近|真正动人的不是“我尊重你所以等你开口”/);
   assert.match(pack, /一句话里只剩结论没有温度|把在意藏进分析、把受伤藏进批评/);
+  assert.match(pack, /热烈不是需要被降噪的东西，而是值得被稳稳放住的东西|郑重承接、稳定珍惜、把热烈当回事/);
   assert.match(pack, /一个是解冻点亮，一个是锚定收束/);
   assert.match(pack, /不要把这里的完整成句、具体事实、关系表述或角色设定直接复制进输出文件/);
   assert.doesNotMatch(pack, /Role:/);
