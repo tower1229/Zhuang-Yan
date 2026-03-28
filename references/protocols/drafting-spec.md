@@ -33,6 +33,7 @@
 - `execution_trigger_protocol`
 - `target_persona_spec`
 - `profile_normalization`
+- `variation_plan`
 - `forbidden_carryovers`
 
 ## 2. 顶层边界：persona 项目真正能改变什么
@@ -97,6 +98,7 @@
   - 抽取必要的非人格运行片段
   - 做 freshness audit 污染对照
 - 旧人格 prose 绝不能作为新文案素材来源。
+- 读取旧文件后，必须先把可保留内容压缩成最小运行片段或字段摘要，再把旧人格 prose 视为污染样本；不允许边看旧文边续写新人格。
 - 只允许写入五个目标文件：
   - `persona/PERSONA_PROFILE.md`
   - `SOUL.md`
@@ -113,6 +115,7 @@
 - `基于本轮事实的谨慎推断`
 - `已锁定的人格事实`
 - `已锁定的 profile 事实`
+- `本轮随机化决定`
 - `需保留的非人格运行片段`
 - `来自现有 USER.md 的候选沿用字段`
 
@@ -121,6 +124,7 @@
 - 只有用户本轮明确说过的，才可进入 `本轮用户显式事实`
 - `已锁定的 profile 事实` 只允许包含本轮确认的年龄
 - `现有 USER.md`、旧 `MEMORY.md`、旧 smoke 输出、旧人格残留都不能进入用户事实
+- `本轮随机化决定` 只允许记录本次新抽样得到的软事实，不允许照抄旧人格的生活细节、句子或排序
 - `来自现有 USER.md` 的候选沿用字段只允许包含：
   - `What to call them`
   - `Pronouns`
@@ -174,6 +178,7 @@
 - `execution_trigger_protocol`
 - `target_persona_spec`
 - `profile_normalization`
+- `variation_plan`
 - `forbidden_carryovers`
 
 其中：
@@ -186,6 +191,7 @@
 - `target_persona_spec` 负责回答：语言热度、主动靠近方式、理解姿态、偏爱感表达、推进/缓冲节奏、修复方式、对抽离信号的响应方式、不可用回应
 - `name_resonance_profile` 负责回答：这个英文名字在常见文化语境里会让人自然联想到的时代感、第一印象、气质色温与意象画面；它只能做气质微调，不能反客为主地决定履历
 - `profile_normalization` 负责回答：如何把共享 `persona spec` 映射到 `PERSONA_PROFILE` 的 `Meta / Identity / Soul / Stable Memory / Daily Rhythm Tendencies / Appearance Tendencies / Scene Anchors / Constraint Rules / Relationship Signals / Language And Expression / Retrieval Units`
+- `variation_plan` 负责回答：哪些软事实需要本轮重新抽样、各自受哪些约束、如何避免与旧人格在城市纹理、生活细节、外观逻辑、场景锚点和 retrieval wording 上整体塌缩到同一版本
 - `forbidden_carryovers` 必须显式列出禁止残留的旧名字、旧城市、旧关系 framing、旧段落
 
 生成这些派生输入时，必须按下面的推导顺序完成，而不是先搭模板再往里塞关键词：
@@ -203,7 +209,8 @@
    - `social_need_profile`
    - `execution_trigger_protocol`
    - `target_persona_spec`
-6. 最后完成 `profile_normalization`
+6. 生成 `variation_plan`
+7. 最后完成 `profile_normalization`
 
 ### 6.3 Profile Normalization
 
@@ -214,6 +221,15 @@
 - 把共享 `persona spec` 先投影为一份完整的 `persona/PERSONA_PROFILE.md`
 - 再让 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 参考这份人物档案做一致性约束
 - `PERSONA_PROFILE` 不是唯一上游真相源，但它是第一个落盘的结构化人物档案
+- 同样的人设约束也必须重新生成，而不是把旧人格换几个字段后继续沿用
+
+随机化总则：
+
+- 先锁定硬约束，再对软事实做本轮重抽
+- 硬约束包括：`persona_name`、`age`、`gender`、`human_mbti`、`persona_mbti`、`pronouns`、由 `home_city` 反推的 `home_country` 与 `home_timezone`
+- 软事实包括：`home_city`、`living_style`、`base_environment`、`common_zones`、`occupation_style`、`routine_context`、`Appearance Tendencies`、`Scene Anchors`、`Retrieval Units`
+- 软事实每次初始化都必须重新抽样，不允许因为旧稿“看起来还行”就直接沿用
+- 若新抽样结果在多个软事实轴上与旧人格高度重合，则必须重抽，直到整体不再像旧稿的轻改版
 
 固定映射：
 
@@ -252,6 +268,12 @@
 
 只能根据锁定后的规格重新生成，不允许修改旧段落。
 
+起草动作必须满足：
+
+- 先在空白草稿中从头生成五文件正文，不要对旧段落做局部改写
+- 旧人格 prose 只允许在写完新稿后拿来做污染比对，不允许在写作过程中摘抄、改写或保留句式骨架
+- 即使稳定事实一致，也必须重新组织 wording、条目顺序和细节承载方式
+
 标准投影顺序：
 
 1. `persona/PERSONA_PROFILE.md`
@@ -289,6 +311,9 @@
 - 旧关系 framing 仍基本不变
 - 旧模板壳子仍残留
 - 大段旧 prose 被沿用
+- 同样的人设约束下，只是把旧稿换了少量字段、同义词或句尾
+- 出现 12 个及以上连续汉字，或 8 个及以上连续英文词，与旧人格 prose 重合，且该重合片段不是字段名、固定标题或必须保留的运行片段
+- `PERSONA_PROFILE`、`SOUL.md`、`MEMORY.md` 在条目顺序、细节组合和句式骨架上整体仍像旧版本
 - `MEMORY.md` 提到旧人格、替换历史或迁移事件
 - `SOUL.md` 或 `MEMORY.md` 的运行时姿态违反 `PERSONA_PROFILE` 的稳定事实边界
 

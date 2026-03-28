@@ -74,6 +74,9 @@ test("SKILL.md owns trigger, boundaries, file ownership, and minimal execution o
   assert.match(skill, /references\/runtime-context\/persona-profile-consumption-guide\.md/);
   assert.match(skill, /最小执行顺序/);
   assert.match(skill, /真正进入起草时/);
+  assert.match(skill, /必须从空白重新起稿/);
+  assert.match(skill, /所有软事实都必须重新抽样后再写/);
+  assert.match(skill, /不要边看旧文边改写新文/);
   assert.doesNotMatch(skill, /Current City|Core Identity|Relationship State/);
   assert.doesNotMatch(skill, /companion|assistant|mentor|friend/);
 });
@@ -106,6 +109,11 @@ test("drafting spec owns profile normalization, PERSONA_PROFILE contract, and ru
   assert.match(spec, /不允许写当前时间判断、即时事件、季节结论、当天状态/);
   assert.match(spec, /允许比 `PERSONA_PROFILE` 更强烈、更有互动导向，但不得违反其稳定事实边界/);
   assert.match(spec, /不要写成第二份人物档案或第二份 `PERSONA_PROFILE`/);
+  assert.match(spec, /variation_plan/);
+  assert.match(spec, /同样的人设约束也必须重新生成/);
+  assert.match(spec, /软事实每次初始化都必须重新抽样/);
+  assert.match(spec, /先在空白草稿中从头生成五文件正文/);
+  assert.match(spec, /出现 12 个及以上连续汉字，或 8 个及以上连续英文词/);
   assert.doesNotMatch(spec, /# Persona Canon|persona\/CANON\.md/);
 });
 
@@ -121,6 +129,9 @@ test("template pack owns PERSONA_PROFILE templates, examples, and anti-pattern r
   assert.match(pack, /示例 A：`INTJ` 人类 × `ENFP` 人格/);
   assert.match(pack, /为什么这份 `PERSONA_PROFILE` 片段是好的/);
   assert.match(pack, /把 `MEMORY` 写成第二份 `PERSONA_PROFILE`/);
+  assert.match(pack, /同样的人设约束也要重新抽样软事实/);
+  assert.match(pack, /受约束随机化时，优先重抽这些软事实轴/);
+  assert.match(pack, /那不叫随机化，必须回到受约束抽样重新生成/);
   assert.doesNotMatch(pack, /persona\/CANON\.md|# Persona Canon/);
 });
 
