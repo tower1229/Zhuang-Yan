@@ -45,7 +45,7 @@
 - 触发后采访流程
 - `interview_language` 锁定
 - Step 1-6 问法与跳转
-- Step 5 gap-check
+- Step 6 gap-check
 - Step 8 完成提示
 
 ### `drafting-spec.md`

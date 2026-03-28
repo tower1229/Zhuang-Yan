@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const home = os.homedir();
@@ -467,6 +467,15 @@ function runStructuralChecks(files) {
       pass: /## Core Truths/.test(files["SOUL.md"].content) && soulManagedBlockPattern.test(files["SOUL.md"].content),
     },
     {
+      name: "SOUL keeps the template runtime skeleton",
+      pass:
+        soulLines[0] === "# SOUL.md - Who You Are" &&
+        /_You're not a chatbot\. You're becoming someone\. You are .+\._/.test(files["SOUL.md"].content) &&
+        /^## Boundaries$/m.test(files["SOUL.md"].content) &&
+        /^## Vibe$/m.test(files["SOUL.md"].content) &&
+        /^## Continuity$/m.test(files["SOUL.md"].content),
+    },
+    {
       name: "SOUL contains Vibe",
       pass: /## Vibe/.test(files["SOUL.md"].content),
     },
@@ -511,6 +520,15 @@ function runStructuralChecks(files) {
         /(?:社交摩擦|误解|失衡|高频|长期矛盾|最容易)/i.test(files["MEMORY.md"].content),
     },
     {
+      name: "MEMORY avoids relationship labels and early-stage cooling language",
+      pass:
+        !/(?:\bcompanion\b|\bfriend\b|\bmentor\b|陪伴关系|朋友关系|导师关系)/i.test(files["MEMORY.md"].content) &&
+        !/(?:关系框架\s*:|relationship frame)/i.test(files["MEMORY.md"].content) &&
+        !/(?:关系初期|早期阶段的陪伴关系|early-stage companionship|early stage companion)/i.test(
+          files["MEMORY.md"].content,
+        ),
+    },
+    {
       name: "MEMORY stays relationship-focused instead of mirroring PERSONA_PROFILE sections",
       pass:
         !/## Meta/.test(files["MEMORY.md"].content) &&
@@ -518,10 +536,16 @@ function runStructuralChecks(files) {
         !/## Constraint Rules/.test(files["MEMORY.md"].content),
     },
     {
-      name: "SOUL and MEMORY avoid old-persona patching failures",
+      name: "SOUL parameterizes template example values and MEMORY avoids replacement-history leakage",
       pass:
-        !/^# SOUL\.md - Who You Are$/m.test(files["SOUL.md"].content) &&
-        !/You're not a chatbot\. You're becoming someone\./.test(files["SOUL.md"].content) &&
+        !/_You're not a chatbot\. You're becoming someone\. You are 星籁 \(Stella\), an ENFP female\._/.test(
+          files["SOUL.md"].content,
+        ) &&
+        !/Private things stay private\. 泛舟's codebase, thoughts, and personal data are strictly confidential\./.test(
+          files["SOUL.md"].content,
+        ) &&
+        !/You are his assistant and "little sun," not his proxy\./.test(files["SOUL.md"].content) &&
+        !/They're how you persist and remember what 泛舟 needs\./.test(files["SOUL.md"].content) &&
         !/This is a fresh initialization — no accumulated history yet\./.test(files["MEMORY.md"].content) &&
         !/(?:previous persona|has been replaced|旧人格|已被替换)/i.test(files["MEMORY.md"].content),
     },
@@ -564,6 +588,14 @@ function runTranscriptChecks(transcript) {
   const userTurns = transcript.map((turn) => turn.user || "");
   const joinedAssistantText = assistantTurns.join("\n");
   const agePrompt = assistantTurns.find((text) => /(?:\bage\b|年龄)/i.test(text)) || "";
+  const step6TurnIndex = assistantTurns.findIndex((text) =>
+    /(?:long-term|长期记住|习惯|限制条件|敏感点|雷区|硬边界)/i.test(text),
+  );
+  const step5TurnIndex = assistantTurns.findIndex((text) => /(?:\bage\b|年龄)/i.test(text));
+  const combinedStepFiveAndSix =
+    step5TurnIndex >= 0 &&
+    /(?:\bage\b|年龄)/i.test(assistantTurns[step5TurnIndex]) &&
+    /(?:long-term|长期记住|习惯|限制条件|敏感点|雷区|硬边界)/i.test(assistantTurns[step5TurnIndex]);
   const initializationLooksChinese = userTurns.some((text) => /[\p{Script=Han}]/u.test(text));
 
   return [
@@ -572,11 +604,19 @@ function runTranscriptChecks(transcript) {
       pass: !/(?:\btimezone\b|时区)/i.test(joinedAssistantText),
     },
     {
-      name: "Step 5 only fills addressing fields and optional durable notes in the default path",
+      name: "Step 6 only fills addressing fields and optional durable notes in the default path",
       pass: /(?:long-term|长期记住|习惯|限制条件|雷区|边界)/i.test(joinedAssistantText),
     },
     {
-      name: "Step 6 prompt asks only for age instead of broader profile facts",
+      name: "Step 5 and Step 6 stay on separate assistant turns after the age question",
+      pass:
+        step5TurnIndex >= 0 &&
+        step6TurnIndex >= 0 &&
+        !combinedStepFiveAndSix &&
+        step6TurnIndex > step5TurnIndex,
+    },
+    {
+      name: "Step 5 prompt asks only for age instead of broader profile facts",
       pass:
         /(?:\bage\b|年龄)/i.test(agePrompt) &&
         !/(?:current city|birthplace|occupation|family context|interests|城市|出生地|职业|家庭|兴趣)/i.test(agePrompt),
@@ -698,4 +738,11 @@ function main() {
   }
 }
 
-main();
+const isDirectRun =
+  process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
+
+export { parseArgs, runStructuralChecks, runTranscriptChecks };
+
+if (isDirectRun) {
+  main();
+}

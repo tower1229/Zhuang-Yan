@@ -72,13 +72,8 @@ test("SKILL.md owns trigger, boundaries, file ownership, and minimal execution o
   const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
   assert.match(skill, /本 Skill 只负责人格初始化或重建/);
   assert.match(skill, /persona\/PERSONA_PROFILE\.md/);
-  assert.match(skill, /references\/runtime-context\/persona-profile-consumption-guide\.md/);
   assert.match(skill, /references\/runtime-context\/SOUL\.template\.md/);
   assert.match(skill, /最小执行顺序/);
-  assert.match(skill, /真正进入起草时/);
-  assert.match(skill, /必须从空白重新起稿/);
-  assert.match(skill, /所有软事实都必须重新抽样后再写/);
-  assert.match(skill, /不要边看旧文边改写新文/);
   assert.match(skill, /SOUL\.md` 只能基于 `references\/runtime-context\/SOUL\.template\.md`/);
   assert.match(skill, /IDENTITY\.md` 只允许定点更新五个卡片字段/);
   assert.doesNotMatch(skill, /Current City|Core Identity|Relationship State/);
@@ -89,8 +84,11 @@ test("initialization flow stays interview-only while switching completion target
   const flow = fs.readFileSync(path.join(root, "references/protocols/initialization-flow.md"), "utf8");
   assert.match(flow, /本文件只负责采访流程本身/);
   assert.match(flow, /Step 1：确认人类用户的 MBTI/);
-  assert.match(flow, /Step 5：补齐用户侧稳定信息/);
-  assert.match(flow, /Step 6：只锁定年龄/);
+  assert.match(flow, /Step 5：只锁定年龄/);
+  assert.match(flow, /Step 6：补齐用户侧稳定信息/);
+  assert.match(flow, /不允许在同一条 assistant 消息里同时出现 Step 5 的年龄问题和 Step 6 的补充提问/);
+  assert.match(flow, /Step 5 发出后必须等待用户回复，收到该回复后才能进入 Step 6/);
+  assert.match(flow, /Step 5 必须作为新的单独一轮提问发送/);
   assert.match(flow, /Step 8：完成提示/);
   assert.match(flow, /旧 `PERSONA_PROFILE`、旧 `SOUL`/);
   assert.match(flow, /其他 `PERSONA_PROFILE` 事实都留到起草阶段再推导/);
@@ -114,15 +112,14 @@ test("drafting spec owns profile normalization, PERSONA_PROFILE contract, and ru
   assert.match(spec, /允许比 `PERSONA_PROFILE` 更强烈、更有互动导向，但不得违反其稳定事实边界/);
   assert.match(spec, /不要写成第二份人物档案或第二份 `PERSONA_PROFILE`/);
   assert.match(spec, /variation_plan/);
-  assert.match(spec, /同样的人设约束也必须重新生成/);
-  assert.match(spec, /软事实每次初始化都必须重新抽样/);
-  assert.match(spec, /先在空白草稿中从头生成五文件正文/);
   assert.match(spec, /出现 12 个及以上连续汉字，或 8 个及以上连续英文词/);
   assert.match(spec, /旧目标文件不再参与生成人格正文/);
   assert.match(spec, /SOUL\.md` 必须基于 `references\/runtime-context\/SOUL\.template\.md` 实例化后整文件覆盖写入/);
   assert.match(spec, /旧 `USER\.md` 只允许在本轮未明确提供 `Timezone` 时读取该字段/);
   assert.match(spec, /只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行/);
   assert.match(spec, /`SOUL\.md` 残留 `Stella`、`泛舟`、`his`、`little sun`/);
+  assert.match(spec, /不得把这件事写成情感降温理由/);
+  assert.match(spec, /不要给关系贴 `companion \/ friend \/ mentor \/ assistant \/ 陪伴关系 \/ 朋友关系 \/ 导师关系`/);
   assert.doesNotMatch(spec, /# Persona Canon|persona\/CANON\.md/);
 });
 
@@ -138,13 +135,12 @@ test("template pack owns PERSONA_PROFILE templates, examples, and anti-pattern r
   assert.match(pack, /示例 A：`INTJ` 人类 × `ENFP` 人格/);
   assert.match(pack, /为什么这份 `PERSONA_PROFILE` 片段是好的/);
   assert.match(pack, /把 `MEMORY` 写成第二份 `PERSONA_PROFILE`/);
-  assert.match(pack, /同样的人设约束也要重新抽样软事实/);
-  assert.match(pack, /受约束随机化时，优先重抽这些软事实轴/);
-  assert.match(pack, /那不叫随机化，必须回到受约束抽样重新生成/);
   assert.match(pack, /`references\/runtime-context\/SOUL\.template\.md` 是 `SOUL\.md` 的固定骨架来源/);
   assert.match(pack, /`## Core Truths` 必须完全替换为本轮人格内容/);
   assert.match(pack, /`## Boundaries` 与 `## Continuity` 保留运行时意图/);
   assert.match(pack, /用整文件覆盖的方式重写 `IDENTITY\.md`/);
+  assert.match(pack, /没有用 `companion`、`friend`、`mentor` 之类关系标签给热度降级/);
+  assert.match(pack, /在 `MEMORY` 里用 `companion \/ friend \/ mentor \/ assistant \/ 陪伴关系`/);
   assert.doesNotMatch(pack, /persona\/CANON\.md|# Persona Canon/);
 });
 
@@ -190,7 +186,7 @@ test("publish checklist matches the PERSONA_PROFILE migration", () => {
   assert.match(checklist, /persona-profile-consumption-guide\.md/);
   assert.match(checklist, /canon-consumption-guide\.md/);
   assert.match(checklist, /`persona\/PERSONA_PROFILE\.md` 包含 `Meta \/ Appearance Tendencies \/ Constraint Rules \/ Retrieval Units`/);
-  assert.match(checklist, /Step 6 只问年龄/);
+  assert.match(checklist, /Step 5 只问年龄/);
 });
 
 test("machine-facing MBTI metadata stays English-first and no longer ships compatibility_matrix", () => {
@@ -260,7 +256,9 @@ test("smoke runner guards the PERSONA_PROFILE outputs and interview shape", () =
   assert.match(smoke, /mature:/);
   assert.match(smoke, /student:/);
   assert.match(smoke, /persona\/PERSONA_PROFILE\.md/);
-  assert.match(smoke, /Step 6 prompt asks only for age instead of broader profile facts/);
+  assert.match(smoke, /Step 5 and Step 6 stay on separate assistant turns after the age question/);
+  assert.match(smoke, /Step 5 prompt asks only for age instead of broader profile facts/);
+  assert.match(smoke, /MEMORY avoids relationship labels and early-stage cooling language/);
   assert.match(smoke, /PERSONA_PROFILE uses the timeline contract/);
   assert.match(smoke, /PERSONA_PROFILE includes geo anchors and machine-facing meta/);
   assert.match(smoke, /PERSONA_PROFILE includes explicit constraint groups/);

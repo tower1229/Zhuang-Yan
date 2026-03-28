@@ -2,7 +2,7 @@
 
 本文件只负责采访流程本身。
 
-- 负责：触发后的采访起点、提问顺序、选项呈现、`interview_language` 锁定、Step 5 gap-check、完成提示。
+- 负责：触发后的采访起点、提问顺序、选项呈现、`interview_language` 锁定、Step 6 gap-check、完成提示。
 - 不负责：起草读取顺序、文件合同、四段流水线、freshness audit、写入安全边界、模板内容。
 
 ## 触发后起点
@@ -75,7 +75,15 @@ node scripts/mbti-lookup.js <human_mbti>
 - 名字本身保持英文，但解释文字、选项说明、刷新提示仍必须使用锁定的 `interview_language`。
 - 如果用户不满意，就刷新 3 个新名字。
 
-## Step 5：补齐用户侧稳定信息
+## Step 5：只锁定年龄
+
+- 进入起草前，必须明确询问人格年龄。
+- Step 5 只允许问年龄，不允许顺带再问城市、职业、家庭、兴趣等其他 profile 事实。
+- 年龄必须锁死，不能跳过、不能留白。
+- 其他 `PERSONA_PROFILE` 事实都留到起草阶段再推导。
+- Step 5 必须作为新的单独一轮提问发送，不能和 Step 6 共用同一条 assistant 消息
+
+## Step 6：补齐用户侧稳定信息
 
 开始前先查看已有 `USER.md`，仅用于 gap-check。
 
@@ -99,12 +107,11 @@ node scripts/mbti-lookup.js <human_mbti>
 
 如果 `Pronouns` 本轮仍为空，且你还没有明确问过，就不能直接结束初始化。
 
-## Step 6：只锁定年龄
+Step 6 发问规则：
 
-- 进入起草前，必须明确询问人格年龄。
-- Step 6 只允许问年龄，不允许顺带再问城市、职业、家庭、兴趣等其他 profile 事实。
-- 年龄必须锁死，不能跳过、不能留白。
-- 其他 `PERSONA_PROFILE` 事实都留到起草阶段再推导。
+- Step 6 的最后一条消息必须停在用户侧稳定信息的询问上
+- 不允许在同一条 assistant 消息里同时出现 Step 5 的年龄问题和 Step 6 的补充提问
+- Step 5 发出后必须等待用户回复，收到该回复后才能进入 Step 6
 
 ## Step 7：交给起草规范
 
