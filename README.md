@@ -1,6 +1,8 @@
 # Zhuang-Yan (persona-skill) — [中文说明](./README_ZH.md)
 
-`persona-skill` initializes or rebuilds an OpenClaw persona through a short interview, then writes the result into the five runtime files plus `persona/PERSONA_PROFILE.md`.
+Stop treating persona setup like a disposable prompt.
+
+`persona-skill` does more than assign an MBTI label to an OpenClaw character. It runs a short, high-signal initialization interview, identifies the kind of presence the user actually wants, and then rebuilds the full persona stack in one pass: `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, `USER.md`, and `persona/PERSONA_PROFILE.md`. The result is a character foundation that feels more coherent in conversation, more reusable across skills, and far more stable over time.
 
 ## Install
 
@@ -8,11 +10,18 @@
 clawhub install persona-skill
 ```
 
-No extra API keys or environment variables are required.
+No API keys. No extra environment variables. Install it and start initialization.
+
+## It Fixes More Than "Persona Drift"
+
+- It does not patch an old persona in place. Once explicitly triggered, it interviews from scratch, drafts from scratch, and writes from scratch.
+- It does not start with a random vibe and force details around it. It starts from the user's relationship needs, then works backward into a better persona direction.
+- It does not produce a single pretty paragraph. It generates both the runtime context files and a structured profile contract in `persona/PERSONA_PROFILE.md`.
+- It does not optimize only for the current chat. It creates a shared foundation for memory, scene continuity, identity constraints, and downstream skill consumption.
 
 ## Use
 
-Trigger it with an explicit initialization request, for example:
+Trigger it with an explicit initialization command, for example:
 
 - `initialize persona`
 - `rebuild persona`
@@ -20,7 +29,9 @@ Trigger it with an explicit initialization request, for example:
 - `调用 persona 进行初始化`
 - `初始化人格`
 
-The skill stays inactive during normal conversation. Once explicitly triggered, it runs a one-question-at-a-time interview and then rewrites:
+The skill stays dormant during normal conversation.
+
+Once triggered, it runs a one-question-at-a-time interview and then rewrites:
 
 - `persona/PERSONA_PROFILE.md`
 - `SOUL.md`
@@ -28,9 +39,38 @@ The skill stays inactive during normal conversation. Once explicitly triggered, 
 - `IDENTITY.md`
 - `USER.md`
 
-## Architecture
+## Why This Feels Closer To A Real Character
 
-The initialization chain now uses a reduced structure:
+The core pipeline is not generic personality analysis. It is built around the user's real social and emotional needs:
+
+`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> runtime file projection`
+
+That means the output is not just "a persona with traits." It is a persona designed to show up in a way that feels more specific, more supportive, and more relationally coherent.
+
+The highest-value layers are these:
+
+- `social_friction_signature`: where the user is most likely to feel drained, misunderstood, or disappointed in relationships.
+- `core_social_need`: the central need the persona should help satisfy.
+- `ideal_counterparty_presence`: how the ideal companion should sound, respond, and emotionally land.
+- `pair_core_value` and `desired_emotional_impact`: the bridge between abstract persona design and lived interaction quality.
+
+## Profile First, Runtime Second
+
+The new architecture is built on a simple principle:
+
+1. Generate `persona/PERSONA_PROFILE.md` as the structured ground truth.
+2. Project that profile into `SOUL`, `MEMORY`, `IDENTITY`, and `USER`.
+3. Give downstream skills and Timeline a stable source of persona facts they can reliably consume.
+
+This matters because it makes the system:
+
+- more stable across long conversations
+- easier for downstream tools to read for identity, appearance, background, scene anchors, and constraints
+- cleaner at runtime, with "who this character is" separated from "how this character behaves"
+
+## Progressive Disclosure Architecture
+
+The initialization chain now follows a tight read order:
 
 1. `SKILL.md`
 2. `references/protocols/initialization-flow.md`
@@ -43,22 +83,14 @@ Data assets stay separate:
 - `assets/mbti/mbti-index.json`
 - `references/mbti/*.md`
 
-Progressive disclosure is intentional:
+The read sequence is intentional:
 
-1. `SKILL.md` decides whether initialization should start
-2. `initialization-flow.md` governs the interview
-3. `drafting-spec.md` governs generation, profile normalization, and writing
-4. `template-pack.md` and `persona-profile-consumption-guide.md` are read only at drafting time
+1. `SKILL.md` decides whether initialization should begin
+2. `initialization-flow.md` is read only after explicit trigger
+3. `drafting-spec.md` is read only after the interview is complete
+4. templates, consumption guides, and MBTI assets are read only when drafting actually starts
 
-## What the Skill Optimizes For
-
-- emotional value first through the user's core social need
-- `human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> runtime file projection`
-- `social_friction_signature`, `core_social_need`, and `ideal_counterparty_presence` act as the main psychological guidance package
-- stable `persona/PERSONA_PROFILE.md` facts are derived from life stage first; if the age is still below the usual graduation threshold, the persona should default into a student or strongly student-stage context. Only then does persona spec guide the profile, with English-culture name connotations used as a light vibe adjustment inside constrained randomness
-- `persona/PERSONA_PROFILE.md` should function as structured ground truth for downstream skills and Timeline, so it should prefer fixed sections, externally visible attributes, and short labeled entries over long personality essays
-- runtime persona files stay lean, while `persona/PERSONA_PROFILE.md` carries stable persona, appearance, scene, and constraint semantics
-- rebuilds from scratch instead of lightly patching the old persona
+This progressive disclosure keeps initialization focused. The model sees the right document at the right time, instead of loading the whole system too early and getting distracted by irrelevant rules.
 
 ## Documents
 
