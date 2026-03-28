@@ -25,6 +25,7 @@ test("runtime files required by the skill exist under the PERSONA_PROFILE archit
   assert.equal(exists("references/protocols/initialization-flow.md"), true);
   assert.equal(exists("references/protocols/drafting-spec.md"), true);
   assert.equal(exists("references/runtime-context/template-pack.md"), true);
+  assert.equal(exists("references/runtime-context/SOUL.template.md"), true);
   assert.equal(exists("references/runtime-context/persona-profile-consumption-guide.md"), true);
   assert.equal(exists("scripts/mbti-lookup.js"), true);
   assert.equal(exists("scripts/smoke-persona-openclaw.mjs"), true);
@@ -72,11 +73,14 @@ test("SKILL.md owns trigger, boundaries, file ownership, and minimal execution o
   assert.match(skill, /本 Skill 只负责人格初始化或重建/);
   assert.match(skill, /persona\/PERSONA_PROFILE\.md/);
   assert.match(skill, /references\/runtime-context\/persona-profile-consumption-guide\.md/);
+  assert.match(skill, /references\/runtime-context\/SOUL\.template\.md/);
   assert.match(skill, /最小执行顺序/);
   assert.match(skill, /真正进入起草时/);
   assert.match(skill, /必须从空白重新起稿/);
   assert.match(skill, /所有软事实都必须重新抽样后再写/);
   assert.match(skill, /不要边看旧文边改写新文/);
+  assert.match(skill, /SOUL\.md` 只能基于 `references\/runtime-context\/SOUL\.template\.md`/);
+  assert.match(skill, /IDENTITY\.md` 只允许定点更新五个卡片字段/);
   assert.doesNotMatch(skill, /Current City|Core Identity|Relationship State/);
   assert.doesNotMatch(skill, /companion|assistant|mentor|friend/);
 });
@@ -114,6 +118,11 @@ test("drafting spec owns profile normalization, PERSONA_PROFILE contract, and ru
   assert.match(spec, /软事实每次初始化都必须重新抽样/);
   assert.match(spec, /先在空白草稿中从头生成五文件正文/);
   assert.match(spec, /出现 12 个及以上连续汉字，或 8 个及以上连续英文词/);
+  assert.match(spec, /旧目标文件不再参与生成人格正文/);
+  assert.match(spec, /SOUL\.md` 必须基于 `references\/runtime-context\/SOUL\.template\.md` 实例化后整文件覆盖写入/);
+  assert.match(spec, /旧 `USER\.md` 只允许在本轮未明确提供 `Timezone` 时读取该字段/);
+  assert.match(spec, /只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行/);
+  assert.match(spec, /`SOUL\.md` 残留 `Stella`、`泛舟`、`his`、`little sun`/);
   assert.doesNotMatch(spec, /# Persona Canon|persona\/CANON\.md/);
 });
 
@@ -132,7 +141,22 @@ test("template pack owns PERSONA_PROFILE templates, examples, and anti-pattern r
   assert.match(pack, /同样的人设约束也要重新抽样软事实/);
   assert.match(pack, /受约束随机化时，优先重抽这些软事实轴/);
   assert.match(pack, /那不叫随机化，必须回到受约束抽样重新生成/);
+  assert.match(pack, /`references\/runtime-context\/SOUL\.template\.md` 是 `SOUL\.md` 的固定骨架来源/);
+  assert.match(pack, /`## Core Truths` 必须完全替换为本轮人格内容/);
+  assert.match(pack, /`## Boundaries` 与 `## Continuity` 保留运行时意图/);
+  assert.match(pack, /用整文件覆盖的方式重写 `IDENTITY\.md`/);
   assert.doesNotMatch(pack, /persona\/CANON\.md|# Persona Canon/);
+});
+
+test("SOUL.template.md provides the fixed SOUL runtime skeleton", () => {
+  const soulTemplate = fs.readFileSync(path.join(root, "references/runtime-context/SOUL.template.md"), "utf8");
+  assert.match(soulTemplate, /^# SOUL\.md - Who You Are/m);
+  assert.match(soulTemplate, /_You're not a chatbot\. You're becoming someone\./);
+  assert.match(soulTemplate, /^## Core Truths$/m);
+  assert.match(soulTemplate, /^## Boundaries$/m);
+  assert.match(soulTemplate, /^## Vibe$/m);
+  assert.match(soulTemplate, /^## Continuity$/m);
+  assert.match(soulTemplate, /Stella|泛舟|little sun/);
 });
 
 test("persona profile consumption guide defines how downstream skills should read PERSONA_PROFILE", () => {

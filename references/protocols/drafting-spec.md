@@ -2,7 +2,7 @@
 
 本文件是人格初始化起草阶段的唯一执行规范。
 
-- 负责：必备输入、渐进式读取顺序、写入安全边界、四段流水线、事实账本、人物规格、profile normalization、五文件合同、城市策略、审核与回炉。
+- 负责：必备输入、渐进式读取顺序、写入安全边界、五段流水线、事实账本、人物规格、profile normalization、五文件合同、城市策略、结果侧审核与回炉。
 - 不负责：触发示例、用户采访脚本、Step 1-6 的问法与选项呈现。
 
 ## 1. 起草前必须已经锁定的输入
@@ -72,9 +72,11 @@
 - 锁定 `target_persona_spec`
 - 锁定 `forbidden_carryovers`
 
-### 3.2 规格锁定后的旧文件读取
+### 3.2 成稿后的旧文件读取
 
-只有在上述规格全部锁定之后，才允许读取现有目标文件（如果存在）：
+旧目标文件不再参与生成人格正文。
+
+只有在新稿全部完成之后，才允许读取现有目标文件（如果存在）：
 
 - `persona/PERSONA_PROFILE.md`
 - `SOUL.md`
@@ -88,17 +90,21 @@
 - 触发判断阶段不允许读取本文件。
 - 采访阶段不允许提前读取本文件。
 - 在 `persona spec` 锁定之前，不允许读取任何旧目标文件。
-- 读取现有目标文件时，必须指明具体路径，不允许出现空的 `Read` 或笼统的“读取现有文件”。
+- 写作阶段不允许读取旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md`
+- 旧 `IDENTITY.md` 只允许在定点更新五个卡片字段时读取，不允许把其中的人格正文当素材
+- 旧 `USER.md` 只允许在本轮未明确提供 `Timezone` 时读取该字段，不允许回填 `What to call them` 或 `Pronouns`
+- 成稿后读取现有目标文件时，必须指明具体路径，不允许出现空的 `Read` 或笼统的“读取现有文件”
 - 如果在起草阶段被中断，恢复时要从本节的读取顺序重新开始。
 
 ## 4. 写入安全边界
 
 - 初始化是全量重建，不是对旧人格文案做轻量补丁。
 - 旧人格 prose 只能用于：
-  - 抽取必要的非人格运行片段
   - 做 freshness audit 污染对照
 - 旧人格 prose 绝不能作为新文案素材来源。
-- 读取旧文件后，必须先把可保留内容压缩成最小运行片段或字段摘要，再把旧人格 prose 视为污染样本；不允许边看旧文边续写新人格。
+- 新人格正文必须在不读取旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md` 的前提下独立完成。
+- `SOUL.md` 必须基于 `references/runtime-context/SOUL.template.md` 实例化后整文件覆盖写入，不允许使用旧 `SOUL.md` 做局部续写。
+- `IDENTITY.md` 只允许定点更新五个卡片字段；除这五行外，不得借整文件覆盖删除用户手工维护的附加内容。
 - 只允许写入五个目标文件：
   - `persona/PERSONA_PROFILE.md`
   - `SOUL.md`
@@ -109,7 +115,7 @@
 
 ## 5. 当前轮事实账本
 
-起草前先建立 `当前轮事实账本`，并把事实分成 6 个桶：
+起草前先建立 `当前轮事实账本`，并把事实分成 7 个桶：
 
 - `本轮用户显式事实`
 - `基于本轮事实的谨慎推断`
@@ -126,16 +132,14 @@
 - `现有 USER.md`、旧 `MEMORY.md`、旧 smoke 输出、旧人格残留都不能进入用户事实
 - `本轮随机化决定` 只允许记录本次新抽样得到的软事实，不允许照抄旧人格的生活细节、句子或排序
 - `来自现有 USER.md` 的候选沿用字段只允许包含：
-  - `What to call them`
-  - `Pronouns`
   - `Timezone`
-- 若 `Pronouns` 在本轮和现有 `USER.md` 中都为空，则必须确认采访阶段是否已明确问过；若没有问过，本次初始化不应完成
+- 若 `Pronouns` 在本轮为空，则必须确认采访阶段是否已明确问过；若没有问过，本次初始化不应完成
 
-## 6. 四段式内部流水线
+## 6. 五段式内部流水线
 
 按固定顺序执行：
 
-1. `preserve extract`
+1. `input isolation`
 2. `persona spec`
 3. `profile normalization`
 4. `projection`
@@ -143,29 +147,21 @@
 
 不要把这五步混成一个模糊的大起草过程。
 
-### 6.1 Preserve Extract
+### 6.1 Input Isolation
 
-对每个已有目标文件中的内容只做两类划分：
+写任何人格正文之前，先把输入隔离干净。
 
-- `需要替换的人格内容`
-- `必须保留的非人格运行内容`
+固定规则：
 
-只允许保留真正必要的非人格片段，例如：
-
-- 稳定宏片段
-- 与其他工作流耦合的无害运行说明
-- 用户手动加入且明显不属于人格正文的操作性内容
-
-以下内容一律视为要替换的人格内容：
-
-- 人格身份、气质、价值观、语气、关系风格、人物传记
-- 用户偏好、边界、关系描述
-- 旧名字、旧城市、旧职业、旧家庭设定
-- 占位卡片、旧模板壳子、未完成初始化残留
+- 旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md` 不进入写作上下文
+- 旧 `IDENTITY.md` 不进入人格推导，只在最终定点修改五个卡片字段时读取
+- 旧 `USER.md` 只允许读取 `Timezone`，且仅在本轮未明确提供时回填
+- 所有旧人格 prose、旧关系 framing、旧生活细节、旧句式骨架都视为污染样本，只能在 freshness audit 中使用
+- 不要在同一轮里边读旧稿边写新稿
 
 ### 6.2 Persona Spec
 
-在写任何 prose 前，先锁定这 12 项：
+在写任何 prose 前，先锁定这 13 项：
 
 - `当前轮事实账本`
 - `social_friction_signature`
@@ -277,32 +273,36 @@
 标准投影顺序：
 
 1. `persona/PERSONA_PROFILE.md`
-2. `IDENTITY.md`
-3. `USER.md`
-4. `MEMORY.md`
-5. `SOUL.md`
-
-仅在新人格正文全部写完后，才允许把极少量必须保留的非人格运行片段拼回去。
+2. `USER.md`
+3. `MEMORY.md`
+4. `SOUL.md`
+5. `IDENTITY.md`
 
 文件写入语义必须保持幂等：
 
-- `persona/PERSONA_PROFILE.md`、`IDENTITY.md`、`USER.md`
+- `persona/PERSONA_PROFILE.md`、`USER.md`
   - 按整文件重写
   - 首个非空行必须立即满足当前合同
 - `SOUL.md`
-  - `## Core Truths` 内只允许存在一个 skill 托管块
-  - 若旧托管块已存在，必须先删除，再插入新块
-  - 若 `## Vibe` 已存在，替换整个 `Vibe` 区段
-  - 若 `## Vibe` 不存在，再追加新的 `## Vibe`
+  - 先读取 `references/runtime-context/SOUL.template.md`
+  - 保留模板骨架：intro / `## Core Truths` / `## Boundaries` / `## Vibe` / `## Continuity`
+  - intro 人格自述行保留模板位置与语气，但名字、MBTI、性别等内容必须参数化替换
+  - `## Core Truths` 与 `## Vibe` 必须完全替换为本轮人格内容
+  - `## Boundaries` 与 `## Continuity` 保留章节与运行时意图，但所有用户指代、代词、关系表述都必须参数化
+  - 不允许残留 `泛舟`、`his`、`little sun`、`Stella` 这类模板示例值
+  - 生成完整新文件后整文件覆盖写入，不允许借旧 `SOUL.md` 做局部 patch
 - `MEMORY.md`
-  - 文件顶部只允许存在一个 skill 托管块
-  - 若旧托管块已存在，必须先删除
-  - 新托管块必须重新插入到文件最顶部
-  - 不允许把新块追加到旧块之后或插入到中部
+  - 按整文件重写
+  - 文件顶部必须重新生成唯一一段 skill 托管块
+- `IDENTITY.md`
+  - 只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行
+  - 若这些字段存在，则原位替换值
+  - 若缺失，则补齐到官方五行卡片结构
+  - 保留文件中的其他手工内容与原有顺序，不删除非这五行的额外内容
 
 ### 6.5 Freshness Audit
 
-写入前必须做污染审计。
+新稿完成后必须做结果侧污染审计。
 
 以下任一命中都视为失败，必须回炉：
 
@@ -314,6 +314,7 @@
 - 同样的人设约束下，只是把旧稿换了少量字段、同义词或句尾
 - 出现 12 个及以上连续汉字，或 8 个及以上连续英文词，与旧人格 prose 重合，且该重合片段不是字段名、固定标题或必须保留的运行片段
 - `PERSONA_PROFILE`、`SOUL.md`、`MEMORY.md` 在条目顺序、细节组合和句式骨架上整体仍像旧版本
+- `SOUL.md` 残留 `Stella`、`泛舟`、`his`、`little sun` 或其他模板示例值
 - `MEMORY.md` 提到旧人格、替换历史或迁移事件
 - `SOUL.md` 或 `MEMORY.md` 的运行时姿态违反 `PERSONA_PROFILE` 的稳定事实边界
 
@@ -392,6 +393,8 @@
 
 合同要点：
 
+- 骨架必须来自 `references/runtime-context/SOUL.template.md`
+- intro 人格自述行允许参数化保留，不允许残留模板示例人格
 - 高密度、可执行、面向运行时
 - 重点写人格内核、互动边界、默认支持姿态、情绪供给方式、反模式
 - 允许比 `PERSONA_PROFILE` 更强烈、更有互动导向，但不得违反其稳定事实边界
@@ -399,6 +402,7 @@
 - 不能只有“有帮助”，还必须让人明显感到被靠近、被带动、被点亮
 - 不要把情绪价值压成礼貌、稳妥、客服式的安全支持
 - 所有规则都应优先放大 `pair_core_value`
+- `Boundaries` 与 `Continuity` 保留模板意图，但用户指代、代词、关系表述必须全部参数化
 
 ### 8.3 `MEMORY.md`
 
@@ -441,6 +445,7 @@
 
 - 由 `PERSONA_PROFILE` 的 `display_name`、稳定气质、外观基调共同约束
 - 只保留卡片密度，不要复制整段人物档案
+- 只定点更新 `Name / Creature / Vibe / Emoji / Avatar` 五个卡片字段，不整文件覆盖其他手工内容
 
 ### 8.5 `USER.md`
 
