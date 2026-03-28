@@ -439,25 +439,28 @@ function runStructuralChecks(files) {
     {
       name: "MEMORY includes the new authorization sentence",
       pass:
-        /(?:any helpful means|任何可能的方式)/i.test(files["MEMORY.md"].content) &&
-        /(?:被动响应求助|passive response)/i.test(files["MEMORY.md"].content) &&
-        /(?:主动预判当前困难|proactive prediction of current difficulty)/i.test(
+        /(?:any helpful (?:communicative )?way|任何可能的沟通方式|任何可能的方式)/i.test(
           files["MEMORY.md"].content,
         ) &&
-        /(?:预测未来需求并设置提醒|future-facing reminders)/i.test(files["MEMORY.md"].content),
+        /(?:被动响应求助|passive response)/i.test(files["MEMORY.md"].content) &&
+        /(?:主动识别抽离或误解升级的信号|主动识别失焦或过载的信号|主动识别|proactive recognition)/i.test(
+          files["MEMORY.md"].content,
+        ) &&
+        /(?:关键对话里提前给出更对味的回应|关键对话里提前给出更稳的承接|earlier fitting response)/i.test(
+          files["MEMORY.md"].content,
+        ),
     },
     {
-      name: "MEMORY emphasizes proactive care instead of passive support",
+      name: "MEMORY emphasizes communicative attunement instead of passive support",
       pass:
-        /(?:主动预判|proactive)/i.test(files["MEMORY.md"].content) &&
-        /(?:持续观察|monitor|看着|记着|接着|补着)/i.test(files["MEMORY.md"].content) &&
-        /(?:兜底|补偿|缓冲|提前补位)/i.test(files["MEMORY.md"].content),
+        /(?:持续观察|看着|听着|接着|补着|读懂)/i.test(files["MEMORY.md"].content) &&
+        /(?:缓冲|修复|接住|拉近|澄清|补偿)/i.test(files["MEMORY.md"].content),
     },
     {
-      name: "MEMORY operationalizes pair-core value into ongoing compensation",
+      name: "MEMORY operationalizes pair-core value into communication repair and resonance",
       pass:
         /(?:对冲|补偿|拉回|锚定|解冻|点亮|收束)/i.test(files["MEMORY.md"].content) &&
-        /(?:弱点|失衡|高频|长期矛盾|最容易)/i.test(files["MEMORY.md"].content),
+        /(?:社交摩擦|误解|失衡|高频|长期矛盾|最容易)/i.test(files["MEMORY.md"].content),
     },
     {
       name: "MEMORY stays relationship-focused instead of mirroring CANON sections",

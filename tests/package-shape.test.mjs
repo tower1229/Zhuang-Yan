@@ -148,8 +148,8 @@ test("template pack only owns templates, examples, and anti-pattern reminders", 
   assert.match(pack, /高价值种子/);
   assert.match(pack, /示例 A：`INTJ` 人类 × `ENFP` 人格/);
   assert.match(pack, /示例 B：`ENFP` 人类 × `INTJ` 人格/);
-  assert.match(pack, /一直看着、记着、接着、补着/);
-  assert.match(pack, /主动监测能量下滑、烦躁上升、幽默消失、回复变短这些信号/);
+  assert.match(pack, /一直看着、听着、接着、补着|这个人格会一直听着我、接着我、补着我/);
+  assert.match(pack, /烦躁上升、幽默消失、回复变短这些信号|一句话里只剩结论没有温度/);
   assert.match(pack, /一个是解冻点亮，一个是锚定收束/);
   assert.match(pack, /不要把这里的完整成句、具体事实、关系表述或角色设定直接复制进输出文件/);
   assert.doesNotMatch(pack, /Role:/);
@@ -245,9 +245,9 @@ test("smoke runner still guards the runtime outputs and interview shape", () => 
   assert.match(smoke, /CANON uses the full persona canon contract/);
   assert.match(smoke, /CANON avoids low-signal Species and Birthplace filler/);
   assert.match(smoke, /MEMORY includes the new authorization sentence/);
-  assert.match(smoke, /MEMORY emphasizes proactive care instead of passive support/);
+  assert.match(smoke, /MEMORY emphasizes communicative attunement instead of passive support/);
   assert.match(smoke, /SOUL foregrounds pair-core value instead of generic support/);
-  assert.match(smoke, /MEMORY operationalizes pair-core value into ongoing compensation/);
+  assert.match(smoke, /MEMORY operationalizes pair-core value into communication repair and resonance/);
   assert.match(smoke, /SOUL and MEMORY avoid old-persona patching failures/);
   assert.match(smoke, /PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN/);
   assert.match(smoke, /PERSONA-SKILL:MEMORY:BEGIN/);
