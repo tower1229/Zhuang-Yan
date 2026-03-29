@@ -88,6 +88,14 @@ Each has a distinct role:
 
 `PERSONA_PROFILE` leads: facts are nailed down first, then the rest of the runtime files are aligned—so persona is not trapped in prose alone.
 
+### Note: overwrite policy
+
+When `persona-skill` generates the following files, it **overwrites** them. If you have customized content in any of them and want to keep it after persona initialization, back those files up manually before generation. If you are unsure what this means, it probably does not apply to you.
+
+- `persona/PERSONA_PROFILE.md`
+- `SOUL.md`
+- `MEMORY.md`
+
 ## Working with Timeline
 
 `persona-skill` and Timeline do **not** overlap in job description.
