@@ -60,7 +60,8 @@ npm run publish:clawhub
 - 验证 Step 5 只问年龄
 - 验证 Step 6 只补称呼/代词/长期备注
 - 验证起草结果仍只写五个目标文件
-- 验证 `persona/PERSONA_PROFILE.md` 包含 `Meta / Appearance Tendencies / Constraint Rules / Retrieval Units`
+- 验证 `persona/PERSONA_PROFILE.md` 采用 8 段 canonical 结构，并保留关键 rich persona 字段
+- 验证 `Constraint Rules` 使用 parser 可读的 `must / should / avoid` 键值格式，而不是 `### must` 小标题
 - 验证 `PERSONA_PROFILE` 不含当前时间判断、即时事件或季节结论
 - 验证 `MEMORY.md` 不含旧人格残留
 - 验证初始化不再询问额外分类标签

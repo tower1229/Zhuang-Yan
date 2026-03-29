@@ -6,32 +6,45 @@ const CARD_FIELDS = [
   ["avatar", "- Avatar:"],
 ];
 
+const BASIC_INFO_FIELDS = [
+  ["age", "- Age:"],
+  ["gender", "- Gender:"],
+  ["language", "- Language:"],
+  ["mbti", "- MBTI:"],
+];
+
 function isCardLine(line) {
   return CARD_FIELDS.some(([, prefix]) => line.startsWith(prefix));
+}
+
+function isBasicInfoLine(line) {
+  return BASIC_INFO_FIELDS.some(([, prefix]) => line.startsWith(prefix));
 }
 
 export function patchIdentityCard(existingContent, nextFields) {
   const lines = existingContent.split(/\r?\n/);
   const canonicalCard = CARD_FIELDS.map(([key, prefix]) => `${prefix} ${nextFields[key] ?? ""}`.trimEnd());
+  const canonicalBasicInfo = BASIC_INFO_FIELDS.map(([key, prefix]) => `${prefix} ${nextFields[key] ?? ""}`.trimEnd());
+  const canonicalIdentityBlock = [...canonicalCard, "", ...canonicalBasicInfo];
 
   let insertAt = 0;
-  let foundExistingCard = false;
+  let foundManagedIdentityBlock = false;
   const remainingLines = [];
 
   for (const line of lines) {
-    if (isCardLine(line)) {
-      if (!foundExistingCard) {
+    if (isCardLine(line) || isBasicInfoLine(line)) {
+      if (!foundManagedIdentityBlock) {
         insertAt = remainingLines.length;
-        foundExistingCard = true;
+        foundManagedIdentityBlock = true;
       }
       continue;
     }
     remainingLines.push(line);
   }
 
-  const resultLines = foundExistingCard
-    ? [...remainingLines.slice(0, insertAt), ...canonicalCard, ...remainingLines.slice(insertAt)]
-    : [...canonicalCard, ...remainingLines];
+  const resultLines = foundManagedIdentityBlock
+    ? [...remainingLines.slice(0, insertAt), ...canonicalIdentityBlock, ...remainingLines.slice(insertAt)]
+    : [...canonicalIdentityBlock, ...remainingLines];
 
   return resultLines.join("\n").replace(/\n+$/u, "\n");
 }

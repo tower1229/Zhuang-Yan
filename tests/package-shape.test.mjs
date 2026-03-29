@@ -104,9 +104,11 @@ test("drafting spec owns profile normalization, PERSONA_PROFILE contract, and ru
   assert.match(spec, /# PERSONA_PROFILE/);
   assert.match(spec, /## Appearance Tendencies/);
   assert.match(spec, /## Constraint Rules/);
-  assert.match(spec, /## Relationship Signals/);
-  assert.match(spec, /## Retrieval Units/);
-  assert.match(spec, /### must/);
+  assert.match(spec, /双层合同/);
+  assert.match(spec, /canonical runtime layer/);
+  assert.match(spec, /rich profile layer/);
+  assert.match(spec, /`persona_id`、`display_name`、`age`、`gender`、`mbti`、`life_stage`/);
+  assert.match(spec, /不要写成 `### must` 小标题/);
   assert.match(spec, /home_country`、`home_timezone` 必须由 `home_city` 反推/);
   assert.match(spec, /不允许写当前时间判断、即时事件、季节结论、当天状态/);
   assert.match(spec, /允许比 `PERSONA_PROFILE` 更强烈、更有互动导向，但不得违反其稳定事实边界/);
@@ -134,8 +136,10 @@ test("template pack owns PERSONA_PROFILE templates, examples, and anti-pattern r
   assert.match(pack, /- schema_version:/);
   assert.match(pack, /- default_home_style:/);
   assert.match(pack, /- change_triggers:/);
-  assert.match(pack, /### must/);
-  assert.match(pack, /### unit: identity\.home_base/);
+  assert.match(pack, /canonical runtime layer/);
+  assert.match(pack, /rich profile layer/);
+  assert.match(pack, /- must:/);
+  assert.match(pack, /- appearance_priority:/);
   assert.match(pack, /示例 A：`INTJ` 人类 × `ENFP` 人格/);
   assert.match(pack, /为什么这份 `PERSONA_PROFILE` 片段是好的/);
   assert.match(pack, /把 `MEMORY` 写成第二份 `PERSONA_PROFILE`/);
@@ -169,6 +173,10 @@ test("persona profile consumption guide defines how downstream skills should rea
   assert.match(guide, /`SOUL\.md` 提供即时互动规则/);
   assert.match(guide, /`Appearance Tendencies`/);
   assert.match(guide, /`Constraint Rules`/);
+  assert.match(guide, /双层合同/);
+  assert.match(guide, /canonical runtime layer/);
+  assert.match(guide, /rich profile layer/);
+  assert.match(guide, /`appearance_priority`/);
   assert.match(guide, /推荐读取顺序/);
   assert.match(guide, /运行时以 `SOUL\.md` 为准/);
   assert.match(guide, /若维护者在 `SOUL\.md`、`MEMORY\.md`、`IDENTITY\.md`、`USER\.md` 中改写了稳定 persona 事实，必须同步回写 `PERSONA_PROFILE\.md`/);
@@ -192,7 +200,9 @@ test("publish checklist matches the PERSONA_PROFILE migration", () => {
   const checklist = fs.readFileSync(path.join(root, "docs", "clawhub-publish-checklist.md"), "utf8");
   assert.match(checklist, /persona-profile-consumption-guide\.md/);
   assert.match(checklist, /canon-consumption-guide\.md/);
-  assert.match(checklist, /`persona\/PERSONA_PROFILE\.md` 包含 `Meta \/ Appearance Tendencies \/ Constraint Rules \/ Retrieval Units`/);
+  assert.match(checklist, /8 段 canonical 结构/);
+  assert.match(checklist, /关键 rich persona 字段/);
+  assert.match(checklist, /`must \/ should \/ avoid` 键值格式/);
   assert.match(checklist, /Step 5 只问年龄/);
 });
 
@@ -266,9 +276,10 @@ test("smoke runner guards the PERSONA_PROFILE outputs and interview shape", () =
   assert.match(smoke, /Step 5 and Step 6 stay on separate assistant turns after the age question/);
   assert.match(smoke, /Step 5 prompt asks only for age instead of broader profile facts/);
   assert.match(smoke, /MEMORY avoids relationship labels and early-stage cooling language/);
-  assert.match(smoke, /PERSONA_PROFILE uses the timeline contract/);
-  assert.match(smoke, /PERSONA_PROFILE includes geo anchors and machine-facing meta/);
-  assert.match(smoke, /PERSONA_PROFILE includes explicit constraint groups/);
+  assert.match(smoke, /PERSONA_PROFILE keeps the canonical runtime structure/);
+  assert.match(smoke, /PERSONA_PROFILE includes canonical geo anchors and runtime fields/);
+  assert.match(smoke, /PERSONA_PROFILE keeps rich persona metadata used by the skill/);
+  assert.match(smoke, /PERSONA_PROFILE encodes parser-compatible constraint groups/);
   assert.match(smoke, /PERSONA_PROFILE avoids current-time and event claims/);
   assert.match(smoke, /MEMORY stays relationship-focused instead of mirroring PERSONA_PROFILE sections/);
   assert.match(smoke, /PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN/);

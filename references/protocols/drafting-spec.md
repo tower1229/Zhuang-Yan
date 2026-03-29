@@ -186,8 +186,8 @@
 - `execution_trigger_protocol` 负责回答：哪些信号意味着他又卡进了老的人际摩擦，如何在对话中主动缓冲、如何提前读懂抽离迹象、如何把回应重新拉回命中状态、哪些回应会适得其反
 - `target_persona_spec` 负责回答：语言热度、主动靠近方式、理解姿态、偏爱感表达、推进/缓冲节奏、修复方式、对抽离信号的响应方式、不可用回应
 - `name_resonance_profile` 负责回答：这个英文名字在常见文化语境里会让人自然联想到的时代感、第一印象、气质色温与意象画面；它只能做气质微调，不能反客为主地决定履历
-- `profile_normalization` 负责回答：如何把共享 `persona spec` 映射到 `PERSONA_PROFILE` 的 `Meta / Identity / Soul / Stable Memory / Daily Rhythm Tendencies / Appearance Tendencies / Scene Anchors / Constraint Rules / Relationship Signals / Language And Expression / Retrieval Units`
-- `variation_plan` 负责回答：哪些软事实需要本轮重新抽样、各自受哪些约束、如何避免与旧人格在城市纹理、生活细节、外观逻辑、场景锚点和 retrieval wording 上整体塌缩到同一版本
+- `profile_normalization` 负责回答：如何把共享 `persona spec` 映射到 `PERSONA_PROFILE` 的 canonical runtime layer，以及同一结构内的 rich profile extension fields
+- `variation_plan` 负责回答：哪些软事实需要本轮重新抽样、各自受哪些约束、如何避免与旧人格在城市纹理、生活细节、外观逻辑、场景锚点和 extension wording 上整体塌缩到同一版本
 - `forbidden_carryovers` 必须显式列出禁止残留的旧名字、旧城市、旧关系 framing、旧段落
 
 生成这些派生输入时，必须按下面的推导顺序完成，而不是先搭模板再往里塞关键词：
@@ -225,22 +225,28 @@
 
 - 先锁定硬约束，再对软事实做本轮重抽
 - 硬约束包括：`persona_name`、`age`、`gender`、`human_mbti`、`persona_mbti`、`pronouns`、由 `home_city` 反推的 `home_country` 与 `home_timezone`
-- 软事实包括：`home_city`、`living_style`、`base_environment`、`common_zones`、`occupation_style`、`routine_context`、`Appearance Tendencies`、`Scene Anchors`、`Retrieval Units`
+- 软事实包括：`home_city`、`living_style`、`base_environment`、`common_zones`、`occupation_style`、`routine_context`、`Appearance Tendencies`、`Scene Anchors` 以及 rich extension wording
 - 软事实每次初始化都必须重新抽样，不允许因为旧稿“看起来还行”就直接沿用
 - 若新抽样结果在多个软事实轴上与旧人格高度重合，则必须重抽，直到整体不再像旧稿的轻改版
 
 固定映射：
 
 - `Meta`
+  - canonical required：`schema_version`、`home_city`、`home_country`、`home_timezone`
+  - rich extension：`persona_id`、`primary_language`
   - `schema_version` 使用单一机器可读值
   - `persona_id` 由本轮人格名字生成稳定 slug
   - `home_city` 按本文件城市策略生成
   - `home_country`、`home_timezone` 必须由 `home_city` 反推
   - `primary_language` 跟随 `interview_language`
 - `Identity`
+  - canonical required：`living_style`、`base_environment`、`common_zones`、`routine_context`
+  - rich extension：`display_name`、`age`、`gender`、`mbti`、`life_stage`、`mobility_radius`、`occupation_style`
   - 必须同时给出 `display_name`、`age`、`gender`、`mbti`
   - 由年龄先决定 `life_stage`，再结合城市环境、名字气质和目标人格画像生成生活场景基底
 - `Soul`
+  - canonical required：`temperament`、`emotional_style`、`social_style`、`cognitive_style`、`values`
+  - rich extension：`aesthetic_bias`
   - 只写稳定气质、体验风格、价值偏好，不复制 `SOUL.md` 的运行时指令口吻
 - `Stable Memory`
   - 吸收长期习惯、偏好、承诺、长期非时间事实
@@ -248,19 +254,15 @@
   - 只写时间段倾向，不写精确日程表
 - `Appearance Tendencies`
   - 基于年龄、性别、life stage、人物气质和城市环境做受约束随机生成
+  - canonical required：`default_home_style`、`default_outing_style`、`default_exercise_style`、`change_triggers`、`non_triggers`、`style_constraints`
+  - rich extension：`appearance_priority`
   - 必须显式给出 `default_home_style`、`default_outing_style`、`default_exercise_style`、`appearance_priority`、`change_triggers`、`non_triggers`、`style_constraints`
   - 不得写当前穿着或当天状态
 - `Scene Anchors`
   - 必须覆盖 plausible / rare / implausible 的地点与活动边界
 - `Constraint Rules`
   - 必须拆成 `must / should / avoid`
-- `Relationship Signals`
-  - 承接稳定的人际靠近方式，不替代 `MEMORY.md`
-- `Language And Expression`
-  - 承接稳定语域、节奏、直率度和表达在意的方式，不替代 `SOUL.md`
-- `Retrieval Units`
-  - 写 citation-ready 原子条目
-  - 优先覆盖 identity、appearance、scene、constraint 四类高频引用点
+  - 必须使用 parser 可读的键值形式，不要写成 `### must` 小标题
 
 ### 6.4 Projection
 
@@ -357,12 +359,12 @@
 6. `## Appearance Tendencies`
 7. `## Scene Anchors`
 8. `## Constraint Rules`
-9. `## Relationship Signals`
-10. `## Language And Expression`
-11. `## Retrieval Units`
 
 合同要点：
 
+- `PERSONA_PROFILE` 采用双层合同：同一份文档里同时承载 canonical runtime layer 与 rich profile layer
+- canonical runtime layer 必须严格对齐 Timeline 真正消费的 8 个一级结构
+- rich profile layer 允许在这 8 个结构内部保留 `persona_id`、`display_name`、`age`、`gender`、`mbti`、`life_stage`、`mobility_radius`、`occupation_style`、`aesthetic_bias`、`appearance_priority` 等补充资料字段
 - 只写稳定、可外化、可被其他 skill 或 Timeline 消费的人物事实
 - `PERSONA_PROFILE` 的主要作用是给下游一份稳定、结构化、可解析的人设档案，不要额外承担“人格剖析文”职责
 - 优先写带字段名的短条目、列表与可引用摘要，不要把核心信息埋进长段散文
@@ -371,12 +373,7 @@
 - `home_country` 与 `home_timezone` 必须由 `home_city` 反推，不要硬填常量
 - `Appearance Tendencies` 负责提供外观延续逻辑，不负责回答“她现在穿什么”
 - `Constraint Rules` 必须显式拆成 `must / should / avoid`
-  - 必须出现 `### must`
-  - 必须出现 `### should`
-  - 必须出现 `### avoid`
-- `Relationship Signals` 只写稳定的人际靠近方式，不写当前关系过程
-- `Language And Expression` 只写稳定表达纹理，不写运行时指令
-- `Retrieval Units` 至少给出 4 个高价值原子条目
+  - 必须写成 parser 可读的键值形式，例如 `- must:` 或 `- must: [a, b]`
 - 不得写当前时间判断、即时事件、季节结论、当天状态、已发生日记或时间戳事实
 - 不允许写当前时间判断、即时事件、季节结论、当天状态
 - 不要默认给 persona 配双语或多语能力
@@ -490,8 +487,10 @@
 - 是否完整生成五个文件
 - 是否仍像旧人格轻改
 - 是否还残留旧模板壳子
-- `PERSONA_PROFILE` 是否缺 `schema_version / persona_id / home_city / home_country / home_timezone`
-- `PERSONA_PROFILE` 是否缺 `Appearance Tendencies`、`Constraint Rules` 或 `Retrieval Units`
+- `PERSONA_PROFILE` 的 canonical runtime layer 是否缺 `schema_version / home_city / home_country / home_timezone`
+- `PERSONA_PROFILE` 的 rich profile layer 是否遗漏 `persona_id`、`display_name`、`age`、`gender`、`mbti`、`life_stage` 等关键人物资料字段
+- `PERSONA_PROFILE` 是否缺 `Appearance Tendencies` 或 `Constraint Rules`
+- `Constraint Rules` 是否误写成 `### must` 一类 parser 不可读的小标题
 - `PERSONA_PROFILE` 是否出现当前时间判断、即时事件、季节结论或当天状态
 - `MEMORY` 是否提及旧人格或替换历史
 - `USER` 是否虚构了代词、昵称、诊断、边界

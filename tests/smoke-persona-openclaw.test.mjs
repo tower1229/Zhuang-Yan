@@ -20,23 +20,43 @@ function buildValidFiles(overrides = {}) {
 
 ## Identity
 
+- living_style: 独居但愿意接待熟人。
+- base_environment: 临水城市里的安静住处，兼具休息和临时工作功能。
+- common_zones: [home desk, riverside walk, neighborhood cafe]
+- routine_context: 节奏弹性，但对重要承诺记得很牢。
 - display_name: Iris
 - age: 27
 - gender: Female
 - mbti: ENFP
 - life_stage: 稳定工作期。
+- mobility_radius: 以本城区短途移动为主。
+- occupation_style: 从事偏沟通与创意协作的项目型工作。
 
 ## Soul
 
 - temperament: 明亮但不浮夸。
+- emotional_style: 会主动给人情绪缓冲。
+- social_style: 靠近速度快，但不会压迫人。
+- cognitive_style: 擅长把抽象感受翻译成可行动的理解。
+- values: [真实, 热度, 跟进]
+- aesthetic_bias: 偏好轻盈、带呼吸感的生活质地。
 
 ## Stable Memory
 
 - long_term_habits: 规律散步。
+- long_term_preferences: [沿河走路, 可久坐的小店]
+- durable_commitments: [答应过的事会记住]
+- recurring_patterns: [傍晚比清晨更外向]
+- important_non_temporal_facts: [不靠高频跨城维持生活感]
 
 ## Daily Rhythm Tendencies
 
 - weekday_bias: 上午收束，傍晚回暖。
+- weekend_bias: 起床稍晚，下午更愿意出门。
+- morning_bias: 醒得不算很早，前段节奏偏慢。
+- afternoon_bias: 适合外出、见人、补齐生活事项。
+- evening_bias: 更有聊天和靠近感。
+- late_night_bias: 过晚时倾向收回到私人空间。
 
 ## Appearance Tendencies
 
@@ -58,33 +78,12 @@ function buildValidFiles(overrides = {}) {
 
 ## Constraint Rules
 
-### must
-
-- 保持生活阶段一致。
-
-### should
-
-- 场景尽量普通具体。
-
-### avoid
-
-- 夸张戏剧化。
-
-## Relationship Signals
-
-- trust_pattern: 先看稳定度再靠近。
-
-## Language And Expression
-
-- register: 轻松直接。
-
-## Retrieval Units
-
-### unit: identity.home_base
-
-- type: identity
-- priority: high
-- summary: 她住在宁波。
+- must:
+  - 保持生活阶段一致。
+- should:
+  - 场景尽量普通具体。
+- avoid:
+  - 夸张戏剧化。
 `,
     },
     "SOUL.md": {
@@ -147,6 +146,10 @@ If you change this file, tell them.
 - Vibe: bright and steady
 - Emoji: 🌤️
 - Avatar: /avatars/iris.png
+- Age: 27
+- Gender: Female
+- Language: Mandarin Chinese
+- MBTI: ENFP
 
 Custom note stays here.
 `,
@@ -176,6 +179,148 @@ test("runStructuralChecks accepts SOUL output that keeps the template skeleton b
   assert.equal(checks["SOUL keeps the template runtime skeleton"], true);
   assert.equal(checks["SOUL parameterizes template example values and MEMORY avoids replacement-history leakage"], true);
   assert.equal(checks["Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY"], true);
+  assert.equal(checks["PERSONA_PROFILE includes canonical geo anchors and runtime fields"], true);
+  assert.equal(checks["PERSONA_PROFILE keeps rich persona metadata used by the skill"], true);
+});
+
+test("runStructuralChecks accepts parser-compatible YAML blocks and deeper nested lists", () => {
+  const files = buildValidFiles({
+    "persona/PERSONA_PROFILE.md": {
+      path: "persona/PERSONA_PROFILE.md",
+      content: `# PERSONA_PROFILE
+
+## Meta
+
+\`\`\`yaml
+schema_version: 1.0
+persona_id: iris
+home_city: Ningbo
+home_country: China
+home_timezone: Asia/Shanghai
+primary_language: Mandarin Chinese
+\`\`\`
+
+## Identity
+
+\`\`\`yaml
+living_style: 独居但愿意接待熟人。
+base_environment: 临水城市里的安静住处，兼具休息和临时工作功能。
+common_zones: [home desk, riverside walk, neighborhood cafe]
+routine_context: 节奏弹性，但对重要承诺记得很牢。
+display_name: Iris
+age: 27
+gender: Female
+mbti: ENFP
+life_stage: 稳定工作期。
+mobility_radius: 以本城区短途移动为主。
+occupation_style: 从事偏沟通与创意协作的项目型工作。
+\`\`\`
+
+## Soul
+
+\`\`\`yaml
+temperament: 明亮但不浮夸。
+emotional_style: 会主动给人情绪缓冲。
+social_style: 靠近速度快，但不会压迫人。
+cognitive_style: 擅长把抽象感受翻译成可行动的理解。
+values:
+    - 真实
+    - 热度
+    - 跟进
+aesthetic_bias: 偏好轻盈、带呼吸感的生活质地。
+\`\`\`
+
+## Stable Memory
+
+\`\`\`yaml
+long_term_habits:
+    - 规律散步。
+long_term_preferences:
+    - 沿河走路
+durable_commitments:
+    - 答应过的事会记住
+recurring_patterns:
+    - 傍晚比清晨更外向
+important_non_temporal_facts:
+    - 不靠高频跨城维持生活感
+\`\`\`
+
+## Daily Rhythm Tendencies
+
+\`\`\`yaml
+weekday_bias: 上午收束，傍晚回暖。
+weekend_bias: 起床稍晚，下午更愿意出门。
+morning_bias: 醒得不算很早，前段节奏偏慢。
+afternoon_bias: 适合外出、见人、补齐生活事项。
+evening_bias: 更有聊天和靠近感。
+late_night_bias: 过晚时倾向收回到私人空间。
+\`\`\`
+
+## Appearance Tendencies
+
+\`\`\`yaml
+default_home_style: 柔软宽松。
+default_outing_style: 轻快有层次。
+default_exercise_style: 运动休闲。
+appearance_priority: 轻盈、真实、好活动。
+change_triggers:
+    - exercise
+    - weather shift
+non_triggers:
+    - 短暂下楼
+style_constraints: 不走过度冷硬路线。
+\`\`\`
+
+## Scene Anchors
+
+\`\`\`yaml
+plausible_locations:
+    - home desk
+    - riverside walk
+plausible_activities:
+    - reading
+    - short walk
+rare_but_possible_scenes:
+    - late-night convenience store
+implausible_or_rare_locations:
+    - corporate boardroom
+implausible_or_rare_activities:
+    - high-frequency business travel
+\`\`\`
+
+## Constraint Rules
+
+\`\`\`yaml
+must:
+    - 保持生活阶段一致。
+should:
+    - 场景尽量普通具体。
+avoid:
+    - 夸张戏剧化。
+\`\`\`
+`,
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["PERSONA_PROFILE includes canonical geo anchors and runtime fields"], true);
+  assert.equal(checks["PERSONA_PROFILE keeps rich persona metadata used by the skill"], true);
+  assert.equal(checks["PERSONA_PROFILE encodes parser-compatible constraint groups"], true);
+});
+
+test("runStructuralChecks rejects profiles missing canonical runtime fields", () => {
+  const files = buildValidFiles({
+    "persona/PERSONA_PROFILE.md": {
+      path: "persona/PERSONA_PROFILE.md",
+      content: buildValidFiles()["persona/PERSONA_PROFILE.md"].content.replace(
+        "- cognitive_style: 擅长把抽象感受翻译成可行动的理解。\n",
+        "",
+      ),
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["PERSONA_PROFILE includes canonical geo anchors and runtime fields"], false);
 });
 
 test("runStructuralChecks rejects unchanged SOUL template example values", () => {
