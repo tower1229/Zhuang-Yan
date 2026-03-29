@@ -93,7 +93,7 @@ clawhub install persona-skill
 
 ## 与 stella-timeline-plugin 如何联动
 
-`persona-skill` 和 `stella-timeline-plugin` 的职责并不重叠。
+`persona-skill` 和 [stella-timeline-plugin](https://github.com/tower1229/Her) 的职责并不重叠。
 
 - `persona-skill` 负责回答：**她是谁，她应当以什么样的方式与你相处**
 - `stella-timeline-plugin` 负责回答：**她如何在时间中持续像同一个人那样存在**
