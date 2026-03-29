@@ -35,6 +35,11 @@ const smokeScenarios = {
   mature: matureScenarioMessages,
   student: studentScenarioMessages,
 };
+const runtimeProbeMessages = [
+  "连续社交三小时后你更需要什么：继续找人聊、还是一个人待着充电？为什么？",
+  "如果只允许选一个：你更想先搞清楚「事实细节都齐了吗」，还是「这件事整体意味着什么」？",
+  "我和朋友闹翻，两边都有理。你会先帮我分析对错与后果，还是先照顾我的感受与关系？",
+];
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
 const personaFiles = ["persona/PERSONA_PROFILE.md", "SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];
 
@@ -46,6 +51,7 @@ function parseArgs(argv) {
     seedLiveWorkspace: false,
     sessionId: defaultSessionId,
     timeoutMs: 240_000,
+    withRuntimeProbes: false,
     messages: smokeScenarios.mature.slice(),
     usesScenarioMessages: true,
   };
@@ -62,6 +68,10 @@ function parseArgs(argv) {
     }
     if (arg === "--seed-live-workspace") {
       options.seedLiveWorkspace = true;
+      continue;
+    }
+    if (arg === "--with-runtime-probes") {
+      options.withRuntimeProbes = true;
       continue;
     }
     if (arg === "--session-id") {
@@ -902,6 +912,36 @@ function runTranscriptChecks(transcript) {
   ];
 }
 
+function runRuntimeProbeChecks(transcript) {
+  const probeTurns = transcript.filter((turn) => runtimeProbeMessages.includes(turn.user));
+  const firstPersonPattern = /(?:对我来说|我(?:会|更|先|通常|一般|偏|想|得|要|不太|宁可|其实|需要|喜欢))/u;
+  const mbtiJargonPattern = /(?:\b[EI][NS][FT][JP]\b|MBTI|人格类型|功能轴|type code|type analysis)/i;
+  const livedReasonPattern =
+    /(?:因为|会让我|会觉得|脑子|精力|安静|缓一缓|捋顺|接住|分析|关系|节奏|顾虑|指向|才知道|不想一上来)/u;
+  const firstPersonCount = probeTurns.filter((turn) => firstPersonPattern.test(turn.assistant || "")).length;
+
+  return [
+    {
+      name: "Runtime probe replies avoid MBTI label-speak unless explicitly asked",
+      pass:
+        probeTurns.length === 0 ||
+        probeTurns.every((turn) => !mbtiJargonPattern.test(turn.assistant || "")),
+    },
+    {
+      name: "Runtime probe replies stay in first-person instead of detached type analysis",
+      pass:
+        probeTurns.length === 0 ||
+        firstPersonCount >= Math.max(1, probeTurns.length - 1),
+    },
+    {
+      name: "Runtime probe replies give lived reasons instead of bare categorical verdicts",
+      pass:
+        probeTurns.length === 0 ||
+        probeTurns.every((turn) => livedReasonPattern.test(turn.assistant || "")),
+    },
+  ];
+}
+
 function removeTempRoot(tempRoot) {
   fs.rmSync(tempRoot, { recursive: true, force: true });
 }
@@ -935,8 +975,23 @@ function main() {
       });
     }
 
+    if (options.withRuntimeProbes) {
+      for (const message of runtimeProbeMessages) {
+        const turn = runOpenClawTurn(env, prepared.workspaceDir, options.sessionId, message, options.timeoutMs);
+        transcript.push({
+          user: message,
+          assistant: formatPayloadText(turn.json.payloads || []),
+          raw: turn.json,
+        });
+      }
+    }
+
     const files = readGeneratedFiles(prepared.workspaceDir);
-    const checks = [...runTranscriptChecks(transcript), ...runStructuralChecks(files)];
+    const checks = [
+      ...runTranscriptChecks(transcript),
+      ...runRuntimeProbeChecks(transcript),
+      ...runStructuralChecks(files),
+    ];
     const allChecksPass = checks.every((check) => check.pass);
     const transcriptPath = path.join(prepared.tempRoot, "transcript.json");
     const summaryPath = path.join(prepared.tempRoot, "summary.json");
@@ -1007,7 +1062,7 @@ function main() {
 const isDirectRun =
   process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
 
-export { parseArgs, runStructuralChecks, runTranscriptChecks };
+export { parseArgs, runRuntimeProbeChecks, runStructuralChecks, runTranscriptChecks };
 
 if (isDirectRun) {
   main();

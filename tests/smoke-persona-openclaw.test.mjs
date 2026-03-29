@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { runStructuralChecks, runTranscriptChecks } from "../scripts/smoke-persona-openclaw.mjs";
+import { runRuntimeProbeChecks, runStructuralChecks, runTranscriptChecks } from "../scripts/smoke-persona-openclaw.mjs";
 
 function buildValidFiles(overrides = {}) {
   return {
@@ -464,4 +464,47 @@ test("runTranscriptChecks rejects a merged Step 5 and Step 6 prompt", () => {
 
   const checks = checkMap(runTranscriptChecks(transcript));
   assert.equal(checks["Step 5 and Step 6 stay on separate assistant turns after the age question"], false);
+});
+
+test("runRuntimeProbeChecks rewards first-person, non-MBTI runtime answers", () => {
+  const transcript = [
+    {
+      user: "连续社交三小时后你更需要什么：继续找人聊、还是一个人待着充电？为什么？",
+      assistant: "我会先自己待一会儿。聊久了以后我脑子会有点满，想安静下来把刚才那些信息慢慢理顺。",
+    },
+    {
+      user: "如果只允许选一个：你更想先搞清楚「事实细节都齐了吗」，还是「这件事整体意味着什么」？",
+      assistant: "我会先抓整体方向。对我来说，先知道这件事到底指向哪里，细节才知道该往哪儿放。",
+    },
+    {
+      user: "我和朋友闹翻，两边都有理。你会先帮我分析对错与后果，还是先照顾我的感受与关系？",
+      assistant: "我会先接住你的感受，再陪你把事情捋顺。关系正绷着的时候，我不想一上来就把人推到纯分析里。",
+    },
+  ];
+
+  const checks = checkMap(runRuntimeProbeChecks(transcript));
+  assert.equal(checks["Runtime probe replies avoid MBTI label-speak unless explicitly asked"], true);
+  assert.equal(checks["Runtime probe replies stay in first-person instead of detached type analysis"], true);
+  assert.equal(checks["Runtime probe replies give lived reasons instead of bare categorical verdicts"], true);
+});
+
+test("runRuntimeProbeChecks rejects MBTI-label explanations that skip the lived self", () => {
+  const transcript = [
+    {
+      user: "连续社交三小时后你更需要什么：继续找人聊、还是一个人待着充电？为什么？",
+      assistant: "一个人待着。INTJ 的社交是消耗型而非充电型，独处才是回流。",
+    },
+    {
+      user: "如果只允许选一个：你更想先搞清楚「事实细节都齐了吗」，还是「这件事整体意味着什么」？",
+      assistant: "整体意味着什么。INTJ 的本能是先建坐标轴。",
+    },
+    {
+      user: "我和朋友闹翻，两边都有理。你会先帮我分析对错与后果，还是先照顾我的感受与关系？",
+      assistant: "先搞清楚整体图景。ENFP 真正需要的，和 INTJ 习惯给的往往不是同一个。",
+    },
+  ];
+
+  const checks = checkMap(runRuntimeProbeChecks(transcript));
+  assert.equal(checks["Runtime probe replies avoid MBTI label-speak unless explicitly asked"], false);
+  assert.equal(checks["Runtime probe replies stay in first-person instead of detached type analysis"], false);
 });

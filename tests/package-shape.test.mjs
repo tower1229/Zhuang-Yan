@@ -144,6 +144,8 @@ test("template pack owns PERSONA_PROFILE templates, examples, and anti-pattern r
   assert.match(pack, /- must:/);
   assert.match(pack, /- appearance_priority:/);
   assert.match(pack, /示例 A：`INTJ` 人类 × `ENFP` 人格/);
+  assert.match(pack, /默认把人格回答写成一个人在说话，而不是一个类型在被讲解/);
+  assert.match(pack, /除非用户明确追问 MBTI、类型代码、功能轴或配对原理，否则不要主动把 `INTJ \/ ENFP` 这种标签抬到前台/);
   assert.match(pack, /为什么这份 `PERSONA_PROFILE` 片段是好的/);
   assert.match(pack, /把 `MEMORY` 写成第二份 `PERSONA_PROFILE`/);
   assert.match(pack, /`references\/runtime-context\/SOUL\.template\.md` 是 `SOUL\.md` 的固定骨架来源/);
@@ -166,6 +168,8 @@ test("SOUL.template.md provides the fixed SOUL runtime skeleton", () => {
   assert.match(soulTemplate, /update `persona\/PERSONA_PROFILE\.md` in the same pass/);
   assert.match(soulTemplate, /If you need richer stable persona details and `IDENTITY\.md` is not enough, read `persona\/PERSONA_PROFILE\.md`/);
   assert.match(soulTemplate, /Stella|泛舟|little sun/);
+  assert.match(soulTemplate, /Keep MBTI and personality-framework jargon backstage unless the human explicitly asks for it/);
+  assert.match(soulTemplate, /Speak from lived first-person experience/);
 });
 
 test("persona profile consumption guide defines how downstream skills should read PERSONA_PROFILE", () => {
@@ -270,15 +274,19 @@ test("package.json test script uses the tests directory for cross-platform disco
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
   assert.equal(pkg.scripts.test, 'node --test "tests/*.mjs"');
   assert.equal(pkg.scripts["smoke:persona"], "node ./scripts/smoke-persona-openclaw.mjs");
+  assert.equal(pkg.scripts["smoke:persona:runtime"], "node ./scripts/smoke-persona-openclaw.mjs --with-runtime-probes");
 });
 
 test("smoke runner guards the PERSONA_PROFILE outputs and interview shape", () => {
   const smoke = fs.readFileSync(path.join(root, "scripts", "smoke-persona-openclaw.mjs"), "utf8");
   assert.match(smoke, /const smokeScenarios = \{/);
+  assert.match(smoke, /const runtimeProbeMessages = \[/);
   assert.match(smoke, /mature:/);
   assert.match(smoke, /student:/);
+  assert.match(smoke, /--with-runtime-probes/);
   assert.match(smoke, /persona\/PERSONA_PROFILE\.md/);
   assert.match(smoke, /Step 5 and Step 6 stay on separate assistant turns after the age question/);
+  assert.match(smoke, /Runtime probe replies avoid MBTI label-speak unless explicitly asked/);
   assert.match(smoke, /Step 5 prompt asks only for age instead of broader profile facts/);
   assert.match(smoke, /MEMORY avoids relationship labels and early-stage cooling language/);
   assert.match(smoke, /PERSONA_PROFILE keeps the canonical runtime structure/);
