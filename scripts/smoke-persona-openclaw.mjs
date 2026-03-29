@@ -597,11 +597,17 @@ function runStructuralChecks(files) {
   const profileDisplayName = readStructuredValue(profileSections, "identity", "display_name");
   const profileAge = readStructuredValue(profileSections, "identity", "age");
   const profileGender = readStructuredValue(profileSections, "identity", "gender");
+  const profileCity = readStructuredValue(profileSections, "meta", "home_city");
+  const profileHomeCountry = readStructuredValue(profileSections, "meta", "home_country");
+  const profileHomeTimezone = readStructuredValue(profileSections, "meta", "home_timezone");
   const profileLanguage = readStructuredValue(profileSections, "meta", "primary_language");
   const profileMbti = readStructuredValue(profileSections, "identity", "mbti");
   const identityName = readBulletValue(files["IDENTITY.md"].content, "Name");
   const identityAge = readBulletValue(files["IDENTITY.md"].content, "Age");
   const identityGender = readBulletValue(files["IDENTITY.md"].content, "Gender");
+  const identityCity = readBulletValue(files["IDENTITY.md"].content, "City");
+  const identityHomeCountry = readBulletValue(files["IDENTITY.md"].content, "Home Country");
+  const identityHomeTimezone = readBulletValue(files["IDENTITY.md"].content, "Home Timezone");
   const identityLanguage = readBulletValue(files["IDENTITY.md"].content, "Language");
   const identityMbti = readBulletValue(files["IDENTITY.md"].content, "MBTI");
   const soulIntroMatch = files["SOUL.md"].content.match(
@@ -688,6 +694,9 @@ function runStructuralChecks(files) {
         looselyAligned(profileDisplayName, soulDisplayName) &&
         looselyAligned(profileAge, identityAge) &&
         looselyAligned(profileGender, identityGender) &&
+        looselyAligned(profileCity, identityCity) &&
+        looselyAligned(profileHomeCountry, identityHomeCountry) &&
+        looselyAligned(profileHomeTimezone, identityHomeTimezone) &&
         looselyAligned(profileLanguage, identityLanguage) &&
         Boolean(profileMbti) &&
         profileMbti === soulMbti &&
@@ -802,7 +811,7 @@ function runStructuralChecks(files) {
     {
       name: "IDENTITY uses the card plus basic-info template",
       pass:
-        identityLines.length >= 9 &&
+        identityLines.length >= 12 &&
         /^- Name: /.test(identityLines[0]) &&
         /^- Creature: /.test(identityLines[1]) &&
         /^- Vibe: /.test(identityLines[2]) &&
@@ -810,8 +819,11 @@ function runStructuralChecks(files) {
         /^- Avatar: /.test(identityLines[4]) &&
         /^- Age: /.test(identityLines[5]) &&
         /^- Gender: /.test(identityLines[6]) &&
-        /^- Language: /.test(identityLines[7]) &&
-        /^- MBTI: /.test(identityLines[8]),
+        /^- City: /.test(identityLines[7]) &&
+        /^- Home Country: /.test(identityLines[8]) &&
+        /^- Home Timezone: /.test(identityLines[9]) &&
+        /^- Language: /.test(identityLines[10]) &&
+        /^- MBTI: /.test(identityLines[11]),
     },
     {
       name: "USER uses the contract template",

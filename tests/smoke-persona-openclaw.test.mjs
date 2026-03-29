@@ -148,6 +148,9 @@ If you change this file, tell them.
 - Avatar: /avatars/iris.png
 - Age: 27
 - Gender: Female
+- City: Ningbo
+- Home Country: China
+- Home Timezone: Asia/Shanghai
 - Language: Mandarin Chinese
 - MBTI: ENFP
 
@@ -398,6 +401,9 @@ test("runStructuralChecks rejects runtime stable facts that drift from PERSONA_P
 - Avatar: /avatars/iris.png
 - Age: 27
 - Gender: Female
+- City: Ningbo
+- Home Country: China
+- Home Timezone: Asia/Shanghai
 - Language: Mandarin Chinese
 - MBTI: ENFP
 
@@ -419,8 +425,11 @@ test("runStructuralChecks rejects IDENTITY basic info that drifts from PERSONA_P
 - Vibe: bright and steady
 - Emoji: 🌤️
 - Avatar: /avatars/iris.png
-- Age: 24
+- Age: 27
 - Gender: Female
+- City: Shanghai
+- Home Country: China
+- Home Timezone: Asia/Shanghai
 - Language: Mandarin Chinese
 - MBTI: ENFP
 

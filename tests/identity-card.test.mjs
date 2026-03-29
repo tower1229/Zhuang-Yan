@@ -11,6 +11,9 @@ test("patchIdentityCard updates the card and basic identity fields while preserv
 - Avatar: /avatars/old.png
 - Age: 20
 - Gender: Old
+- City: Old City
+- Home Country: Old Country
+- Home Timezone: Old/Timezone
 - Language: Old Language
 - MBTI: ISTJ
 
@@ -27,6 +30,9 @@ test("patchIdentityCard updates the card and basic identity fields while preserv
     avatar: "/avatars/iris.png",
     age: "27",
     gender: "Female",
+    city: "Ningbo",
+    homeCountry: "China",
+    homeTimezone: "Asia/Shanghai",
     language: "Mandarin Chinese",
     mbti: "ENFP",
   });
@@ -38,6 +44,9 @@ test("patchIdentityCard updates the card and basic identity fields while preserv
   assert.match(patched, /^- Avatar: \/avatars\/iris\.png$/m);
   assert.match(patched, /^- Age: 27$/m);
   assert.match(patched, /^- Gender: Female$/m);
+  assert.match(patched, /^- City: Ningbo$/m);
+  assert.match(patched, /^- Home Country: China$/m);
+  assert.match(patched, /^- Home Timezone: Asia\/Shanghai$/m);
   assert.match(patched, /^- Language: Mandarin Chinese$/m);
   assert.match(patched, /^- MBTI: ENFP$/m);
   assert.match(patched, /^## Manual Notes$/m);
@@ -59,6 +68,9 @@ Custom footer
     avatar: "/avatars/nova.png",
     age: "24",
     gender: "Female",
+    city: "Hangzhou",
+    homeCountry: "China",
+    homeTimezone: "Asia/Shanghai",
     language: "English",
     mbti: "INFJ",
   });
@@ -75,7 +87,10 @@ Custom footer
   assert.equal(nonEmptyLines[4], "- Avatar: /avatars/nova.png");
   assert.equal(nonEmptyLines[5], "- Age: 24");
   assert.equal(nonEmptyLines[6], "- Gender: Female");
-  assert.equal(nonEmptyLines[7], "- Language: English");
-  assert.equal(nonEmptyLines[8], "- MBTI: INFJ");
+  assert.equal(nonEmptyLines[7], "- City: Hangzhou");
+  assert.equal(nonEmptyLines[8], "- Home Country: China");
+  assert.equal(nonEmptyLines[9], "- Home Timezone: Asia/Shanghai");
+  assert.equal(nonEmptyLines[10], "- Language: English");
+  assert.equal(nonEmptyLines[11], "- MBTI: INFJ");
   assert.match(patched, /Custom footer/);
 });

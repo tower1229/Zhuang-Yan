@@ -9,6 +9,9 @@ const CARD_FIELDS = [
 const BASIC_INFO_FIELDS = [
   ["age", "- Age:"],
   ["gender", "- Gender:"],
+  ["city", "- City:"],
+  ["homeCountry", "- Home Country:"],
+  ["homeTimezone", "- Home Timezone:"],
   ["language", "- Language:"],
   ["mbti", "- MBTI:"],
 ];

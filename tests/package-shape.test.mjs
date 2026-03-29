@@ -120,7 +120,10 @@ test("drafting spec owns profile normalization, PERSONA_PROFILE contract, and ru
   assert.match(spec, /旧目标文件不再参与生成人格正文/);
   assert.match(spec, /SOUL\.md` 必须基于 `references\/runtime-context\/SOUL\.template\.md` 实例化后整文件覆盖写入/);
   assert.match(spec, /旧 `USER\.md` 只允许在本轮未明确提供 `Timezone` 时读取该字段/);
-  assert.match(spec, /只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行，以及 `- Age:`、`- Gender:`、`- Language:`、`- MBTI:` 四行/);
+  assert.match(
+    spec,
+    /只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行，以及 `- Age:`、`- Gender:`、`- City:`、`- Home Country:`、`- Home Timezone:`、`- Language:`、`- MBTI:` 七行/,
+  );
   assert.match(spec, /`SOUL\.md` 残留 `Stella`、`泛舟`、`his`、`little sun`/);
   assert.match(spec, /不得把这件事写成情感降温理由/);
   assert.match(spec, /不要给关系贴 `companion \/ friend \/ mentor \/ assistant \/ 陪伴关系 \/ 朋友关系 \/ 导师关系`/);

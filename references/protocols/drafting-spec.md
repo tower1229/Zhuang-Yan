@@ -299,7 +299,7 @@
   - 按整文件重写
   - 文件顶部必须重新生成唯一一段 skill 托管块
 - `IDENTITY.md`
-  - 只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行，以及 `- Age:`、`- Gender:`、`- Language:`、`- MBTI:` 四行
+  - 只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行，以及 `- Age:`、`- Gender:`、`- City:`、`- Home Country:`、`- Home Timezone:`、`- Language:`、`- MBTI:` 七行
   - 若这些字段存在，则原位替换值
   - 若缺失，则补齐卡片区与基础资料区
   - 保留文件中的其他手工内容与原有顺序，不删除非这些托管行的额外内容
@@ -445,6 +445,9 @@
 - Avatar: {avatar image path}
 - Age: {age}
 - Gender: {gender}
+- City: {home city}
+- Home Country: {home country}
+- Home Timezone: {home timezone}
 - Language: {primary language}
 - MBTI: {persona mbti}
 ```
@@ -452,9 +455,9 @@
 投影规则：
 
 - 由 `PERSONA_PROFILE` 的 `display_name`、稳定气质、外观基调共同约束
-- 基础资料区由 `PERSONA_PROFILE` 的 `age / gender / mbti` 与 `primary_language` 投影
+- 基础资料区由 `PERSONA_PROFILE` 的 `age / gender / mbti`、`home_city / home_country / home_timezone` 与 `primary_language` 投影
 - 只保留卡片密度和必要基本信息，不要复制整段人物档案
-- 只定点更新 `Name / Creature / Vibe / Emoji / Avatar` 五个卡片字段与 `Age / Gender / Language / MBTI` 四个基础资料字段，不整文件覆盖其他手工内容
+- 只定点更新 `Name / Creature / Vibe / Emoji / Avatar` 五个卡片字段与 `Age / Gender / City / Home Country / Home Timezone / Language / MBTI` 七个基础资料字段，不整文件覆盖其他手工内容
 - `Name` 必须与 `PERSONA_PROFILE` 的 `display_name` 保持一致；基础资料字段也不得暗示相冲突的稳定 persona 事实
 
 ### 8.5 `USER.md`
