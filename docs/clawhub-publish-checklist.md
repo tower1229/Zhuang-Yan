@@ -16,7 +16,9 @@
 ## 发布前检查
 
 - 先运行：`npm test`
+- 建议再运行：`npm run smoke:persona:runtime`
 - 确认 `package.json` 中的 `version` 已更新
+- 确认 `CHANGELOG.md` 已补本次版本条目
 - 确认 `SKILL.md` frontmatter 可被 OpenClaw 正常识别
 - 确认 `metadata.openclaw.homepage` 指向可访问项目主页
 - 确认新结构文件完整存在：
@@ -49,6 +51,8 @@
 npm run publish:clawhub
 ```
 
+如果本机 `openclaw` 不在 `PATH`，运行 smoke 时可先设置 `OPENCLAW_BIN` 指向可执行文件；如果默认临时目录不可写，可设置 `OPENCLAW_SMOKE_TMPDIR`。
+
 该命令会先运行测试，通过后再读取 `package.json` 的版本号进行发布。
 
 ## 发布后验证
@@ -59,8 +63,10 @@ npm run publish:clawhub
 - 验证采访语言是否全程锁定，不混用中英文
 - 验证 Step 5 只问年龄
 - 验证 Step 6 只补称呼/代词/长期备注
+- 验证 runtime probe 回答默认使用第一人称，不主动搬出 MBTI 标签解释用户未询问的题
 - 验证起草结果仍只写五个目标文件
-- 验证 `persona/PERSONA_PROFILE.md` 包含 `Meta / Appearance Tendencies / Constraint Rules / Retrieval Units`
+- 验证 `persona/PERSONA_PROFILE.md` 采用 8 段 canonical 结构，并保留关键 rich persona 字段
+- 验证 `Constraint Rules` 使用 parser 可读的 `must / should / avoid` 键值格式，而不是 `### must` 小标题
 - 验证 `PERSONA_PROFILE` 不含当前时间判断、即时事件或季节结论
 - 验证 `MEMORY.md` 不含旧人格残留
 - 验证初始化不再询问额外分类标签

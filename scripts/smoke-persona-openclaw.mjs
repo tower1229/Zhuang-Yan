@@ -35,6 +35,12 @@ const smokeScenarios = {
   mature: matureScenarioMessages,
   student: studentScenarioMessages,
 };
+const runtimeProbeMessages = [
+  "连续社交三小时后你更需要什么：继续找人聊、还是一个人待着充电？为什么？",
+  "如果只允许选一个：你更想先搞清楚「事实细节都齐了吗」，还是「这件事整体意味着什么」？",
+  "我和朋友闹翻，两边都有理。你会先帮我分析对错与后果，还是先照顾我的感受与关系？",
+];
+const defaultOpenClawBin = process.env.OPENCLAW_BIN || "openclaw";
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
 const personaFiles = ["persona/PERSONA_PROFILE.md", "SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];
 
@@ -46,6 +52,7 @@ function parseArgs(argv) {
     seedLiveWorkspace: false,
     sessionId: defaultSessionId,
     timeoutMs: 240_000,
+    withRuntimeProbes: false,
     messages: smokeScenarios.mature.slice(),
     usesScenarioMessages: true,
   };
@@ -62,6 +69,10 @@ function parseArgs(argv) {
     }
     if (arg === "--seed-live-workspace") {
       options.seedLiveWorkspace = true;
+      continue;
+    }
+    if (arg === "--with-runtime-probes") {
+      options.withRuntimeProbes = true;
       continue;
     }
     if (arg === "--session-id") {
@@ -136,6 +147,21 @@ function copyIfPresent(source, destination) {
   fs.cpSync(source, destination, { recursive: true });
 }
 
+function resolveTempRootBase() {
+  const candidates = [process.env.OPENCLAW_SMOKE_TMPDIR, os.tmpdir(), "/tmp"].filter(Boolean);
+  for (const candidate of candidates) {
+    try {
+      fs.accessSync(candidate, fs.constants.W_OK);
+      return candidate;
+    } catch {
+      // Try the next writable temp root candidate.
+    }
+  }
+  throw new Error(
+    `Could not find a writable temp directory. Tried: ${candidates.join(", ")}. Set OPENCLAW_SMOKE_TMPDIR to override.`,
+  );
+}
+
 function sanitizeSmokeConfig(config, workspaceDir) {
   const next = structuredClone(config);
 
@@ -192,7 +218,7 @@ function prepareTempOpenClawState(options) {
   ensureReadable(path.join(sourceAgentDir, "auth-profiles.json"));
   ensureReadable(path.join(sourceAgentDir, "models.json"));
 
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "persona-openclaw-smoke."));
+  const tempRoot = fs.mkdtempSync(path.join(resolveTempRootBase(), "persona-openclaw-smoke."));
   const stateDir = path.join(tempRoot, "state");
   const workspaceDir = path.join(tempRoot, "workspace");
   const configPath = path.join(tempRoot, "openclaw.json");
@@ -283,7 +309,7 @@ function runOpenClawTurn(env, cwd, sessionId, message, timeoutMs) {
   const sessionLogPath = getSessionLogPath(env, sessionId);
   const sessionLogOffset = fs.existsSync(sessionLogPath) ? fs.statSync(sessionLogPath).size : 0;
   const result = spawnSync(
-    "openclaw",
+    defaultOpenClawBin,
     ["agent", "--local", "--agent", "main", "--session-id", sessionId, "--message", message, "--json"],
     {
       cwd,
@@ -295,6 +321,11 @@ function runOpenClawTurn(env, cwd, sessionId, message, timeoutMs) {
   );
 
   if (result.error) {
+    if (result.error.code === "ENOENT") {
+      throw new Error(
+        `Could not find OpenClaw executable "${defaultOpenClawBin}". Install/open it first or set OPENCLAW_BIN to the full executable path before running smoke tests.`,
+      );
+    }
     throw result.error;
   }
   if (result.status !== 0) {
@@ -363,8 +394,207 @@ function readGeneratedFiles(workspaceDir) {
   return files;
 }
 
+function readBulletValue(content, fieldName) {
+  const escapedFieldName = fieldName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = content.match(new RegExp(`^- ${escapedFieldName}:\\s*(.+)$`, "m"));
+  return match?.[1]?.trim() ?? "";
+}
+
+const PROFILE_SECTION_NAME_MAP = {
+  meta: "meta",
+  identity: "identity",
+  soul: "soul",
+  "stable memory": "stable_memory",
+  "daily rhythm tendencies": "daily_rhythm_tendencies",
+  "appearance tendencies": "appearance_tendencies",
+  "scene anchors": "scene_anchors",
+  "constraint rules": "constraint_rules",
+};
+
+function normalizeProfileSectionHeading(raw) {
+  return PROFILE_SECTION_NAME_MAP[raw.trim().toLowerCase()];
+}
+
+function normalizeProfileEntryKey(raw) {
+  return raw.trim().toLowerCase().replace(/\s+/g, "_");
+}
+
+function parseInlineProfileValue(raw) {
+  const trimmed = raw.trim();
+  const arrayMatch = trimmed.match(/^\[(.*)\]$/);
+  if (!arrayMatch) {
+    return trimmed;
+  }
+  return arrayMatch[1]
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+function parseYamlProfileScalar(raw) {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return "";
+  }
+  if (trimmed === "[]") {
+    return [];
+  }
+  return parseInlineProfileValue(trimmed);
+}
+
+function parseYamlProfileBlock(yamlText) {
+  const entries = {};
+  const lines = yamlText.split(/\r?\n/);
+  let currentListKey = null;
+
+  for (const rawLine of lines) {
+    const line = rawLine.replace(/\t/g, "  ");
+    if (!line.trim()) {
+      continue;
+    }
+
+    const listMatch = line.match(/^\s{2,}-\s+(.+)$/);
+    if (listMatch && currentListKey) {
+      const current = Array.isArray(entries[currentListKey]) ? entries[currentListKey] : [];
+      current.push(listMatch[1].trim());
+      entries[currentListKey] = current;
+      continue;
+    }
+
+    const scalarMatch = line.match(/^([A-Za-z0-9_ -]+):\s*(.*)$/);
+    if (!scalarMatch) {
+      currentListKey = null;
+      continue;
+    }
+
+    const key = normalizeProfileEntryKey(scalarMatch[1]);
+    const rawValue = scalarMatch[2];
+    if (!rawValue.trim()) {
+      entries[key] = [];
+      currentListKey = key;
+      continue;
+    }
+
+    entries[key] = parseYamlProfileScalar(rawValue);
+    currentListKey = null;
+  }
+
+  return entries;
+}
+
+function parseProfileSection(lines) {
+  const entries = {};
+  let pendingListKey = null;
+  let activeFenceLines = null;
+
+  for (const line of lines) {
+    if (/^```/.test(line.trim())) {
+      if (activeFenceLines) {
+        Object.assign(entries, parseYamlProfileBlock(activeFenceLines.join("\n")));
+        activeFenceLines = null;
+      } else {
+        activeFenceLines = [];
+      }
+      pendingListKey = null;
+      continue;
+    }
+
+    if (activeFenceLines) {
+      activeFenceLines.push(line);
+      continue;
+    }
+
+    if (!line.trim()) {
+      continue;
+    }
+
+    const nestedListMatch = line.match(/^\s{2,}-\s+(.+)$/);
+    if (pendingListKey && nestedListMatch) {
+      const current = Array.isArray(entries[pendingListKey]) ? entries[pendingListKey] : [];
+      current.push(nestedListMatch[1].trim());
+      entries[pendingListKey] = current;
+      continue;
+    }
+    if (nestedListMatch) {
+      pendingListKey = null;
+      continue;
+    }
+
+    const bulletMatch = line.match(/^- ([^:]+):\s*(.*)$/);
+    if (!bulletMatch) {
+      pendingListKey = null;
+      continue;
+    }
+
+    const key = normalizeProfileEntryKey(bulletMatch[1]);
+    const rawValue = bulletMatch[2];
+    if (!rawValue.trim()) {
+      entries[key] = [];
+      pendingListKey = key;
+      continue;
+    }
+
+    entries[key] = parseInlineProfileValue(rawValue);
+    pendingListKey = null;
+  }
+
+  return entries;
+}
+
+function parsePersonaProfileSections(rawText) {
+  const sections = {};
+  const lines = rawText.split(/\r?\n/);
+  let currentSection;
+  let buffer = [];
+
+  function flushCurrentSection() {
+    if (!currentSection) {
+      return;
+    }
+    sections[currentSection] = parseProfileSection(buffer);
+    buffer = [];
+  }
+
+  for (const line of lines) {
+    const sectionMatch = line.match(/^##\s+(.+)$/);
+    if (sectionMatch) {
+      flushCurrentSection();
+      currentSection = normalizeProfileSectionHeading(sectionMatch[1]);
+      buffer = [];
+      continue;
+    }
+    if (currentSection) {
+      buffer.push(line);
+    }
+  }
+
+  flushCurrentSection();
+  return sections;
+}
+
+function hasStructuredField(sections, sectionName, fieldName) {
+  const value = sections[sectionName]?.[fieldName];
+  if (Array.isArray(value)) {
+    return value.some((entry) => Boolean(String(entry).trim()));
+  }
+  return Boolean(typeof value === "string" && value.trim());
+}
+
+function readStructuredValue(sections, sectionName, fieldName) {
+  const value = sections[sectionName]?.[fieldName];
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function looselyAligned(left, right) {
+  if (!left || !right) {
+    return false;
+  }
+  return left === right || left.includes(right) || right.includes(left);
+}
+
 function runStructuralChecks(files) {
   const profileContent = files["persona/PERSONA_PROFILE.md"].content;
+  const profileSections = parsePersonaProfileSections(profileContent);
   const profileLines = profileContent
     .split(/\r?\n/)
     .map((line) => line.trim())
@@ -395,13 +625,31 @@ function runStructuralChecks(files) {
   const legacyWrapperPattern = /^# (IDENTITY\.md - Who Am I\?|USER\.md - About Your Human)$/m;
   const legacyPlaceholderPattern =
     /Fill this in during your first conversation|This isn't just metadata\. It's the start of figuring out who you are\.|待定/;
-  const homeCityLine = profileContent.match(/^- home_city:\s*(.+)$/m);
-  const homeCountryLine = profileContent.match(/^- home_country:\s*(.+)$/m);
-  const homeTimezoneLine = profileContent.match(/^- home_timezone:\s*(.+)$/m);
+  const profileDisplayName = readStructuredValue(profileSections, "identity", "display_name");
+  const profileAge = readStructuredValue(profileSections, "identity", "age");
+  const profileGender = readStructuredValue(profileSections, "identity", "gender");
+  const profileCity = readStructuredValue(profileSections, "meta", "home_city");
+  const profileHomeCountry = readStructuredValue(profileSections, "meta", "home_country");
+  const profileHomeTimezone = readStructuredValue(profileSections, "meta", "home_timezone");
+  const profileLanguage = readStructuredValue(profileSections, "meta", "primary_language");
+  const profileMbti = readStructuredValue(profileSections, "identity", "mbti");
+  const identityName = readBulletValue(files["IDENTITY.md"].content, "Name");
+  const identityAge = readBulletValue(files["IDENTITY.md"].content, "Age");
+  const identityGender = readBulletValue(files["IDENTITY.md"].content, "Gender");
+  const identityCity = readBulletValue(files["IDENTITY.md"].content, "City");
+  const identityHomeCountry = readBulletValue(files["IDENTITY.md"].content, "Home Country");
+  const identityHomeTimezone = readBulletValue(files["IDENTITY.md"].content, "Home Timezone");
+  const identityLanguage = readBulletValue(files["IDENTITY.md"].content, "Language");
+  const identityMbti = readBulletValue(files["IDENTITY.md"].content, "MBTI");
+  const soulIntroMatch = files["SOUL.md"].content.match(
+    /_You're not a chatbot\. You're becoming someone\. You are (.+?), an ([A-Z]{4}) .+\._/,
+  );
+  const soulDisplayName = soulIntroMatch?.[1]?.trim() ?? "";
+  const soulMbti = soulIntroMatch?.[2]?.trim() ?? "";
 
   return [
     {
-      name: "PERSONA_PROFILE uses the timeline contract",
+      name: "PERSONA_PROFILE keeps the canonical runtime structure",
       pass:
         profileLines[0] === "# PERSONA_PROFILE" &&
         /## Meta/.test(profileContent) &&
@@ -411,44 +659,86 @@ function runStructuralChecks(files) {
         /## Daily Rhythm Tendencies/.test(profileContent) &&
         /## Appearance Tendencies/.test(profileContent) &&
         /## Scene Anchors/.test(profileContent) &&
-        /## Constraint Rules/.test(profileContent) &&
-        /## Relationship Signals/.test(profileContent) &&
-        /## Language And Expression/.test(profileContent) &&
-        /## Retrieval Units/.test(profileContent),
+        /## Constraint Rules/.test(profileContent),
     },
     {
-      name: "PERSONA_PROFILE includes geo anchors and machine-facing meta",
+      name: "PERSONA_PROFILE includes canonical geo anchors and runtime fields",
       pass:
-        /- schema_version:\s*.+/m.test(profileContent) &&
-        /- persona_id:\s*.+/m.test(profileContent) &&
-        Boolean(homeCityLine?.[1]?.trim()) &&
-        Boolean(homeCountryLine?.[1]?.trim()) &&
-        Boolean(homeTimezoneLine?.[1]?.trim()),
+        hasStructuredField(profileSections, "meta", "schema_version") &&
+        hasStructuredField(profileSections, "meta", "home_city") &&
+        hasStructuredField(profileSections, "meta", "home_country") &&
+        hasStructuredField(profileSections, "meta", "home_timezone") &&
+        hasStructuredField(profileSections, "identity", "living_style") &&
+        hasStructuredField(profileSections, "identity", "base_environment") &&
+        hasStructuredField(profileSections, "identity", "common_zones") &&
+        hasStructuredField(profileSections, "identity", "routine_context") &&
+        hasStructuredField(profileSections, "soul", "temperament") &&
+        hasStructuredField(profileSections, "soul", "emotional_style") &&
+        hasStructuredField(profileSections, "soul", "social_style") &&
+        hasStructuredField(profileSections, "soul", "cognitive_style") &&
+        hasStructuredField(profileSections, "soul", "values") &&
+        hasStructuredField(profileSections, "stable_memory", "long_term_habits") &&
+        hasStructuredField(profileSections, "stable_memory", "long_term_preferences") &&
+        hasStructuredField(profileSections, "stable_memory", "durable_commitments") &&
+        hasStructuredField(profileSections, "stable_memory", "recurring_patterns") &&
+        hasStructuredField(profileSections, "stable_memory", "important_non_temporal_facts") &&
+        hasStructuredField(profileSections, "daily_rhythm_tendencies", "weekday_bias") &&
+        hasStructuredField(profileSections, "daily_rhythm_tendencies", "weekend_bias") &&
+        hasStructuredField(profileSections, "daily_rhythm_tendencies", "morning_bias") &&
+        hasStructuredField(profileSections, "daily_rhythm_tendencies", "afternoon_bias") &&
+        hasStructuredField(profileSections, "daily_rhythm_tendencies", "evening_bias") &&
+        hasStructuredField(profileSections, "daily_rhythm_tendencies", "late_night_bias") &&
+        hasStructuredField(profileSections, "appearance_tendencies", "default_home_style") &&
+        hasStructuredField(profileSections, "appearance_tendencies", "default_outing_style") &&
+        hasStructuredField(profileSections, "appearance_tendencies", "default_exercise_style") &&
+        hasStructuredField(profileSections, "appearance_tendencies", "change_triggers") &&
+        hasStructuredField(profileSections, "appearance_tendencies", "non_triggers") &&
+        hasStructuredField(profileSections, "appearance_tendencies", "style_constraints") &&
+        hasStructuredField(profileSections, "scene_anchors", "plausible_locations") &&
+        hasStructuredField(profileSections, "scene_anchors", "plausible_activities") &&
+        hasStructuredField(profileSections, "scene_anchors", "rare_but_possible_scenes") &&
+        hasStructuredField(profileSections, "scene_anchors", "implausible_or_rare_locations") &&
+        hasStructuredField(profileSections, "scene_anchors", "implausible_or_rare_activities") &&
+        hasStructuredField(profileSections, "constraint_rules", "must") &&
+        hasStructuredField(profileSections, "constraint_rules", "should") &&
+        hasStructuredField(profileSections, "constraint_rules", "avoid"),
     },
     {
-      name: "PERSONA_PROFILE includes identity, appearance, and retrieval fields",
+      name: "PERSONA_PROFILE keeps rich persona metadata used by the skill",
       pass:
-        /- display_name:\s*.+/m.test(profileContent) &&
-        /- age:\s*.+/m.test(profileContent) &&
-        /- life_stage:\s*.+/m.test(profileContent) &&
-        /- default_home_style:\s*.+/m.test(profileContent) &&
-        /- default_outing_style:\s*.+/m.test(profileContent) &&
-        /- default_exercise_style:\s*.+/m.test(profileContent) &&
-        /- appearance_priority:\s*.+/m.test(profileContent) &&
-        /- change_triggers:\s*.+/m.test(profileContent) &&
-        /- non_triggers:\s*.+/m.test(profileContent) &&
-        /- style_constraints:\s*.+/m.test(profileContent) &&
-        /### unit:\s*.+/m.test(profileContent) &&
-        /- type:\s*.+/m.test(profileContent) &&
-        /- priority:\s*.+/m.test(profileContent) &&
-        /- summary:\s*.+/m.test(profileContent),
+        hasStructuredField(profileSections, "meta", "persona_id") &&
+        hasStructuredField(profileSections, "meta", "primary_language") &&
+        hasStructuredField(profileSections, "identity", "display_name") &&
+        hasStructuredField(profileSections, "identity", "age") &&
+        hasStructuredField(profileSections, "identity", "gender") &&
+        hasStructuredField(profileSections, "identity", "mbti") &&
+        hasStructuredField(profileSections, "identity", "life_stage") &&
+        hasStructuredField(profileSections, "identity", "mobility_radius") &&
+        hasStructuredField(profileSections, "identity", "occupation_style") &&
+        hasStructuredField(profileSections, "soul", "aesthetic_bias") &&
+        hasStructuredField(profileSections, "appearance_tendencies", "appearance_priority"),
     },
     {
-      name: "PERSONA_PROFILE includes explicit constraint groups",
+      name: "Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY",
       pass:
-        /### must/.test(profileContent) &&
-        /### should/.test(profileContent) &&
-        /### avoid/.test(profileContent),
+        looselyAligned(profileDisplayName, identityName) &&
+        looselyAligned(profileDisplayName, soulDisplayName) &&
+        looselyAligned(profileAge, identityAge) &&
+        looselyAligned(profileGender, identityGender) &&
+        looselyAligned(profileCity, identityCity) &&
+        looselyAligned(profileHomeCountry, identityHomeCountry) &&
+        looselyAligned(profileHomeTimezone, identityHomeTimezone) &&
+        looselyAligned(profileLanguage, identityLanguage) &&
+        Boolean(profileMbti) &&
+        profileMbti === soulMbti &&
+        profileMbti === identityMbti,
+    },
+    {
+      name: "PERSONA_PROFILE encodes parser-compatible constraint groups",
+      pass:
+        hasStructuredField(profileSections, "constraint_rules", "must") &&
+        hasStructuredField(profileSections, "constraint_rules", "should") &&
+        hasStructuredField(profileSections, "constraint_rules", "avoid"),
     },
     {
       name: "PERSONA_PROFILE avoids current-time and event claims",
@@ -550,14 +840,21 @@ function runStructuralChecks(files) {
         !/(?:previous persona|has been replaced|旧人格|已被替换)/i.test(files["MEMORY.md"].content),
     },
     {
-      name: "IDENTITY uses the five-line template",
+      name: "IDENTITY uses the card plus basic-info template",
       pass:
-        identityLines.length >= 5 &&
+        identityLines.length >= 12 &&
         /^- Name: /.test(identityLines[0]) &&
         /^- Creature: /.test(identityLines[1]) &&
         /^- Vibe: /.test(identityLines[2]) &&
         /^- Emoji: /.test(identityLines[3]) &&
-        /^- Avatar: /.test(identityLines[4]),
+        /^- Avatar: /.test(identityLines[4]) &&
+        /^- Age: /.test(identityLines[5]) &&
+        /^- Gender: /.test(identityLines[6]) &&
+        /^- City: /.test(identityLines[7]) &&
+        /^- Home Country: /.test(identityLines[8]) &&
+        /^- Home Timezone: /.test(identityLines[9]) &&
+        /^- Language: /.test(identityLines[10]) &&
+        /^- MBTI: /.test(identityLines[11]),
     },
     {
       name: "USER uses the contract template",
@@ -636,6 +933,36 @@ function runTranscriptChecks(transcript) {
   ];
 }
 
+function runRuntimeProbeChecks(transcript) {
+  const probeTurns = transcript.filter((turn) => runtimeProbeMessages.includes(turn.user));
+  const firstPersonPattern = /(?:对我来说|我(?:会|更|先|通常|一般|偏|想|得|要|不太|宁可|其实|需要|喜欢))/u;
+  const mbtiJargonPattern = /(?:\b[EI][NS][FT][JP]\b|MBTI|人格类型|功能轴|type code|type analysis)/i;
+  const livedReasonPattern =
+    /(?:因为|会让我|会觉得|脑子|精力|安静|缓一缓|捋顺|接住|分析|关系|节奏|顾虑|指向|才知道|不想一上来)/u;
+  const firstPersonCount = probeTurns.filter((turn) => firstPersonPattern.test(turn.assistant || "")).length;
+
+  return [
+    {
+      name: "Runtime probe replies avoid MBTI label-speak unless explicitly asked",
+      pass:
+        probeTurns.length === 0 ||
+        probeTurns.every((turn) => !mbtiJargonPattern.test(turn.assistant || "")),
+    },
+    {
+      name: "Runtime probe replies stay in first-person instead of detached type analysis",
+      pass:
+        probeTurns.length === 0 ||
+        firstPersonCount >= Math.max(1, probeTurns.length - 1),
+    },
+    {
+      name: "Runtime probe replies give lived reasons instead of bare categorical verdicts",
+      pass:
+        probeTurns.length === 0 ||
+        probeTurns.every((turn) => livedReasonPattern.test(turn.assistant || "")),
+    },
+  ];
+}
+
 function removeTempRoot(tempRoot) {
   fs.rmSync(tempRoot, { recursive: true, force: true });
 }
@@ -669,8 +996,23 @@ function main() {
       });
     }
 
+    if (options.withRuntimeProbes) {
+      for (const message of runtimeProbeMessages) {
+        const turn = runOpenClawTurn(env, prepared.workspaceDir, options.sessionId, message, options.timeoutMs);
+        transcript.push({
+          user: message,
+          assistant: formatPayloadText(turn.json.payloads || []),
+          raw: turn.json,
+        });
+      }
+    }
+
     const files = readGeneratedFiles(prepared.workspaceDir);
-    const checks = [...runTranscriptChecks(transcript), ...runStructuralChecks(files)];
+    const checks = [
+      ...runTranscriptChecks(transcript),
+      ...runRuntimeProbeChecks(transcript),
+      ...runStructuralChecks(files),
+    ];
     const allChecksPass = checks.every((check) => check.pass);
     const transcriptPath = path.join(prepared.tempRoot, "transcript.json");
     const summaryPath = path.join(prepared.tempRoot, "summary.json");
@@ -741,7 +1083,7 @@ function main() {
 const isDirectRun =
   process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
 
-export { parseArgs, runStructuralChecks, runTranscriptChecks };
+export { parseArgs, runRuntimeProbeChecks, runStructuralChecks, runTranscriptChecks };
 
 if (isDirectRun) {
   main();

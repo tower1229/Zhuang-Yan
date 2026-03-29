@@ -37,7 +37,7 @@ function parseArgs(argv, options = {}) {
     slug: "persona-skill",
     name: "Persona Skill",
     tag: "latest",
-    changelog: "Initial public release",
+    changelog: "",
   };
 
   for (let i = 0; i < argv.length; i++) {
@@ -57,6 +57,10 @@ function parseArgs(argv, options = {}) {
   if (!out.version) {
     console.error("Missing version value");
     usage(2);
+  }
+
+  if (!out.changelog) {
+    out.changelog = `Release ${out.version}`;
   }
 
   return out;

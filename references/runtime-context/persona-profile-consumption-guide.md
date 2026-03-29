@@ -30,10 +30,17 @@
 - 若某段落出现解释性 prose，以其中能够稳定复用的事实和外在特征为准
 - 不要从 `PERSONA_PROFILE.md` 反推不存在的关系标签、岗位职责或时间事实
 - 不要把 `Scene Anchors` 中的可复用场景误当成已经发生过的历史
+- 若维护者在 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 中改写了稳定 persona 事实，必须同步回写 `PERSONA_PROFILE.md`
+- 纯运行时话术、关系过程更新或纯用户侧信息更新，不应反向污染 `PERSONA_PROFILE.md`
 
 ## 3. 一级结构约定
 
-`PERSONA_PROFILE.md` 必须包含以下一级结构：
+`PERSONA_PROFILE.md` 采用“双层合同”：
+
+- 第一层是 **canonical runtime layer**，必须严格对齐 Timeline 真正消费的 8 个一级结构
+- 第二层是 **rich profile layer**，允许在这 8 个结构内部保留更完整的人物资料字段，供 persona skill 或其他下游读取
+
+必需一级结构只有以下 8 个：
 
 1. `## Meta`
 2. `## Identity`
@@ -43,11 +50,8 @@
 6. `## Appearance Tendencies`
 7. `## Scene Anchors`
 8. `## Constraint Rules`
-9. `## Relationship Signals`
-10. `## Language And Expression`
-11. `## Retrieval Units`
 
-其他 skill 不应依赖额外的一级标题。
+其他下游不要把额外一级标题当成 runtime contract 的一部分；如果维护者确实增加了额外章节，也只能视为 extension-only 内容，不能假设 Timeline 会消费它们。
 
 ## 4. 分段语义约定
 
@@ -55,13 +59,16 @@
 
 这是最强约束的地理与兼容层。
 
-优先读取：
+canonical required：
 
 - `schema_version`
-- `persona_id`
 - `home_city`
 - `home_country`
 - `home_timezone`
+
+common rich extension：
+
+- `persona_id`
 - `primary_language`
 
 消费建议：
@@ -69,50 +76,61 @@
 - `home_city` 是地理锚点，不是“当前就在这里”的时间性声明
 - `home_country` 与 `home_timezone` 应与 `home_city` 一致
 - 下游时间推理应优先依赖这里的地理与时区信息
+- `persona_id` 与 `primary_language` 可以保留，但不要误当作 Timeline runtime 的必需字段
 
 ### 4.2 `## Identity`
 
 这里描述**稳定身份与生活基底**。
 
-优先读取：
+canonical required：
+
+- `living_style`
+- `base_environment`
+- `common_zones`
+- `routine_context`
+
+common rich extension：
 
 - `display_name`
 - `age`
 - `gender`
 - `mbti`
 - `life_stage`
-- `common_zones`
+- `mobility_radius`
 - `occupation_style`
-- `routine_context`
 
 消费建议：
 
-- 年龄和 life stage 的约束优先级很高
+- 年龄和 `life_stage` 的约束优先级很高，即使它们不是 Timeline canonical contract 的必需字段，也应继续保留在完整人物资料里
 - 不要把学生阶段 persona 写成成熟职场高管
 
 ### 4.3 `## Soul`
 
 这里描述**稳定气质与体验风格**。
 
-优先读取：
+canonical required：
 
 - `temperament`
 - `emotional_style`
 - `social_style`
 - `cognitive_style`
 - `values`
+
+common rich extension：
+
 - `aesthetic_bias`
 
 消费建议：
 
 - 它能影响场景氛围、叙事质感和生活纹理
 - 它不替代 `SOUL.md` 的运行时规则
+- `aesthetic_bias` 很适合保留在 rich profile layer，但不要让它掩盖 canonical 气质字段
 
 ### 4.4 `## Stable Memory`
 
 这里描述**长期成立的习惯、偏好、承诺与非时间事实**。
 
-优先读取：
+canonical required：
 
 - `long_term_habits`
 - `long_term_preferences`
@@ -128,7 +146,7 @@
 
 这里描述**时间段倾向**。
 
-优先读取：
+canonical required：
 
 - `weekday_bias`
 - `weekend_bias`
@@ -146,26 +164,30 @@
 
 这里描述**外观延续与换装逻辑**。
 
-优先读取：
+canonical required：
 
 - `default_home_style`
 - `default_outing_style`
 - `default_exercise_style`
-- `appearance_priority`
 - `change_triggers`
 - `non_triggers`
 - `style_constraints`
+
+common rich extension：
+
+- `appearance_priority`
 
 消费建议：
 
 - 它适合支持 same-day appearance continuity
 - 不要把这里误读成“当前穿着状态”
+- `appearance_priority` 很有价值，但它属于 rich profile layer，而不是 Timeline runtime 的必需字段
 
 ### 4.7 `## Scene Anchors`
 
 这里描述**生活场景先验**。
 
-优先读取：
+canonical required：
 
 - `plausible_locations`
 - `plausible_activities`
@@ -182,96 +204,56 @@
 
 这里描述**硬边界和软约束**。
 
-优先读取：
+canonical required：
 
 - `must`
 - `should`
 - `avoid`
+
+编码要求：
+
+- 必须使用 parser 可读的键值形式，例如 `- must: [a, b]` 或 `- must:` 后接缩进列表
+- 不要再用 `### must` / `### should` / `### avoid` 这种小标题形式，因为 Timeline parser 不会把它们映射进 canonical contract
 
 消费建议：
 
 - `must` 约束最强
 - `avoid` 代表低 plausibility 或明显不合人设的方向
 
-### 4.9 `## Relationship Signals`
-
-这里描述**稳定的人际靠近方式**。
-
-优先读取：
-
-- `trust_pattern`
-- `closeness_pace`
-- `care_style`
-- `conflict_style`
-- `boundary_style`
-
-消费建议：
-
-- 它适合指导“如何靠近这个人格”
-- 若与 `SOUL.md` 的即时互动规则发生冲突，运行时以 `SOUL.md` 为准
-
-### 4.10 `## Language And Expression`
-
-这里描述**稳定表达纹理**。
-
-优先读取：
-
-- `register`
-- `conversational_pace`
-- `directness`
-- `humor_style`
-- `care_through_speech`
-
-消费建议：
-
-- 这个区段可以直接指导语气、措辞和语用偏好
-- 若下游任务涉及“怎么说”，这里的优先级通常高于 `Stable Memory`
-
-### 4.11 `## Retrieval Units`
-
-这里描述**citation-ready 原子条目**。
-
-优先读取：
-
-- `type`
-- `priority`
-- `summary`
-
-消费建议：
-
-- 适合给 reasoner 或收集器直接引用
-- 尽量保持一条一义，不要把多个约束混在一个 summary 里
-
 ## 5. 推荐读取顺序
 
-如果其他 skill 只需要快速消费 `PERSONA_PROFILE.md`，建议按以下顺序读取：
+如果其他 skill 只需要快速消费 `PERSONA_PROFILE.md`，建议先读 canonical runtime layer，再按需补读 rich profile layer：
 
 1. `Meta`
 2. `Identity`
 3. `Constraint Rules`
 4. `Appearance Tendencies`
 5. `Scene Anchors`
-6. `Language And Expression`
-7. `Relationship Signals`
-8. `Stable Memory`
-9. `Daily Rhythm Tendencies`
-10. `Soul`
-11. `Retrieval Units`
+6. `Stable Memory`
+7. `Daily Rhythm Tendencies`
+8. `Soul`
 
-原因：
+补充建议：
 
-- 前五段最直接决定“她是谁、活在什么环境里、什么事情合理、外观如何保持连续”
-- 中间几段补足说话方式和靠近方式
-- 最后三段更多用于纹理和引用
+- 如果任务在问“她是谁”，再读 `Identity` 里的 rich extension 字段
+- 如果任务在问“她的表达或审美质地”，再读 `Soul` 和 `Appearance Tendencies` 里的 rich extension 字段
+- 不要让 rich profile layer 反过来覆盖 canonical runtime layer 的约束判断
 
 ## 6. 推荐消费方式
 
-推荐把 `PERSONA_PROFILE.md` 消费成以下几类结构化对象：
+推荐把 `PERSONA_PROFILE.md` 消费成以下两类结构化对象：
+
+- `canonical_contract`
+  - 只包含 Timeline runtime 真正消费的字段子集
+- `rich_profile_overlay`
+  - 只包含完整人物资料所需、但不属于 canonical runtime contract 的补充字段
+
+一个实用的读取拆分通常是：
 
 - `meta`
-  - schema、persona id、城市、国家、时区、主语言
+  - schema、城市、国家、时区
 - `identity`
-  - 名字、年龄、性别、MBTI、生命阶段、生活环境
+  - 生活方式、底层环境、常见活动区、日常语境
 - `stable_memory`
   - 长期习惯、偏好、承诺、非时间事实
 - `daily_rhythm`
@@ -281,13 +263,15 @@
 - `scene_anchors`
   - 可行场景、低频场景、不合理场景
 - `constraints`
-  - must / should / avoid
-- `speech_profile`
-  - 语域、节奏、直率度、幽默方式、表达关心的语言路径
-- `relationship_profile`
-  - 信任模式、靠近节奏、冲突处理、边界风格
-- `retrieval_units`
-  - 可直接引用的原子摘要
+  - `must / should / avoid`
+- `identity_overlay`
+  - 名字、年龄、性别、MBTI、生命阶段、移动半径、职业风格
+- `meta_overlay`
+  - persona id、主语言
+- `soul_overlay`
+  - 审美取向
+- `appearance_overlay`
+  - 外观优先级
 
 ## 7. 与其他文件的边界
 
@@ -295,6 +279,8 @@
 
 - `PERSONA_PROFILE.md` 回答：她稳定是什么样的人
 - `SOUL.md` 回答：她在运行时应该怎样对待你
+- 若两者出现冲突，运行时以 `SOUL.md` 为准
+- 若运行时 agent 只需要轻量身份摘要，先看 `IDENTITY.md`；若 `IDENTITY.md` 不足以回答稳定人物细节，再补读 `PERSONA_PROFILE.md`
 
 ### 相对 `MEMORY.md`
 
@@ -304,7 +290,7 @@
 ### 相对 `IDENTITY.md`
 
 - `PERSONA_PROFILE.md` 是完整档案
-- `IDENTITY.md` 是极简卡片
+- `IDENTITY.md` 是轻量卡片加基础资料摘要，通常只投影 `display_name`、`home_city`、`home_country`、`home_timezone`、`age`、`gender`、`primary_language`、`mbti` 等高稳定字段，不承载完整人物档案
 
 ### 相对 `USER.md`
 
@@ -320,7 +306,7 @@
 - 把 `Soul` 膨胀成未经明示的深层病理或创伤解释
 - 用单一字段覆盖整个人物，例如只拿 `MBTI` 或只拿 `home_city`
 - 忽略生命阶段，把学生期 persona 写成成熟职场型人格
-- 把 `Scene Anchors` 或 `Retrieval Units` 当成已经发生过的共同记忆
+- 把 `Scene Anchors` 或 rich extension 里的补充资料当成已经发生过的共同记忆
 - 用 `Appearance Tendencies` 直接回答“她现在穿什么”
 
 ## 9. 对其他 skill 的一句建议

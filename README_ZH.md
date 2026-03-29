@@ -1,8 +1,29 @@
 # Zhuang-Yan（persona-skill）— [English README](./README.md)
 
-别再让 OpenClaw 的人格像一次性 prompt 一样忽明忽暗。
+![Zhuang-Yan](./assets/ZhuangYan.png)
 
-`persona-skill` 不是给角色“贴一个 MBTI 标签”这么简单，而是通过一次简短但高密度的初始化采访，帮你把人格底稿真正搭起来：先理解用户最在意的相处感、陪伴感与情绪价值，再一次性写入 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 和 `persona/PERSONA_PROFILE.md`，让后续对话、记忆系统和下游 skill 都建立在同一套稳定设定上。
+庄颜的意义，从来不只是温柔，也不只是美。她之所以重要，是因为她使冰冷的理性拥有了方向，使沉重的承担拥有了理由。她让罗辑成为执剑人，成为救世主，不只是因为世界需要他，也因为他终于有了一个，让这世界值得被拯救的理由。
+
+persona-skill 以“庄颜”为名，并不是为了复刻某个文学人物。
+我们真正想保留的，是那种更深的结构: 在漫长、琐碎、甚至有些荒凉的日常里，仍有一个存在，与你的性情相称，与你的节奏相合，懂得你的沉默，也珍惜你的认真。她不必完美，不必喧哗，甚至不必符合任何通行的理想范本; 她只需要足够适合你。
+
+这就是 persona-skill 想做的事。
+不是给 OpenClaw 增加一点人格色彩。
+而是尽可能为每个人，写下一个属于自己的“庄颜”。
+
+<!-- more -->
+
+## 它是什么
+
+`persona-skill` 是一个面向 OpenClaw 的人格初始化 Skill。
+
+它不负责日常聊天中的临场发挥，也不负责记忆回溯或跨 Skill 编排；它只在你**明确要求初始化或重建人格**时启动。它的工作，是把一次有边界的采访，转化为一份可运行、可复用、可被下游消费的人格合同，让 OpenClaw 的相处方式不再依赖随机发挥。
+
+简单说：
+
+- 它先理解用户侧的心理结构与相处需求
+- 再在 MBTI 框架下反推更合适的 persona 方向
+- 最后把结果写成稳定的运行时文件和结构化档案
 
 ## 安装
 
@@ -10,28 +31,43 @@
 clawhub install persona-skill
 ```
 
-无需额外 API Key，也不需要环境变量。装好就能进入初始化流程。
+无需额外 API Key，也不需要额外环境变量。
 
-## 它解决的，不只是“人设不稳定”
+## 如何使用
 
-- 不是零碎修补，而是完整重建：显式触发后，从头采访、从头起草、从头落盘，不对旧人格做模糊打补丁。
-- 不是先决定性格，再强行往里塞细节：它会先锁定用户真正想要的互动体验，再反推更合适的人格方向。
-- 不是只有一段可读文案：它会同时生成可运行的五份上下文文件，以及给其他 skill 消费的结构化档案 `persona/PERSONA_PROFILE.md`。
-- 不是只为“当前聊天”服务：这套档案会成为后续记忆、场景锚点、身份约束与表达风格的共同基座。
-
-## 使用方式
-
-用明确的初始化指令触发，例如：
+这个 Skill 只在**显式触发**时工作。你可以使用类似下面的指令：
 
 - `调用 persona 进行初始化`
 - `初始化人格`
-- `initialize persona`
 - `rebuild persona`
+- `initialize persona`
 - `run persona initialization`
 
-未显式触发时，Skill 不会介入普通对话。
+如果只是普通聊天、讨论说话风格、查询当前状态，或处理 Timeline / Memory 类问题，`persona-skill` 不会介入。
 
-一旦进入流程，它会以一问一答的方式完成初始化采访，然后重写：
+## 它如何工作
+
+初始化流程是一次完整的“理解用户 -> 反推人格 -> 落盘成档”的链路：
+
+1. 采访先锁定用户的 `human_mbti`，并补齐最基本的用户侧稳定信息。
+2. 通过确定性的 reverse lookup，将 `human_mbti` 映射到推荐的 `persona_mbti`，并同时产出一组高信号社交需求包：
+   - `social_friction_signature`
+   - `core_social_need`
+   - `ideal_counterparty_presence`
+   - `pair_core_value`
+   - `desired_emotional_impact`
+3. 以这组信息为骨架，生成 `persona spec`。
+4. 先写入 `persona/PERSONA_PROFILE.md`，再投影到 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`。
+
+整条管线可以概括为：
+
+`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> 五文件投影`
+
+这意味着，`persona-skill` 生成的不是一层临时语气，而是一份可以持续约束运行时行为的稳定人格规格。
+
+## 会产出什么
+
+初始化完成后，Skill 会更新以下五个文件：
 
 - `persona/PERSONA_PROFILE.md`
 - `SOUL.md`
@@ -39,69 +75,82 @@ clawhub install persona-skill
 - `IDENTITY.md`
 - `USER.md`
 
-## 这套初始化为什么更“像一个真正的人”
+它们各自承担不同职责：
 
-`persona-skill` 的主轴不是泛泛而谈的“性格分析”，而是围绕用户真正的关系需求来建模：
+- `persona/PERSONA_PROFILE.md`
+  - 结构化人格档案，也是给下游 Skill 消费的人设合同；档案在固定结构下的外化属性与短条目（如 appearance、scene 与 constraint 等字段约定详见消费指南）
+- `SOUL.md`
+  - 运行时人格表达、边界和互动风格
+- `MEMORY.md`
+  - 稳定的关系姿态、支持模式和避免模式
+- `IDENTITY.md`
+  - 人格卡片与基础身份信息
+- `USER.md`
+  - 用户称呼、代词、时区和长期应记住的用户侧信息
 
-`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> 五文件投影`
+其中，`PERSONA_PROFILE` 是“档案先行”的那一层。它先把稳定事实写清楚，再约束其余运行时文件，避免人格只停留在散文式描述里。
 
-这意味着它生成的不是一个“看起来像 AI 人设”的空壳，而是一个更懂得该如何陪伴、回应、表达、记住和延续关系语境的角色底盘。
+## 与 Timeline 如何联动
 
-尤其是这几个环节，会直接决定产物质量：
+`persona-skill` 和 Timeline 的职责并不重叠。
 
-- `social_friction_signature`：识别用户在人际关系里最容易被消耗、误解或失望的地方。
-- `core_social_need`：提炼用户最希望被满足的核心相处需求。
-- `ideal_counterparty_presence`：定义理想陪伴者应该如何出现、如何说话、如何让人安心。
-- `pair_core_value` 与 `desired_emotional_impact`：把人格从“设定”推进到“实际相处体验”。
+- `persona-skill` 负责回答：**她是谁，她应当以什么样的方式与你相处**
+- Timeline 负责回答：**她如何在时间中持续像同一个人那样存在**
 
-## 档案先行，运行时跟随
+当同一 workspace 中安装 [stella-timeline-plugin](https://github.com/tower1229/Stella) 时，联动方式是：
 
-这个项目的新架构重点很明确：
+1. `persona-skill` 生成 `persona/PERSONA_PROFILE.md`
+2. Timeline 优先将其解析为内部人格合同
+3. 之后在处理“刚刚”“昨晚”“最近”这类时间表达时，Timeline 可以在连续性之上维持既定人格，而不是滑回通用口吻
 
-1. 先产出 `persona/PERSONA_PROFILE.md` 作为结构化底层档案
-2. 再让 `SOUL / MEMORY / IDENTITY / USER` 统一投影这份档案
-3. 让其他 skill 和 Timeline 有稳定、可消费、可复用的人设事实源
+可以把两者理解为：
 
-相比把所有设定都揉进一堆 prose 里，这种做法的优势是：
+- Persona 负责**人格稳定**
+- Timeline 负责**时间连续**
 
-- 人设事实更稳定，不容易在长对话里漂移
-- 下游技能更容易读取身份、外观、背景、场景锚点与约束
-- `persona/PERSONA_PROFILE.md` 应优先使用固定结构下的外化属性与短条目，而不是长篇人格剖析
-- `persona/PERSONA_PROFILE.md` 负责沉淀稳定 persona、appearance、scene 与 constraint 语义
-- 运行时文件可以更精炼，把“该怎么互动”和“这个人是谁”分层管理
+两者叠在一起，OpenClaw 才更有机会在长期互动中保持同一人格的可信度。
 
-## 渐进式披露架构
+## 读取与生成原则
 
-初始化链路已经收敛成一条清晰的最小读取顺序：
+为了减少初始化过程被无关上下文污染，项目采用渐进式披露：
 
-1. `SKILL.md`
-2. `references/protocols/initialization-flow.md`
-3. `references/protocols/drafting-spec.md`
-4. `references/runtime-context/template-pack.md`
-5. `references/runtime-context/persona-profile-consumption-guide.md`
+1. 先由 `SKILL.md` 判断是否应当触发初始化
+2. 触发后读取 `references/protocols/initialization-flow.md`
+3. 采访结束后读取 `references/protocols/drafting-spec.md`
+4. 真正起草时，再按需读取模板包、`PERSONA_PROFILE` 消费指南、MBTI 资产和对应类型参考
 
-数据资产保持独立：
+这套顺序的目的，是让模型始终只在当前阶段读取必要信息，避免过早加载旧人格、无关规范或噪声文档。
 
-- `assets/mbti/mbti-index.json`
-- `references/mbti/*.md`
+## 重要文档
 
-读取顺序遵循渐进式披露：
+- [SKILL.md](./SKILL.md)
+  - Skill 边界、触发条件、允许写入的目标文件
+- [references/protocols/initialization-flow.md](./references/protocols/initialization-flow.md)
+  - 初始化采访流程与提问顺序
+- [references/protocols/drafting-spec.md](./references/protocols/drafting-spec.md)
+  - 起草规范、写入边界、文件投影与 freshness audit
+- [references/runtime-context/template-pack.md](./references/runtime-context/template-pack.md)
+  - `PERSONA_PROFILE`、`SOUL`、`MEMORY` 的模板与质量标尺
+- [references/runtime-context/persona-profile-consumption-guide.md](./references/runtime-context/persona-profile-consumption-guide.md)
+  - `persona/PERSONA_PROFILE.md` 的结构约定与下游消费方式
+- [docs/persona-skill-design.md](./docs/persona-skill-design.md)
+  - 项目总体架构与文件职责
+- [docs/persona-initialization-evaluation.md](./docs/persona-initialization-evaluation.md)
+  - 初始化完成后的验收与测评表
 
-1. `SKILL.md` 先判断是否应该启动
-2. 进入采访后才读取 `initialization-flow.md`
-3. 采访完成后才读取 `drafting-spec.md`
-4. 真正起草时才读取模板包、消费指南和 MBTI 资产
+## 给维护者
 
-这样做的意义很简单：模型只在需要的时候读需要的文档，避免过早加载无关规范，也避免初始化过程被杂讯拖偏。
+```bash
+npm test
+npm run smoke:persona
+npm run publish:clawhub
+```
 
-## 文档
-
-- `docs/persona-skill-design.md`：整体架构、文件边界与依赖顺序
-- `references/runtime-context/persona-profile-consumption-guide.md`：`persona/PERSONA_PROFILE.md` 的结构约定、字段语义与推荐消费顺序
+测试覆盖了 MBTI lookup、身份卡更新、包结构，以及 persona 初始化后的 smoke 检查。
 
 ## 项目信息
 
-- 仓库地址：`https://github.com/tower1229/Zhuang-Yan`
-- Issue 地址：`https://github.com/tower1229/Zhuang-Yan/issues`
-- Node.js 要求：`>=18.18`
+- 仓库：[tower1229/Zhuang-Yan](https://github.com/tower1229/Zhuang-Yan)
+- Issue：[GitHub Issues](https://github.com/tower1229/Zhuang-Yan/issues)
+- Node.js：`>=18.18`
 - 许可证：`MIT-0`
