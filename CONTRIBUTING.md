@@ -14,6 +14,7 @@ Changes should preserve the skill's single responsibility: persona initializatio
 
 ```bash
 npm run test
+npm run smoke:persona:runtime
 npm run publish:clawhub
 ```
 
@@ -28,8 +29,9 @@ node ./scripts/release-clawhub.mjs
 
 1. Update the release version in `package.json`.
 2. Review `docs/clawhub-publish-checklist.md`.
-3. Run tests before publishing.
-4. Publish from the repository root.
+3. Run tests and the runtime smoke check before publishing.
+4. If `openclaw` is not in `PATH`, set `OPENCLAW_BIN` first; if the default temp directory is not writable, set `OPENCLAW_SMOKE_TMPDIR`.
+5. Publish from the repository root.
 
 ## Repository Conventions
 

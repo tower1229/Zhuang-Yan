@@ -2,6 +2,12 @@
 
 All notable repository-level changes to this project are documented in this file.
 
+## [0.3.2] - 2026-03-29
+
+- Pushed MBTI labels fully backstage in runtime guidance so persona replies default to first-person, lived answers instead of type-code explanations.
+- Added runtime smoke probes plus automated checks that catch detached MBTI label-speak on preference and conflict questions.
+- Hardened the smoke runner with a writable temp-dir fallback and clearer `openclaw` executable guidance for local verification.
+
 ## [0.3.1] - 2026-03-29
 
 - Clarified the SOUL continuity boundary so runtime agents can fall back from `IDENTITY.md` to `persona/PERSONA_PROFILE.md` for richer stable persona facts.

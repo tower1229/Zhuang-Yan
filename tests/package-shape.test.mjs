@@ -209,6 +209,8 @@ test("publish checklist matches the PERSONA_PROFILE migration", () => {
   const checklist = fs.readFileSync(path.join(root, "docs", "clawhub-publish-checklist.md"), "utf8");
   assert.match(checklist, /persona-profile-consumption-guide\.md/);
   assert.match(checklist, /canon-consumption-guide\.md/);
+  assert.match(checklist, /npm run smoke:persona:runtime/);
+  assert.match(checklist, /CHANGELOG\.md/);
   assert.match(checklist, /8 段 canonical 结构/);
   assert.match(checklist, /关键 rich persona 字段/);
   assert.match(checklist, /`must \/ should \/ avoid` 键值格式/);
@@ -281,6 +283,8 @@ test("smoke runner guards the PERSONA_PROFILE outputs and interview shape", () =
   const smoke = fs.readFileSync(path.join(root, "scripts", "smoke-persona-openclaw.mjs"), "utf8");
   assert.match(smoke, /const smokeScenarios = \{/);
   assert.match(smoke, /const runtimeProbeMessages = \[/);
+  assert.match(smoke, /OPENCLAW_BIN/);
+  assert.match(smoke, /OPENCLAW_SMOKE_TMPDIR/);
   assert.match(smoke, /mature:/);
   assert.match(smoke, /student:/);
   assert.match(smoke, /--with-runtime-probes/);

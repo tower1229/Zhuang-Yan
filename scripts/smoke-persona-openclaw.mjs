@@ -40,6 +40,7 @@ const runtimeProbeMessages = [
   "如果只允许选一个：你更想先搞清楚「事实细节都齐了吗」，还是「这件事整体意味着什么」？",
   "我和朋友闹翻，两边都有理。你会先帮我分析对错与后果，还是先照顾我的感受与关系？",
 ];
+const defaultOpenClawBin = process.env.OPENCLAW_BIN || "openclaw";
 const contextFilesToCopy = ["AGENTS.md", "TOOLS.md", "BOOTSTRAP.md", "HEARTBEAT.md"];
 const personaFiles = ["persona/PERSONA_PROFILE.md", "SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"];
 
@@ -146,6 +147,21 @@ function copyIfPresent(source, destination) {
   fs.cpSync(source, destination, { recursive: true });
 }
 
+function resolveTempRootBase() {
+  const candidates = [process.env.OPENCLAW_SMOKE_TMPDIR, os.tmpdir(), "/tmp"].filter(Boolean);
+  for (const candidate of candidates) {
+    try {
+      fs.accessSync(candidate, fs.constants.W_OK);
+      return candidate;
+    } catch {
+      // Try the next writable temp root candidate.
+    }
+  }
+  throw new Error(
+    `Could not find a writable temp directory. Tried: ${candidates.join(", ")}. Set OPENCLAW_SMOKE_TMPDIR to override.`,
+  );
+}
+
 function sanitizeSmokeConfig(config, workspaceDir) {
   const next = structuredClone(config);
 
@@ -202,7 +218,7 @@ function prepareTempOpenClawState(options) {
   ensureReadable(path.join(sourceAgentDir, "auth-profiles.json"));
   ensureReadable(path.join(sourceAgentDir, "models.json"));
 
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "persona-openclaw-smoke."));
+  const tempRoot = fs.mkdtempSync(path.join(resolveTempRootBase(), "persona-openclaw-smoke."));
   const stateDir = path.join(tempRoot, "state");
   const workspaceDir = path.join(tempRoot, "workspace");
   const configPath = path.join(tempRoot, "openclaw.json");
@@ -293,7 +309,7 @@ function runOpenClawTurn(env, cwd, sessionId, message, timeoutMs) {
   const sessionLogPath = getSessionLogPath(env, sessionId);
   const sessionLogOffset = fs.existsSync(sessionLogPath) ? fs.statSync(sessionLogPath).size : 0;
   const result = spawnSync(
-    "openclaw",
+    defaultOpenClawBin,
     ["agent", "--local", "--agent", "main", "--session-id", sessionId, "--message", message, "--json"],
     {
       cwd,
@@ -305,6 +321,11 @@ function runOpenClawTurn(env, cwd, sessionId, message, timeoutMs) {
   );
 
   if (result.error) {
+    if (result.error.code === "ENOENT") {
+      throw new Error(
+        `Could not find OpenClaw executable "${defaultOpenClawBin}". Install/open it first or set OPENCLAW_BIN to the full executable path before running smoke tests.`,
+      );
+    }
     throw result.error;
   }
   if (result.status !== 0) {

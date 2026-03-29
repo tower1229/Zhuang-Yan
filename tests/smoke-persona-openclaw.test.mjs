@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { runRuntimeProbeChecks, runStructuralChecks, runTranscriptChecks } from "../scripts/smoke-persona-openclaw.mjs";
+import {
+  runRuntimeProbeChecks,
+  runStructuralChecks,
+  runTranscriptChecks,
+} from "../scripts/smoke-persona-openclaw.mjs";
 
 function buildValidFiles(overrides = {}) {
   return {
