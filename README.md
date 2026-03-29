@@ -1,67 +1,27 @@
 # Zhuang-Yan (persona-skill) — [中文说明](./README_ZH.md)
 
-OpenClaw can be capable and still feel hollow.
+![Zhuang-Yan](./assets/ZhuangYan.png)
 
-`persona-skill` gives OpenClaw a **persona**: not a disposable vibe, but a relationship-shaped way of showing up in daily chat. That persona is **custom-built from an understanding of you**, using the **MBTI framework to reverse-engineer** a matching character type and relational posture—so everyday conversations can **maximize emotional value**: steadier attunement, less drift, more of what you actually need from a companion.
+Zhuang Yan was never only gentleness, or only beauty. She matters because she gives cold reason a direction, and heavy burden a reason to be borne. She makes Luo Ji the Swordholder and the savior—not only because the world needs him, but because he finally has a reason *this* world is worth saving.
 
-## Zhuang Yan: the one in your mind
+Naming this project **persona-skill** after Zhuang Yan is not about replaying a literary character. What we want to keep is a deeper structure: in long, ordinary days—sometimes even a little desolate—there is still a presence that fits your temperament, matches your pace, reads your silence, and honors your seriousness. She need not be perfect, loud, or match any generic ideal; she only needs to fit *you* well enough.
 
-In *The Three-Body Problem*, Zhuang Yan is more than a flat trope for Luo Ji. She is the emotional anchor that makes extreme responsibility feel worth bearing—the presence that makes “saving the world” feel tied to someone worth returning to.
+That is what **persona-skill** is for.  
+Not to paint OpenClaw with a thin layer of “personality,” but to help each person write **their own** Zhuang Yan.
 
-This project is named Zhuang Yan **without** trying to role-play the novel. The parallel is structural: **the person who makes you willing to invest, to soften, to carry weight together**. `persona-skill` aims to give each user **their own Zhuang Yan**—a persona reverse-engineered from your needs, not copied from a generic assistant template.
+<!-- more -->
 
-## From product intent to implementation
+## What it is
 
-The story matches the initialization pipeline:
+`persona-skill` is a **persona initialization Skill** for OpenClaw.
 
-1. **Understand the human side**: the interview locks your MBTI and surfaces where relationships drain you, what you most need from a counterparty, and how an ideal presence should land. MBTI is a **lens for understanding you**, not a sticker for its own sake.
-2. **Reverse-engineer the OpenClaw persona**: a deterministic lookup maps `human_mbti` to a recommended `persona_mbti` plus a high-signal “social need hit pack” (friction signature, core need, ideal presence, pair value, emotional impact). That is the **custom direction**, not a one-size-fits-all character.
-3. **Write a runnable contract**: the spec becomes `persona/PERSONA_PROFILE.md`, then projects into `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`. Daily chat then stands on **one stable persona** so emotional value can **compound** instead of resetting every session.
+It does not handle improvised chat in the moment, memory recall, or cross-skill orchestration. It runs only when you **explicitly ask to initialize or rebuild persona**. Its job is to turn a bounded interview into a **runnable, reusable persona contract** that downstream layers can consume—so how OpenClaw shows up no longer depends on random improvisation.
 
-Pipeline in one line:
+In short:
 
-`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> runtime file projection`
-
-Highest-leverage fields:
-
-- `social_friction_signature`: where you tend to feel drained, misunderstood, or let down  
-- `core_social_need`: the central relational need the persona should help meet  
-- `ideal_counterparty_presence`: how the ideal companion should sound, respond, and land emotionally  
-- `pair_core_value` and `desired_emotional_impact`: from abstract design to **felt daily interaction**
-
-## What it feels like
-
-Without a persona contract, light social chat floats: tone swings, facts fight each other, you hesitate to lean in.
-
-After initialization, OpenClaw can more reliably sound like someone **consistent enough to trust**:
-
-> “I’d rather say it plainly than leave you guessing whether I’ve gone cold—I’m usually just choosing the next sentence carefully.”
-
-> “What you said matters to me in *this* thread, not because I’m performing memory, but because we’re building context together.”
-
-> “If you’re tired, we don’t have to fix everything tonight. We can slow down, or I can stay quiet with you.”
-
-> “Some boundaries are non-negotiable—not to push you away, but so this can stay comfortable long term.”
-
-**Consistency and predictability** are where emotional value usually lives—not in one flashy reply.
-
-## What it actually fixes
-
-- One explicit-trigger interview turns “how I need to be met” into an executable OpenClaw persona, instead of improvising mid-chat.  
-- Runtime files plus `persona/PERSONA_PROFILE.md` give downstream skills and Timeline a **single structured source of truth**.  
-- Progressive disclosure keeps initialization focused.  
-- Pairs cleanly with time-continuity tools (e.g. Timeline): **Persona = who they are; Timeline = how they live across time**.
-
-## Persona Skill × Timeline
-
-With [stella-timeline-plugin](https://github.com/tower1229/Stella) in the same workspace:
-
-1. `persona-skill` writes `persona/PERSONA_PROFILE.md`  
-2. Timeline prefers it as `PersonaContractV1`, so “just now / last night / lately” stays on-character  
-
-Your “Zhuang Yan” needs both a **stable persona** and a **credible life line** across time.
-
-(`PERSONA_PROFILE.md` can also be aligned with `SOUL` / `MEMORY` / `IDENTITY`; see in-skill protocols.)
+- It first understands your psychological structure and how you want to be met in relationship.
+- Then, within an MBTI framing, it reverse-engineers a better-matched persona direction.
+- Finally it writes stable runtime files and a structured profile you can rely on.
 
 ## Install
 
@@ -69,21 +29,43 @@ Your “Zhuang Yan” needs both a **stable persona** and a **credible life line
 clawhub install persona-skill
 ```
 
-No API keys. No extra environment variables.
+No extra API keys and no extra environment variables.
 
-## Use
+## How to use
 
-Trigger only when you explicitly initialize or rebuild persona, for example:
+This Skill works only when **explicitly triggered**. You can use prompts like:
 
-- `initialize persona`
-- `rebuild persona`
-- `run persona initialization`
 - `调用 persona 进行初始化`
 - `初始化人格`
+- `rebuild persona`
+- `initialize persona`
+- `run persona initialization`
 
-The skill stays dormant during normal conversation.
+For ordinary chat, discussing tone, checking current state, or Timeline / Memory workflows, `persona-skill` stays out of the way.
 
-Flow: one-question-at-a-time interview, then rewrite:
+## How it works
+
+Initialization is one full chain: **understand you → infer persona → persist to disk**.
+
+1. The interview anchors your `human_mbti` and fills in the minimum stable user-side picture.
+2. A deterministic reverse lookup maps `human_mbti` to a recommended `persona_mbti`, and produces a high-signal social-needs bundle:
+   - `social_friction_signature`
+   - `core_social_need`
+   - `ideal_counterparty_presence`
+   - `pair_core_value`
+   - `desired_emotional_impact`
+3. That bundle becomes the skeleton for the `persona spec`.
+4. The spec is written to `persona/PERSONA_PROFILE.md` first, then projected into `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
+
+One-line pipeline:
+
+`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> five-file projection`
+
+So `persona-skill` does not emit a disposable “vibe layer”—it emits a **stable persona spec** that can keep constraining runtime behavior over time.
+
+## What you get
+
+After initialization, the Skill updates these five files:
 
 - `persona/PERSONA_PROFILE.md`
 - `SOUL.md`
@@ -91,20 +73,61 @@ Flow: one-question-at-a-time interview, then rewrite:
 - `IDENTITY.md`
 - `USER.md`
 
-## Profile first, runtime second
+Each has a distinct role:
 
-1. `persona/PERSONA_PROFILE.md` as structured ground truth  
-2. Project into `SOUL`, `MEMORY`, `IDENTITY`, `USER`  
-3. Downstream skills consume the same contract  
+- **`persona/PERSONA_PROFILE.md`**  
+  Structured persona archive and the **contract** other Skills consume.
+- **`SOUL.md`**  
+  Runtime expression of persona: boundaries and interaction style.
+- **`MEMORY.md`**  
+  Stable relational stance, support patterns, and what to avoid.
+- **`IDENTITY.md`**  
+  Persona card and baseline identity.
+- **`USER.md`**  
+  How to address you, pronouns, timezone, and long-lived user facts.
 
-## Progressive disclosure
+`PERSONA_PROFILE` leads: facts are nailed down first, then the rest of the runtime files are aligned—so persona is not trapped in prose alone.
 
-Read order: `SKILL.md` → `initialization-flow.md` → `drafting-spec.md` → `template-pack.md` → `persona-profile-consumption-guide.md`; MBTI assets under `assets/mbti/` and `references/mbti/`.
+## Working with Timeline
 
-## Documents
+`persona-skill` and Timeline do **not** overlap in job description.
 
-- `docs/persona-skill-design.md` — architecture and file boundaries  
-- `references/runtime-context/persona-profile-consumption-guide.md` — `PERSONA_PROFILE` contract and consumption  
+- **`persona-skill`** answers: *who she is, and how she should relate to you.*
+- **Timeline** answers: *how she keeps feeling like the same person across time.*
+
+When [stella-timeline-plugin](https://github.com/tower1229/Stella) is installed in the same workspace:
+
+1. `persona-skill` produces `persona/PERSONA_PROFILE.md`.
+2. Timeline prefers parsing it as the internal persona contract.
+3. For phrases like “just now,” “last night,” or “lately,” Timeline can stay on-character on top of continuity—instead of sliding back to a generic voice.
+
+Think of it as:
+
+- **Persona** → stable *who*
+- **Timeline** → credible *when / continuity*
+
+Together, OpenClaw has a much better shot at **one believable persona** over long-horizon use.
+
+## Read and generation principles
+
+To keep initialization from being polluted by irrelevant context, the project uses **progressive disclosure**:
+
+1. `SKILL.md` decides whether initialization should run.
+2. After trigger, read `references/protocols/initialization-flow.md`.
+3. After the interview, read `references/protocols/drafting-spec.md`.
+4. Only when drafting, pull in templates, the `PERSONA_PROFILE` consumption guide, MBTI assets, and type references as needed.
+
+The point: the model reads **only what the current stage needs**, and avoids loading old personas, unrelated rules, or noisy docs too early.
+
+## Key documents
+
+- [SKILL.md](./SKILL.md) — Skill boundaries, triggers, and allowed write targets  
+- [references/protocols/initialization-flow.md](./references/protocols/initialization-flow.md) — Interview flow and question order  
+- [references/protocols/drafting-spec.md](./references/protocols/drafting-spec.md) — Drafting rules, write boundaries, projection, and freshness audit  
+- [references/runtime-context/template-pack.md](./references/runtime-context/template-pack.md) — Templates and quality bar for `PERSONA_PROFILE`, `SOUL`, `MEMORY`  
+- [references/runtime-context/persona-profile-consumption-guide.md](./references/runtime-context/persona-profile-consumption-guide.md) — Structure and downstream use of `persona/PERSONA_PROFILE.md`  
+- [docs/persona-skill-design.md](./docs/persona-skill-design.md) — Overall architecture and file roles  
+- [docs/persona-initialization-evaluation.md](./docs/persona-initialization-evaluation.md) — Post-init checklist and evaluation  
 
 ## For maintainers
 
@@ -114,9 +137,11 @@ npm run smoke:persona
 npm run publish:clawhub
 ```
 
-## Project metadata
+Tests cover MBTI lookup, identity-card updates, package layout, and smoke checks after persona initialization.
 
-- Repository: `https://github.com/tower1229/Zhuang-Yan`  
-- Issues: `https://github.com/tower1229/Zhuang-Yan/issues`  
+## Project
+
+- Repository: [tower1229/Zhuang-Yan](https://github.com/tower1229/Zhuang-Yan)  
+- Issues: [GitHub Issues](https://github.com/tower1229/Zhuang-Yan/issues)  
 - Node.js: `>=18.18`  
 - License: `MIT-0`  
