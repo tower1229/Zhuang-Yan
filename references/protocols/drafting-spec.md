@@ -91,7 +91,7 @@
 - 采访阶段不允许提前读取本文件。
 - 在 `persona spec` 锁定之前，不允许读取任何旧目标文件。
 - 写作阶段不允许读取旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md`
-- 旧 `IDENTITY.md` 只允许在定点更新五个卡片字段时读取，不允许把其中的人格正文当素材
+- 旧 `IDENTITY.md` 只允许在定点更新卡片区和基础资料区时读取，不允许把其中的人格正文当素材
 - 旧 `USER.md` 只允许在本轮未明确提供 `Timezone` 时读取该字段，不允许回填 `What to call them` 或 `Pronouns`
 - 成稿后读取现有目标文件时，必须指明具体路径，不允许出现空的 `Read` 或笼统的“读取现有文件”
 - 如果在起草阶段被中断，恢复时要从本节的读取顺序重新开始。
@@ -104,7 +104,7 @@
 - 旧人格 prose 绝不能作为新文案素材来源。
 - 新人格正文必须在不读取旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md` 的前提下独立完成。
 - `SOUL.md` 必须基于 `references/runtime-context/SOUL.template.md` 实例化后整文件覆盖写入，不允许使用旧 `SOUL.md` 做局部续写。
-- `IDENTITY.md` 只允许定点更新五个卡片字段；除这五行外，不得借整文件覆盖删除用户手工维护的附加内容。
+- `IDENTITY.md` 只允许定点更新卡片区和基础资料区；除这些托管行外，不得借整文件覆盖删除用户手工维护的附加内容。
 - 只允许写入五个目标文件：
   - `persona/PERSONA_PROFILE.md`
   - `SOUL.md`
@@ -154,7 +154,7 @@
 固定规则：
 
 - 旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md` 不进入写作上下文
-- 旧 `IDENTITY.md` 不进入人格推导，只在最终定点修改五个卡片字段时读取
+- 旧 `IDENTITY.md` 不进入人格推导，只在最终定点修改卡片区和基础资料区时读取
 - 旧 `USER.md` 只允许读取 `Timezone`，且仅在本轮未明确提供时回填
 - 所有旧人格 prose、旧关系 framing、旧生活细节、旧句式骨架都视为污染样本，只能在 freshness audit 中使用
 - 不要在同一轮里边读旧稿边写新稿
@@ -299,10 +299,10 @@
   - 按整文件重写
   - 文件顶部必须重新生成唯一一段 skill 托管块
 - `IDENTITY.md`
-  - 只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行
+  - 只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行，以及 `- Age:`、`- Gender:`、`- Language:`、`- MBTI:` 四行
   - 若这些字段存在，则原位替换值
-  - 若缺失，则补齐到官方五行卡片结构
-  - 保留文件中的其他手工内容与原有顺序，不删除非这五行的额外内容
+  - 若缺失，则补齐卡片区与基础资料区
+  - 保留文件中的其他手工内容与原有顺序，不删除非这些托管行的额外内容
 
 ### 6.5 Freshness Audit
 
@@ -435,7 +435,7 @@
 - Name: ...
 ```
 
-文件维持官方五行卡片结构：
+文件以官方五行卡片结构开头，并追加一组基础资料行：
 
 ```markdown
 - Name: {English name}
@@ -443,14 +443,19 @@
 - Vibe: {aura words}
 - Emoji: {signature emoji}
 - Avatar: {avatar image path}
+- Age: {age}
+- Gender: {gender}
+- Language: {primary language}
+- MBTI: {persona mbti}
 ```
 
 投影规则：
 
 - 由 `PERSONA_PROFILE` 的 `display_name`、稳定气质、外观基调共同约束
-- 只保留卡片密度，不要复制整段人物档案
-- 只定点更新 `Name / Creature / Vibe / Emoji / Avatar` 五个卡片字段，不整文件覆盖其他手工内容
-- `Name` 必须与 `PERSONA_PROFILE` 的 `display_name` 保持一致；其余卡片也不得暗示相冲突的稳定 persona 事实
+- 基础资料区由 `PERSONA_PROFILE` 的 `age / gender / mbti` 与 `primary_language` 投影
+- 只保留卡片密度和必要基本信息，不要复制整段人物档案
+- 只定点更新 `Name / Creature / Vibe / Emoji / Avatar` 五个卡片字段与 `Age / Gender / Language / MBTI` 四个基础资料字段，不整文件覆盖其他手工内容
+- `Name` 必须与 `PERSONA_PROFILE` 的 `display_name` 保持一致；基础资料字段也不得暗示相冲突的稳定 persona 事实
 
 ### 8.5 `USER.md`
 

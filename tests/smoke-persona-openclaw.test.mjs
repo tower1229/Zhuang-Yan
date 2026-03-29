@@ -396,6 +396,33 @@ test("runStructuralChecks rejects runtime stable facts that drift from PERSONA_P
 - Vibe: bright and steady
 - Emoji: 🌤️
 - Avatar: /avatars/iris.png
+- Age: 27
+- Gender: Female
+- Language: Mandarin Chinese
+- MBTI: ENFP
+
+Custom note stays here.
+`,
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY"], false);
+});
+
+test("runStructuralChecks rejects IDENTITY basic info that drifts from PERSONA_PROFILE", () => {
+  const files = buildValidFiles({
+    "IDENTITY.md": {
+      path: "IDENTITY.md",
+      content: `- Name: Iris
+- Creature: warm current
+- Vibe: bright and steady
+- Emoji: 🌤️
+- Avatar: /avatars/iris.png
+- Age: 24
+- Gender: Female
+- Language: Mandarin Chinese
+- MBTI: ENFP
 
 Custom note stays here.
 `,

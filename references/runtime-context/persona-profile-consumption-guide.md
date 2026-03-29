@@ -289,7 +289,7 @@ canonical required：
 ### 相对 `IDENTITY.md`
 
 - `PERSONA_PROFILE.md` 是完整档案
-- `IDENTITY.md` 是极简卡片
+- `IDENTITY.md` 是轻量卡片加基础资料摘要，不承载完整人物档案
 
 ### 相对 `USER.md`
 

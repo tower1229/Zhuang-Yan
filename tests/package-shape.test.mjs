@@ -75,7 +75,7 @@ test("SKILL.md owns trigger, boundaries, file ownership, and minimal execution o
   assert.match(skill, /references\/runtime-context\/SOUL\.template\.md/);
   assert.match(skill, /最小执行顺序/);
   assert.match(skill, /SOUL\.md` 只能基于 `references\/runtime-context\/SOUL\.template\.md`/);
-  assert.match(skill, /IDENTITY\.md` 只允许定点更新五个卡片字段/);
+  assert.match(skill, /IDENTITY\.md` 只允许定点更新卡片区和基础资料区/);
   assert.doesNotMatch(skill, /Current City|Core Identity|Relationship State/);
   assert.doesNotMatch(skill, /companion|assistant|mentor|friend/);
 });
@@ -120,7 +120,7 @@ test("drafting spec owns profile normalization, PERSONA_PROFILE contract, and ru
   assert.match(spec, /旧目标文件不再参与生成人格正文/);
   assert.match(spec, /SOUL\.md` 必须基于 `references\/runtime-context\/SOUL\.template\.md` 实例化后整文件覆盖写入/);
   assert.match(spec, /旧 `USER\.md` 只允许在本轮未明确提供 `Timezone` 时读取该字段/);
-  assert.match(spec, /只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行/);
+  assert.match(spec, /只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行，以及 `- Age:`、`- Gender:`、`- Language:`、`- MBTI:` 四行/);
   assert.match(spec, /`SOUL\.md` 残留 `Stella`、`泛舟`、`his`、`little sun`/);
   assert.match(spec, /不得把这件事写成情感降温理由/);
   assert.match(spec, /不要给关系贴 `companion \/ friend \/ mentor \/ assistant \/ 陪伴关系 \/ 朋友关系 \/ 导师关系`/);
@@ -280,6 +280,7 @@ test("smoke runner guards the PERSONA_PROFILE outputs and interview shape", () =
   assert.match(smoke, /PERSONA_PROFILE includes canonical geo anchors and runtime fields/);
   assert.match(smoke, /PERSONA_PROFILE keeps rich persona metadata used by the skill/);
   assert.match(smoke, /PERSONA_PROFILE encodes parser-compatible constraint groups/);
+  assert.match(smoke, /IDENTITY uses the card plus basic-info template/);
   assert.match(smoke, /PERSONA_PROFILE avoids current-time and event claims/);
   assert.match(smoke, /MEMORY stays relationship-focused instead of mirroring PERSONA_PROFILE sections/);
   assert.match(smoke, /PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN/);

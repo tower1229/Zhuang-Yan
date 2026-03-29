@@ -595,8 +595,15 @@ function runStructuralChecks(files) {
   const legacyPlaceholderPattern =
     /Fill this in during your first conversation|This isn't just metadata\. It's the start of figuring out who you are\.|待定/;
   const profileDisplayName = readStructuredValue(profileSections, "identity", "display_name");
+  const profileAge = readStructuredValue(profileSections, "identity", "age");
+  const profileGender = readStructuredValue(profileSections, "identity", "gender");
+  const profileLanguage = readStructuredValue(profileSections, "meta", "primary_language");
   const profileMbti = readStructuredValue(profileSections, "identity", "mbti");
   const identityName = readBulletValue(files["IDENTITY.md"].content, "Name");
+  const identityAge = readBulletValue(files["IDENTITY.md"].content, "Age");
+  const identityGender = readBulletValue(files["IDENTITY.md"].content, "Gender");
+  const identityLanguage = readBulletValue(files["IDENTITY.md"].content, "Language");
+  const identityMbti = readBulletValue(files["IDENTITY.md"].content, "MBTI");
   const soulIntroMatch = files["SOUL.md"].content.match(
     /_You're not a chatbot\. You're becoming someone\. You are (.+?), an ([A-Z]{4}) .+\._/,
   );
@@ -679,8 +686,12 @@ function runStructuralChecks(files) {
       pass:
         looselyAligned(profileDisplayName, identityName) &&
         looselyAligned(profileDisplayName, soulDisplayName) &&
+        looselyAligned(profileAge, identityAge) &&
+        looselyAligned(profileGender, identityGender) &&
+        looselyAligned(profileLanguage, identityLanguage) &&
         Boolean(profileMbti) &&
-        profileMbti === soulMbti,
+        profileMbti === soulMbti &&
+        profileMbti === identityMbti,
     },
     {
       name: "PERSONA_PROFILE encodes parser-compatible constraint groups",
