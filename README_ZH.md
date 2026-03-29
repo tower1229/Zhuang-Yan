@@ -91,18 +91,18 @@ clawhub install persona-skill
 - `SOUL.md`
 - `MEMORY.md`
 
-## 与 Timeline 如何联动
+## 与 stella-timeline-plugin 如何联动
 
-`persona-skill` 和 Timeline 的职责并不重叠。
+`persona-skill` 和 `stella-timeline-plugin` 的职责并不重叠。
 
 - `persona-skill` 负责回答：**她是谁，她应当以什么样的方式与你相处**
-- Timeline 负责回答：**她如何在时间中持续像同一个人那样存在**
+- `stella-timeline-plugin` 负责回答：**她如何在时间中持续像同一个人那样存在**
 
-当同一 workspace 中安装 [stella-timeline-plugin](https://github.com/tower1229/Stella) 时，联动方式是：
+当同一 workspace 中安装 [stella-timeline-plugin](https://github.com/tower1229/Her) 时，联动方式是：
 
 1. `persona-skill` 生成 `persona/PERSONA_PROFILE.md`
-2. Timeline 优先将其解析为内部人格合同
-3. 之后在处理“刚刚”“昨晚”“最近”这类时间表达时，Timeline 可以在连续性之上维持既定人格，而不是滑回通用口吻
+2. `stella-timeline-plugin` 优先将其解析为内部人格合同
+3. 之后在处理“刚刚”“昨晚”“最近”这类时间表达时，`stella-timeline-plugin` 可以在连续性之上维持既定人格，而不是滑回通用口吻
 
 可以把两者理解为：
 

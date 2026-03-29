@@ -89,25 +89,25 @@ These files are **replaced in full** when generated. If you have hand-edited the
 - `SOUL.md`
 - `MEMORY.md`
 
-## Working with Timeline
+## How it works with stella-timeline-plugin
 
-`persona-skill` and Timeline are **not** the same job.
+`persona-skill` and `stella-timeline-plugin` do **not** overlap in responsibility.
 
 - `persona-skill` answers: **who she is, and how she should relate to you.**
-- Timeline answers: **how she stays the same person across time.**
+- `stella-timeline-plugin` answers: **how she keeps feeling like the same person over time.**
 
-When [stella-timeline-plugin](https://github.com/tower1229/Stella) is installed in the same workspace:
+When [stella-timeline-plugin](https://github.com/tower1229/Her) is installed in the same workspace:
 
 1. `persona-skill` writes `persona/PERSONA_PROFILE.md`.
-2. Timeline prefers to parse it as the internal persona contract.
-3. For phrasing like “just now,” “last night,” or “lately,” Timeline can stay in character on top of continuity—instead of slipping into a generic voice.
+2. `stella-timeline-plugin` prefers to parse it as the internal persona contract.
+3. When handling phrases like “just now,” “last night,” or “lately,” `stella-timeline-plugin` can preserve the established persona on top of continuity—instead of slipping into a generic voice.
 
-In short:
+Think of it as:
 
-- **Persona** → stable *who*
-- **Timeline** → *time* and continuity
+- **Persona** → **personality stability**
+- **Timeline** → **continuity through time**
 
-Together, OpenClaw has a better chance of **one believable persona** over long use.
+With both layers, OpenClaw is more likely to **keep one believable persona** across long-running interactions.
 
 ## Read and generation principles
 
