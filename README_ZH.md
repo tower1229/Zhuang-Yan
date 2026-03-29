@@ -78,7 +78,7 @@ clawhub install persona-skill
 它们各自承担不同职责：
 
 - `persona/PERSONA_PROFILE.md`
-  - 结构化人格档案，也是给下游 Skill 消费的人设合同
+  - 结构化人格档案，也是给下游 Skill 消费的人设合同；档案在固定结构下的外化属性与短条目（如 appearance、scene 与 constraint 等字段约定详见消费指南）
 - `SOUL.md`
   - 运行时人格表达、边界和互动风格
 - `MEMORY.md`

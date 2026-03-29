@@ -59,9 +59,9 @@ Initialization is one full chain: **understand you → infer persona → persist
 
 One-line pipeline:
 
-`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> five-file projection`
+`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> runtime file projection`
 
-So `persona-skill` does not emit a disposable “vibe layer”—it emits a **stable persona spec** that can keep constraining runtime behavior over time.
+So `persona-skill` does not emit a disposable “vibe layer”—it emits a **stable persona spec** that can keep constraining runtime behavior over time, and that hands off cleanly to **downstream skills and Timeline** via `persona/PERSONA_PROFILE.md`.
 
 ## What you get
 
