@@ -90,6 +90,14 @@ clawhub install persona-skill
 
 其中，`PERSONA_PROFILE` 是“档案先行”的那一层。它先把稳定事实写清楚，再约束其余运行时文件，避免人格只停留在散文式描述里。
 
+### 注意：！！覆盖写入策略！！
+
+`persona-skill` 生成下列文件时，会覆盖式写入，如果其中有你自定义的内容并且希望在初始化人格后保留，请在生成前手动备份。如果你不明白我在说什么，说明你不需要这条建议。
+
+- `persona/PERSONA_PROFILE.md`
+- `SOUL.md`
+- `MEMORY.md`
+
 ## 与 Timeline 如何联动
 
 `persona-skill` 和 Timeline 的职责并不重叠。
