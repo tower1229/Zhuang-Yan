@@ -9,19 +9,14 @@ Naming this project **persona-skill** after Zhuang Yan is not about replaying a 
 That is what **persona-skill** is for.  
 Not to paint OpenClaw with a thin layer of “personality,” but to help each person write **their own** Zhuang Yan.
 
-<!-- more -->
-
 ## What it is
 
-`persona-skill` is a **persona initialization Skill** for OpenClaw.
+At heart, two things:
 
-It does not handle improvised chat in the moment, memory recall, or cross-skill orchestration. It runs only when you **explicitly ask to initialize or rebuild persona**. Its job is to turn a bounded interview into a **runnable, reusable persona contract** that downstream layers can consume—so how OpenClaw shows up no longer depends on random improvisation.
+1. Under the **MBTI personality framework**, plus a bounded interview, **persona-skill** tailors an **OpenClaw persona that fits you** and writes the final draft into workspace files such as `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
+2. It also produces a **structured `persona/PERSONA_PROFILE.md`**: a parseable, checkable **contract** for the persona so modules like Timeline can read the same fields consistently.
 
-In short:
-
-- It first understands your psychological structure and how you want to be met in relationship.
-- Then, within an MBTI framing, it reverse-engineers a better-matched persona direction.
-- Finally it writes stable runtime files and a structured profile you can rely on.
+It runs only when you **explicitly ask to initialize or rebuild persona**; casual chat or status checks will not start it on their own.
 
 ## Install
 
@@ -33,7 +28,7 @@ No extra API keys and no extra environment variables.
 
 ## How to use
 
-This Skill works only when **explicitly triggered**. You can use prompts like:
+The Skill runs only when you **issue a clear initialization-style command**. For example:
 
 - `调用 persona 进行初始化`
 - `初始化人格`
@@ -41,27 +36,25 @@ This Skill works only when **explicitly triggered**. You can use prompts like:
 - `initialize persona`
 - `run persona initialization`
 
-For ordinary chat, discussing tone, checking current state, or Timeline / Memory workflows, `persona-skill` stays out of the way.
-
 ## How it works
 
-Initialization is one full chain: **understand you → infer persona → persist to disk**.
+Initialization is one continuous chain: **the interview clarifies you and what you need → MBTI framing infers persona direction → the final draft is written back to the workspace**.
 
-1. The interview anchors your `human_mbti` and fills in the minimum stable user-side picture.
-2. A deterministic reverse lookup maps `human_mbti` to a recommended `persona_mbti`, and produces a high-signal social-needs bundle:
+1. The interview locks in your `human_mbti` and the minimum stable user-side information.
+2. A deterministic reverse lookup maps `human_mbti` to a recommended `persona_mbti`, and yields a **clearly targeted** set of social-needs summaries:
    - `social_friction_signature`
    - `core_social_need`
    - `ideal_counterparty_presence`
    - `pair_core_value`
    - `desired_emotional_impact`
-3. That bundle becomes the skeleton for the `persona spec`.
-4. The spec is written to `persona/PERSONA_PROFILE.md` first, then projected into `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
+3. That set forms the skeleton for the `persona spec`.
+4. The spec is finalized in `persona/PERSONA_PROFILE.md` first, then carried into `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
 
-One-line pipeline:
+The pipeline in short:
 
-`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> runtime file projection`
+`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> the other four files`
 
-So `persona-skill` does not emit a disposable “vibe layer”—it emits a **stable persona spec** that can keep constraining runtime behavior over time, and that hands off cleanly to **downstream skills and Timeline** via `persona/PERSONA_PROFILE.md`.
+So `persona-skill` does not ship a one-off tone tweak—it ships a **persona spec that can constrain runtime behavior over the long run**.
 
 ## What you get
 
@@ -73,24 +66,24 @@ After initialization, the Skill updates these five files:
 - `IDENTITY.md`
 - `USER.md`
 
-Each has a distinct role:
+Each plays a different part:
 
-- **`persona/PERSONA_PROFILE.md`**  
-  Structured persona archive and the **contract** other Skills consume.
-- **`SOUL.md`**  
-  Runtime expression of persona: boundaries and interaction style.
-- **`MEMORY.md`**  
+- `persona/PERSONA_PROFILE.md`  
+  Structured persona archive and the contract other Skills read; externalized traits and short entries under a fixed shape (field rules for appearance, scene, constraint, etc. are in `persona-profile-consumption-guide`).
+- `SOUL.md`  
+  Runtime persona voice, boundaries, and interaction style.
+- `MEMORY.md`  
   Stable relational stance, support patterns, and what to avoid.
-- **`IDENTITY.md`**  
+- `IDENTITY.md`  
   Persona card and baseline identity.
-- **`USER.md`**  
-  How to address you, pronouns, timezone, and long-lived user facts.
+- `USER.md`  
+  How to address you, pronouns, timezone, and long-lived user-side facts.
 
-`PERSONA_PROFILE` leads: facts are nailed down first, then the rest of the runtime files are aligned—so persona is not trapped in prose alone.
+`PERSONA_PROFILE` is finalized first: stable facts are written fully and accurately, then the other runtime files follow—so the persona is not held up by prose alone.
 
-### Note: overwrite policy
+### Note: full overwrite
 
-When `persona-skill` generates the following files, it **overwrites** them. If you have customized content in any of them and want to keep it after persona initialization, back those files up manually before generation. If you are unsure what this means, it probably does not apply to you.
+These files are **replaced in full** when generated. If you have hand-edited them and want to keep those changes, back them up first. If you are not sure this applies to you, you can skip this note.
 
 - `persona/PERSONA_PROFILE.md`
 - `SOUL.md`
@@ -98,44 +91,51 @@ When `persona-skill` generates the following files, it **overwrites** them. If y
 
 ## Working with Timeline
 
-`persona-skill` and Timeline do **not** overlap in job description.
+`persona-skill` and Timeline are **not** the same job.
 
-- **`persona-skill`** answers: *who she is, and how she should relate to you.*
-- **Timeline** answers: *how she keeps feeling like the same person across time.*
+- `persona-skill` answers: **who she is, and how she should relate to you.**
+- Timeline answers: **how she stays the same person across time.**
 
 When [stella-timeline-plugin](https://github.com/tower1229/Stella) is installed in the same workspace:
 
-1. `persona-skill` produces `persona/PERSONA_PROFILE.md`.
-2. Timeline prefers parsing it as the internal persona contract.
-3. For phrases like “just now,” “last night,” or “lately,” Timeline can stay on-character on top of continuity—instead of sliding back to a generic voice.
+1. `persona-skill` writes `persona/PERSONA_PROFILE.md`.
+2. Timeline prefers to parse it as the internal persona contract.
+3. For phrasing like “just now,” “last night,” or “lately,” Timeline can stay in character on top of continuity—instead of slipping into a generic voice.
 
-Think of it as:
+In short:
 
 - **Persona** → stable *who*
-- **Timeline** → credible *when / continuity*
+- **Timeline** → *time* and continuity
 
-Together, OpenClaw has a much better shot at **one believable persona** over long-horizon use.
+Together, OpenClaw has a better chance of **one believable persona** over long use.
 
 ## Read and generation principles
 
-To keep initialization from being polluted by irrelevant context, the project uses **progressive disclosure**:
+To keep initialization from being pulled off-course by irrelevant context, documentation is read **in stages** (progressive disclosure):
 
 1. `SKILL.md` decides whether initialization should run.
-2. After trigger, read `references/protocols/initialization-flow.md`.
+2. After the trigger, read `references/protocols/initialization-flow.md`.
 3. After the interview, read `references/protocols/drafting-spec.md`.
-4. Only when drafting, pull in templates, the `PERSONA_PROFILE` consumption guide, MBTI assets, and type references as needed.
+4. Only while drafting, pull in the template pack, the `PERSONA_PROFILE` structure notes, MBTI assets, and the relevant type references as needed.
 
-The point: the model reads **only what the current stage needs**, and avoids loading old personas, unrelated rules, or noisy docs too early.
+That way the model reads only what the current step needs, and avoids loading an old persona, unrelated rules, or noisy docs too early.
 
 ## Key documents
 
-- [SKILL.md](./SKILL.md) — Skill boundaries, triggers, and allowed write targets  
-- [references/protocols/initialization-flow.md](./references/protocols/initialization-flow.md) — Interview flow and question order  
-- [references/protocols/drafting-spec.md](./references/protocols/drafting-spec.md) — Drafting rules, write boundaries, projection, and freshness audit  
-- [references/runtime-context/template-pack.md](./references/runtime-context/template-pack.md) — Templates and quality bar for `PERSONA_PROFILE`, `SOUL`, `MEMORY`  
-- [references/runtime-context/persona-profile-consumption-guide.md](./references/runtime-context/persona-profile-consumption-guide.md) — Structure and downstream use of `persona/PERSONA_PROFILE.md`  
-- [docs/persona-skill-design.md](./docs/persona-skill-design.md) — Overall architecture and file roles  
-- [docs/persona-initialization-evaluation.md](./docs/persona-initialization-evaluation.md) — Post-init checklist and evaluation  
+- [SKILL.md](./SKILL.md)  
+  Skill boundaries, triggers, and allowed write targets.
+- [references/protocols/initialization-flow.md](./references/protocols/initialization-flow.md)  
+  Initialization interview flow and question order.
+- [references/protocols/drafting-spec.md](./references/protocols/drafting-spec.md)  
+  Drafting rules, write boundaries, file projection, and freshness audit.
+- [references/runtime-context/template-pack.md](./references/runtime-context/template-pack.md)  
+  Templates and quality bar for `PERSONA_PROFILE`, `SOUL`, and `MEMORY`.
+- [references/runtime-context/persona-profile-consumption-guide.md](./references/runtime-context/persona-profile-consumption-guide.md)  
+  Structure of `persona/PERSONA_PROFILE.md` and how downstream code should reference it.
+- [docs/persona-skill-design.md](./docs/persona-skill-design.md)  
+  Overall architecture and file roles.
+- [docs/persona-initialization-evaluation.md](./docs/persona-initialization-evaluation.md)  
+  Post-init acceptance checklist and evaluation.
 
 ## For maintainers
 
@@ -147,9 +147,9 @@ npm run publish:clawhub
 
 Tests cover MBTI lookup, identity-card updates, package layout, and smoke checks after persona initialization.
 
-## Project
+## Project info
 
-- Repository: [tower1229/Zhuang-Yan](https://github.com/tower1229/Zhuang-Yan)  
-- Issues: [GitHub Issues](https://github.com/tower1229/Zhuang-Yan/issues)  
-- Node.js: `>=18.18`  
-- License: `MIT-0`  
+- Repository: [tower1229/Zhuang-Yan](https://github.com/tower1229/Zhuang-Yan)
+- Issues: [GitHub Issues](https://github.com/tower1229/Zhuang-Yan/issues)
+- Node.js: `>=18.18`
+- License: `MIT-0`

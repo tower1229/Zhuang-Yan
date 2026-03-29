@@ -11,19 +11,14 @@ persona-skill 以“庄颜”为名，并不是为了复刻某个文学人物。
 不是给 OpenClaw 增加一点人格色彩。
 而是尽可能为每个人，写下一个属于自己的“庄颜”。
 
-<!-- more -->
-
 ## 它是什么
 
-`persona-skill` 是一个面向 OpenClaw 的人格初始化 Skill。
+核心可以概括成两件事：
 
-它不负责日常聊天中的临场发挥，也不负责记忆回溯或跨 Skill 编排；它只在你**明确要求初始化或重建人格**时启动。它的工作，是把一次有边界的采访，转化为一份可运行、可复用、可被下游消费的人格合同，让 OpenClaw 的相处方式不再依赖随机发挥。
+1. 在 **MBTI 人格分析框架**下，结合有边界的采访，为你**定制一套最适合自己的 OpenClaw 人格**，并把定稿写进 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 等工作区文件。
+2. 同时生成 **结构化的 `persona/PERSONA_PROFILE.md`**：给人设一份可解析、可对照的「合同」，方便 Timeline 等模块按同一套字段读取。
 
-简单说：
-
-- 它先理解用户侧的心理结构与相处需求
-- 再在 MBTI 框架下反推更合适的 persona 方向
-- 最后把结果写成稳定的运行时文件和结构化档案
+它只在**明确要求初始化或重建人格**时才会运行；平常闲聊或问状态，不会自动启动。
 
 ## 安装
 
@@ -35,7 +30,7 @@ clawhub install persona-skill
 
 ## 如何使用
 
-这个 Skill 只在**显式触发**时工作。你可以使用类似下面的指令：
+只有在你**明确发出初始化类指令**时，这个 Skill 才会工作。例如：
 
 - `调用 persona 进行初始化`
 - `初始化人格`
@@ -43,27 +38,25 @@ clawhub install persona-skill
 - `initialize persona`
 - `run persona initialization`
 
-如果只是普通聊天、讨论说话风格、查询当前状态，或处理 Timeline / Memory 类问题，`persona-skill` 不会介入。
-
 ## 它如何工作
 
-初始化流程是一次完整的“理解用户 -> 反推人格 -> 落盘成档”的链路：
+初始化是一条连贯链路：**采访把人和需求问清楚 → 在 MBTI 框架下反推人格方向 → 把定稿写回工作区**。
 
-1. 采访先锁定用户的 `human_mbti`，并补齐最基本的用户侧稳定信息。
-2. 通过确定性的 reverse lookup，将 `human_mbti` 映射到推荐的 `persona_mbti`，并同时产出一组高信号社交需求包：
+1. 采访先锁定用户的 `human_mbti`，并补齐最必要的用户侧稳定信息。
+2. 经确定性的 reverse lookup，把 `human_mbti` 映射到推荐的 `persona_mbti`，并整理出一组**指向清晰**的社交需求摘要：
    - `social_friction_signature`
    - `core_social_need`
    - `ideal_counterparty_presence`
    - `pair_core_value`
    - `desired_emotional_impact`
 3. 以这组信息为骨架，生成 `persona spec`。
-4. 先写入 `persona/PERSONA_PROFILE.md`，再投影到 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`。
+4. 先定稿并写入 `persona/PERSONA_PROFILE.md`，再据此写出 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`。
 
-整条管线可以概括为：
+整条管线可简记为：
 
-`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> 五文件投影`
+`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> 其余四份文件`
 
-这意味着，`persona-skill` 生成的不是一层临时语气，而是一份可以持续约束运行时行为的稳定人格规格。
+因此，`persona-skill` 产出的不是一时一地的语气微调，而是**能长期约束运行时行为的人格规格**。
 
 ## 会产出什么
 
@@ -78,7 +71,7 @@ clawhub install persona-skill
 它们各自承担不同职责：
 
 - `persona/PERSONA_PROFILE.md`
-  - 结构化人格档案，也是给下游 Skill 消费的人设合同；档案在固定结构下的外化属性与短条目（如 appearance、scene 与 constraint 等字段约定详见消费指南）
+  - 结构化人格档案，也是给其他 Skill 读取的人设合同；固定结构下的外化属性与短条目（appearance、scene、constraint 等字段约定见 `persona-profile-consumption-guide`）
 - `SOUL.md`
   - 运行时人格表达、边界和互动风格
 - `MEMORY.md`
@@ -88,11 +81,11 @@ clawhub install persona-skill
 - `USER.md`
   - 用户称呼、代词、时区和长期应记住的用户侧信息
 
-其中，`PERSONA_PROFILE` 是“档案先行”的那一层。它先把稳定事实写清楚，再约束其余运行时文件，避免人格只停留在散文式描述里。
+其中，`PERSONA_PROFILE` 先定稿：稳定事实写全、写准，再约束其余几份运行时文件，避免人格只靠大段散文撑着。
 
-### 注意：！！覆盖写入策略！！
+### 注意：覆盖写入
 
-`persona-skill` 生成下列文件时，会覆盖式写入，如果其中有你自定义的内容并且希望在初始化人格后保留，请在生成前手动备份。如果你不明白我在说什么，说明你不需要这条建议。
+下列文件在生成时会被**整文件覆盖**。若你已手工改过其中内容且希望保留，请先自行备份。若不确定是否与你有关，可跳过本条。
 
 - `persona/PERSONA_PROFILE.md`
 - `SOUL.md`
@@ -120,14 +113,14 @@ clawhub install persona-skill
 
 ## 读取与生成原则
 
-为了减少初始化过程被无关上下文污染，项目采用渐进式披露：
+为避免初始化被无关上下文带偏，文档按阶段拆开阅读（渐进式披露）：
 
 1. 先由 `SKILL.md` 判断是否应当触发初始化
 2. 触发后读取 `references/protocols/initialization-flow.md`
 3. 采访结束后读取 `references/protocols/drafting-spec.md`
-4. 真正起草时，再按需读取模板包、`PERSONA_PROFILE` 消费指南、MBTI 资产和对应类型参考
+4. 真正起草时，再按需读取模板包、`PERSONA_PROFILE` 结构说明、MBTI 资产和对应类型参考
 
-这套顺序的目的，是让模型始终只在当前阶段读取必要信息，避免过早加载旧人格、无关规范或噪声文档。
+这样模型在每个阶段只读当下需要的内容，减少过早载入旧人格、无关规范或杂音文档。
 
 ## 重要文档
 
@@ -140,7 +133,7 @@ clawhub install persona-skill
 - [references/runtime-context/template-pack.md](./references/runtime-context/template-pack.md)
   - `PERSONA_PROFILE`、`SOUL`、`MEMORY` 的模板与质量标尺
 - [references/runtime-context/persona-profile-consumption-guide.md](./references/runtime-context/persona-profile-consumption-guide.md)
-  - `persona/PERSONA_PROFILE.md` 的结构约定与下游消费方式
+  - `persona/PERSONA_PROFILE.md` 的结构约定及下游引用方式
 - [docs/persona-skill-design.md](./docs/persona-skill-design.md)
   - 项目总体架构与文件职责
 - [docs/persona-initialization-evaluation.md](./docs/persona-initialization-evaluation.md)
