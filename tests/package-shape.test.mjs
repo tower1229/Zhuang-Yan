@@ -164,6 +164,7 @@ test("SOUL.template.md provides the fixed SOUL runtime skeleton", () => {
   assert.match(soulTemplate, /^## Vibe$/m);
   assert.match(soulTemplate, /^## Continuity$/m);
   assert.match(soulTemplate, /update `persona\/PERSONA_PROFILE\.md` in the same pass/);
+  assert.match(soulTemplate, /If you need richer stable persona details and `IDENTITY\.md` is not enough, read `persona\/PERSONA_PROFILE\.md`/);
   assert.match(soulTemplate, /Stella|泛舟|little sun/);
 });
 
@@ -182,6 +183,7 @@ test("persona profile consumption guide defines how downstream skills should rea
   assert.match(guide, /`appearance_priority`/);
   assert.match(guide, /推荐读取顺序/);
   assert.match(guide, /运行时以 `SOUL\.md` 为准/);
+  assert.match(guide, /若 `IDENTITY\.md` 不足以回答稳定人物细节，再补读 `PERSONA_PROFILE\.md`/);
   assert.match(guide, /若维护者在 `SOUL\.md`、`MEMORY\.md`、`IDENTITY\.md`、`USER\.md` 中改写了稳定 persona 事实，必须同步回写 `PERSONA_PROFILE\.md`/);
   assert.match(guide, /纯运行时话术、关系过程更新或纯用户侧信息更新，不应反向污染 `PERSONA_PROFILE\.md`/);
   assert.match(guide, /不要试图让 `PERSONA_PROFILE\.md` 一份文件承担全部运行时文件的工作/);

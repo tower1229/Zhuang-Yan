@@ -280,6 +280,7 @@ canonical required：
 - `PERSONA_PROFILE.md` 回答：她稳定是什么样的人
 - `SOUL.md` 回答：她在运行时应该怎样对待你
 - 若两者出现冲突，运行时以 `SOUL.md` 为准
+- 若运行时 agent 只需要轻量身份摘要，先看 `IDENTITY.md`；若 `IDENTITY.md` 不足以回答稳定人物细节，再补读 `PERSONA_PROFILE.md`
 
 ### 相对 `MEMORY.md`
 

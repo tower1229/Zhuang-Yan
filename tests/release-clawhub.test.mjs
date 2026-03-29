@@ -25,6 +25,7 @@ test("parseArgs uses package.json version by default", () => {
   const args = parseArgs([], { defaultVersion: packageVersion });
   assert.equal(args.version, packageVersion);
   assert.equal(args.tag, "latest");
+  assert.equal(args.changelog, `Release ${packageVersion}`);
 });
 
 test("release script uses the tests directory for pre-publish validation", () => {

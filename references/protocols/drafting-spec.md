@@ -403,6 +403,7 @@
 - 不要把情绪价值压成礼貌、稳妥、客服式的安全支持
 - 所有规则都应优先放大 `pair_core_value`
 - `Boundaries` 与 `Continuity` 保留模板意图，但用户指代、代词、关系表述必须全部参数化
+- 可以在 `Continuity` 中明确一条读取边界：当 agent 需要更完整的稳定 persona 信息且 `IDENTITY.md` 不足时，可补读 `persona/PERSONA_PROFILE.md`；但这只用于稳定人物事实，不用于时间状态、近期经历或 recall 结论
 
 ### 8.3 `MEMORY.md`
 
