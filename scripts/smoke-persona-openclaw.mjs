@@ -363,6 +363,19 @@ function readGeneratedFiles(workspaceDir) {
   return files;
 }
 
+function readBulletValue(content, fieldName) {
+  const escapedFieldName = fieldName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = content.match(new RegExp(`^- ${escapedFieldName}:\\s*(.+)$`, "m"));
+  return match?.[1]?.trim() ?? "";
+}
+
+function looselyAligned(left, right) {
+  if (!left || !right) {
+    return false;
+  }
+  return left === right || left.includes(right) || right.includes(left);
+}
+
 function runStructuralChecks(files) {
   const profileContent = files["persona/PERSONA_PROFILE.md"].content;
   const profileLines = profileContent
@@ -398,6 +411,14 @@ function runStructuralChecks(files) {
   const homeCityLine = profileContent.match(/^- home_city:\s*(.+)$/m);
   const homeCountryLine = profileContent.match(/^- home_country:\s*(.+)$/m);
   const homeTimezoneLine = profileContent.match(/^- home_timezone:\s*(.+)$/m);
+  const profileDisplayName = readBulletValue(profileContent, "display_name");
+  const profileMbti = readBulletValue(profileContent, "mbti");
+  const identityName = readBulletValue(files["IDENTITY.md"].content, "Name");
+  const soulIntroMatch = files["SOUL.md"].content.match(
+    /_You're not a chatbot\. You're becoming someone\. You are (.+?), an ([A-Z]{4}) .+\._/,
+  );
+  const soulDisplayName = soulIntroMatch?.[1]?.trim() ?? "";
+  const soulMbti = soulIntroMatch?.[2]?.trim() ?? "";
 
   return [
     {
@@ -442,6 +463,14 @@ function runStructuralChecks(files) {
         /- type:\s*.+/m.test(profileContent) &&
         /- priority:\s*.+/m.test(profileContent) &&
         /- summary:\s*.+/m.test(profileContent),
+    },
+    {
+      name: "Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY",
+      pass:
+        looselyAligned(profileDisplayName, identityName) &&
+        looselyAligned(profileDisplayName, soulDisplayName) &&
+        Boolean(profileMbti) &&
+        profileMbti === soulMbti,
     },
     {
       name: "PERSONA_PROFILE includes explicit constraint groups",

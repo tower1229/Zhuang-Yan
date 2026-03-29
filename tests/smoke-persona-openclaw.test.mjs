@@ -175,6 +175,7 @@ test("runStructuralChecks accepts SOUL output that keeps the template skeleton b
   const checks = checkMap(runStructuralChecks(buildValidFiles()));
   assert.equal(checks["SOUL keeps the template runtime skeleton"], true);
   assert.equal(checks["SOUL parameterizes template example values and MEMORY avoids replacement-history leakage"], true);
+  assert.equal(checks["Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY"], true);
 });
 
 test("runStructuralChecks rejects unchanged SOUL template example values", () => {
@@ -239,6 +240,25 @@ Iris 和泛舟处于早期阶段的陪伴关系。
 
   const checks = checkMap(runStructuralChecks(files));
   assert.equal(checks["MEMORY avoids relationship labels and early-stage cooling language"], false);
+});
+
+test("runStructuralChecks rejects runtime stable facts that drift from PERSONA_PROFILE", () => {
+  const files = buildValidFiles({
+    "IDENTITY.md": {
+      path: "IDENTITY.md",
+      content: `- Name: Stella
+- Creature: warm current
+- Vibe: bright and steady
+- Emoji: 🌤️
+- Avatar: /avatars/iris.png
+
+Custom note stays here.
+`,
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY"], false);
 });
 
 test("runTranscriptChecks enforces separate turns for Step 5 age question and Step 6 durable-note question", () => {

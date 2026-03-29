@@ -218,6 +218,8 @@
 - 再让 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 参考这份人物档案做一致性约束
 - `PERSONA_PROFILE` 不是唯一上游真相源，但它是第一个落盘的结构化人物档案
 - 同样的人设约束也必须重新生成，而不是把旧人格换几个字段后继续沿用
+- 后续维护同样遵守：若本轮对 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 的改动引入或改写了稳定 persona 事实，必须同轮审查并同步更新 `persona/PERSONA_PROFILE.md`
+- 只有纯运行时回应策略、关系过程记录、或纯用户侧事实更新可以不回写 `PERSONA_PROFILE`
 
 随机化总则：
 
@@ -398,6 +400,7 @@
 - 高密度、可执行、面向运行时
 - 重点写人格内核、互动边界、默认支持姿态、情绪供给方式、反模式
 - 允许比 `PERSONA_PROFILE` 更强烈、更有互动导向，但不得违反其稳定事实边界
+- 若改动新增或改写了稳定 persona 事实（如名字、MBTI、年龄、性别、life stage、长期气质、外观或场景约束），必须同步回写 `persona/PERSONA_PROFILE.md`
 - 不要重复完整人物传记
 - 不能只有“有帮助”，还必须让人明显感到被靠近、被带动、被点亮
 - 不要把情绪价值压成礼貌、稳妥、客服式的安全支持
@@ -425,6 +428,7 @@
 - 支持模式必须能体现 `execution_trigger_protocol`
 - 必须让人明显感到被持续理解、被及时缓冲、被主动拉回连接
 - 不要写成第二份人物档案或第二份 `PERSONA_PROFILE`
+- 纯关系过程、支持策略与修复模式更新默认不要求改写 `PERSONA_PROFILE`；只有当文本实际上改写了稳定 persona 事实或稳定关系信号时，才同步回写
 
 ### 8.4 `IDENTITY.md`
 
@@ -449,6 +453,7 @@
 - 由 `PERSONA_PROFILE` 的 `display_name`、稳定气质、外观基调共同约束
 - 只保留卡片密度，不要复制整段人物档案
 - 只定点更新 `Name / Creature / Vibe / Emoji / Avatar` 五个卡片字段，不整文件覆盖其他手工内容
+- `Name` 必须与 `PERSONA_PROFILE` 的 `display_name` 保持一致；其余卡片也不得暗示相冲突的稳定 persona 事实
 
 ### 8.5 `USER.md`
 
@@ -475,6 +480,8 @@
 
 - 不要虚构客观属性
 - `Notes` 可以做谨慎推断，但不得引入旧稿残留
+- `USER.md` 只记录用户侧稳定信息，不得借它偷改 persona 的稳定设定
+- 若确实需要通过本轮维护改写 persona 的稳定事实，应先更新 `persona/PERSONA_PROFILE.md`，再投影到其他文件
 
 ## 9. 自检与回炉
 

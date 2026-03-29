@@ -30,6 +30,8 @@
 - 若某段落出现解释性 prose，以其中能够稳定复用的事实和外在特征为准
 - 不要从 `PERSONA_PROFILE.md` 反推不存在的关系标签、岗位职责或时间事实
 - 不要把 `Scene Anchors` 中的可复用场景误当成已经发生过的历史
+- 若维护者在 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 中改写了稳定 persona 事实，必须同步回写 `PERSONA_PROFILE.md`
+- 纯运行时话术、关系过程更新或纯用户侧信息更新，不应反向污染 `PERSONA_PROFILE.md`
 
 ## 3. 一级结构约定
 

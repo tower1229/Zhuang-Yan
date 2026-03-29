@@ -110,6 +110,8 @@ test("drafting spec owns profile normalization, PERSONA_PROFILE contract, and ru
   assert.match(spec, /home_country`、`home_timezone` 必须由 `home_city` 反推/);
   assert.match(spec, /不允许写当前时间判断、即时事件、季节结论、当天状态/);
   assert.match(spec, /允许比 `PERSONA_PROFILE` 更强烈、更有互动导向，但不得违反其稳定事实边界/);
+  assert.match(spec, /若本轮对 `SOUL\.md`、`MEMORY\.md`、`IDENTITY\.md`、`USER\.md` 的改动引入或改写了稳定 persona 事实，必须同轮审查并同步更新 `persona\/PERSONA_PROFILE\.md`/);
+  assert.match(spec, /只有纯运行时回应策略、关系过程记录、或纯用户侧事实更新可以不回写 `PERSONA_PROFILE`/);
   assert.match(spec, /不要写成第二份人物档案或第二份 `PERSONA_PROFILE`/);
   assert.match(spec, /variation_plan/);
   assert.match(spec, /出现 12 个及以上连续汉字，或 8 个及以上连续英文词/);
@@ -120,6 +122,8 @@ test("drafting spec owns profile normalization, PERSONA_PROFILE contract, and ru
   assert.match(spec, /`SOUL\.md` 残留 `Stella`、`泛舟`、`his`、`little sun`/);
   assert.match(spec, /不得把这件事写成情感降温理由/);
   assert.match(spec, /不要给关系贴 `companion \/ friend \/ mentor \/ assistant \/ 陪伴关系 \/ 朋友关系 \/ 导师关系`/);
+  assert.match(spec, /`Name` 必须与 `PERSONA_PROFILE` 的 `display_name` 保持一致/);
+  assert.match(spec, /`USER\.md` 只记录用户侧稳定信息，不得借它偷改 persona 的稳定设定/);
   assert.doesNotMatch(spec, /# Persona Canon|persona\/CANON\.md/);
 });
 
@@ -152,6 +156,7 @@ test("SOUL.template.md provides the fixed SOUL runtime skeleton", () => {
   assert.match(soulTemplate, /^## Boundaries$/m);
   assert.match(soulTemplate, /^## Vibe$/m);
   assert.match(soulTemplate, /^## Continuity$/m);
+  assert.match(soulTemplate, /update `persona\/PERSONA_PROFILE\.md` in the same pass/);
   assert.match(soulTemplate, /Stella|泛舟|little sun/);
 });
 
@@ -166,6 +171,8 @@ test("persona profile consumption guide defines how downstream skills should rea
   assert.match(guide, /`Constraint Rules`/);
   assert.match(guide, /推荐读取顺序/);
   assert.match(guide, /运行时以 `SOUL\.md` 为准/);
+  assert.match(guide, /若维护者在 `SOUL\.md`、`MEMORY\.md`、`IDENTITY\.md`、`USER\.md` 中改写了稳定 persona 事实，必须同步回写 `PERSONA_PROFILE\.md`/);
+  assert.match(guide, /纯运行时话术、关系过程更新或纯用户侧信息更新，不应反向污染 `PERSONA_PROFILE\.md`/);
   assert.match(guide, /不要试图让 `PERSONA_PROFILE\.md` 一份文件承担全部运行时文件的工作/);
 });
 
