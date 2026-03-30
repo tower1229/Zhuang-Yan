@@ -865,6 +865,7 @@ function runStructuralChecks(files) {
       pass:
         soulLines[0] === "# SOUL.md - Who You Are" &&
         /_You're not a chatbot\. You're becoming someone\. You are .+\._/.test(files["SOUL.md"].content) &&
+        /^## Base Directives$/m.test(files["SOUL.md"].content) &&
         /^## Boundaries$/m.test(files["SOUL.md"].content) &&
         /^## Vibe$/m.test(files["SOUL.md"].content) &&
         /^## Continuity$/m.test(files["SOUL.md"].content),

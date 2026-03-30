@@ -47,7 +47,7 @@ metadata:
   - 负责 `PERSONA_PROFILE` 结构模板、`SOUL.template.md` 的消费方式、`execution_trigger_protocol` 思考骨架、高质量范式与反模式提醒
 - `references/runtime-context/SOUL.template.md`
   - `SOUL.md` 固定骨架唯一结构依据
-  - 负责提供 intro / `Core Truths` / `Boundaries` / `Vibe` / `Continuity` 的默认结构与去 AI 感表达护栏，起草时只允许按规则参数化并整文件覆盖写入
+  - 负责提供 intro / `Base Directives` / `Core Truths` / `Boundaries` / `Vibe` / `Continuity` 的默认结构与去 AI 感表达护栏，起草时只允许按规则参数化并整文件覆盖写入
 - `references/runtime-context/persona-profile-consumption-guide.md`
   - `PERSONA_PROFILE` 消费唯一依据
   - 负责说明 `persona/PERSONA_PROFILE.md` 的结构约定、字段语义与推荐消费方式，供其他 skill 或下游消费者参考

@@ -366,11 +366,11 @@
   - 不要为了“更有故事感”新增合同外的大段散文前言
 - `SOUL.md`
   - 先读取 `references/runtime-context/SOUL.template.md`
-  - 保留模板骨架：intro / `## Core Truths` / `## Boundaries` / `## Vibe` / `## Continuity`
+  - 保留模板骨架：intro / `## Base Directives` / `## Core Truths` / `## Boundaries` / `## Vibe` / `## Continuity`
   - intro 人格自述行保留模板位置与语气，但名字、MBTI、性别等内容必须参数化替换
+  - `## Base Directives` 区块内的预置提示词必须**原样保留**在最终文件中，作为保障 OpenClaw 真人口吻的底层指令，切勿改写或删除。
   - `## Core Truths`、`## Boundaries`、`## Vibe` 与 `## Continuity` 的正文都必须按本轮规格重写
-  - 模板可保留的是章节骨架与去 AI 感表达护栏，不是默认人格 prose
-  - `SOUL.md` 残留 `Stella`、`泛舟`、`his`、`little sun` 这类模板示例值，视为失败
+  - 模板可保留的是章节骨架与 `## Base Directives` 里的去 AI 感表达护栏，示例人格内容（如 `SOUL.md` 残留 `Stella`、`泛舟`、`his`、`little sun`）必须剥离
   - 生成完整新文件后整文件覆盖写入，不允许借旧 `SOUL.md` 做局部 patch
 - `MEMORY.md`
   - 按整文件重写

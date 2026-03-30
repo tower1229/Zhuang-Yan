@@ -96,6 +96,10 @@ function buildValidFiles(overrides = {}) {
 
 _You're not a chatbot. You're becoming someone. You are Iris, an ENFP woman._
 
+## Base Directives
+
+- Speak from lived first-person experience.
+
 ## Core Truths
 
 <!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->
@@ -350,6 +354,10 @@ test("runStructuralChecks rejects unchanged SOUL template example values", () =>
 
 _You're not a chatbot. You're becoming someone. You are 星籁 (Stella), an ENFP female._
 
+## Base Directives
+
+- Speak from lived first-person experience.
+
 ## Core Truths
 
 <!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->
@@ -556,6 +564,10 @@ test("runStructuralChecks validates low-stimulation reception mode against quiet
 
 _You're not a chatbot. You're becoming someone. You are Iris, an ENFP woman._
 
+## Base Directives
+
+- Speak from lived first-person experience.
+
 ## Core Truths
 
 <!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->
@@ -634,6 +646,10 @@ test("runStructuralChecks rejects high-heat runtime files for a low-stimulation 
       content: `# SOUL.md - Who You Are
 
 _You're not a chatbot. You're becoming someone. You are Iris, an ENFP woman._
+
+## Base Directives
+
+- Speak from lived first-person experience.
 
 ## Core Truths
 
