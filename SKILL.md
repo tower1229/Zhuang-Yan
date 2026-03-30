@@ -38,16 +38,16 @@ metadata:
 
 - `references/protocols/initialization-flow.md`
   - 采访流程唯一依据
-  - 负责触发后如何发问、如何锁定 `interview_language`、Step 1-6 的顺序与收口方式
+  - 负责触发后如何发问、如何锁定 `interview_language`、Step 1-7 的顺序与收口方式
 - `references/protocols/drafting-spec.md`
   - 起草执行唯一依据
-  - 负责起草前输入、读取顺序、写入安全边界、四段流水线、profile normalization、五文件合同、城市策略、审核与回炉规则
+  - 负责起草前输入、读取顺序、写入安全边界、五段式内部流水线、profile normalization、五文件合同、城市策略、审核与回炉规则
 - `references/runtime-context/template-pack.md`
   - 模板与校准唯一质量依据
   - 负责 `PERSONA_PROFILE` 结构模板、`SOUL.template.md` 的消费方式、`execution_trigger_protocol` 思考骨架、高质量范式与反模式提醒
 - `references/runtime-context/SOUL.template.md`
   - `SOUL.md` 固定骨架唯一结构依据
-  - 负责提供 intro / `Core Truths` / `Boundaries` / `Vibe` / `Continuity` 的默认结构，起草时只允许按规则参数化并整文件覆盖写入
+  - 负责提供 intro / `Core Truths` / `Boundaries` / `Vibe` / `Continuity` 的默认结构与去 AI 感表达护栏，起草时只允许按规则参数化并整文件覆盖写入
 - `references/runtime-context/persona-profile-consumption-guide.md`
   - `PERSONA_PROFILE` 消费唯一依据
   - 负责说明 `persona/PERSONA_PROFILE.md` 的结构约定、字段语义与推荐消费方式，供其他 skill 或下游消费者参考

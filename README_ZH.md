@@ -42,19 +42,20 @@ clawhub install persona-skill
 
 初始化是一条连贯链路：**采访把人和需求问清楚 → 在 MBTI 框架下反推人格方向 → 把定稿写回工作区**。
 
-1. 采访先锁定用户的 `human_mbti`，并补齐最必要的用户侧稳定信息。
-2. 经确定性的 reverse lookup，把 `human_mbti` 映射到推荐的 `persona_mbti`，并整理出一组**指向清晰**的社交需求摘要：
+1. 采访先锁定用户的 `human_mbti`、`support_reception_mode`，并补齐必须写入 `USER.md` 的用户侧稳定信息。
+2. 经确定性的 reverse lookup，把 `human_mbti` 映射到推荐的 `persona_mbti`，并整理出一组**指向清晰**的社交需求摘要与默认 counterparty seed：
    - `social_friction_signature`
    - `core_social_need`
    - `ideal_counterparty_presence`
    - `pair_core_value`
    - `desired_emotional_impact`
-3. 以这组信息为骨架，生成 `persona spec`。
+   - `base_counterparty_profile`
+3. 再用 `support_reception_mode` 修正默认种子，生成最终的 `target_persona_spec`，这样同一个推荐人格也能对不同用户呈现不同的热度、节奏、主动度与修复顺序。
 4. 先定稿并写入 `persona/PERSONA_PROFILE.md`，再据此写出 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`。
 
 整条管线可简记为：
 
-`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> 其余四份文件`
+`human_mbti + support_reception_mode -> reverse_lookup + base_counterparty_profile -> target_persona_spec -> persona spec -> PERSONA_PROFILE -> 其余四份文件`
 
 因此，`persona-skill` 产出的不是一时一地的语气微调，而是**能长期约束运行时行为的人格规格**。
 
@@ -71,7 +72,7 @@ clawhub install persona-skill
 它们各自承担不同职责：
 
 - `persona/PERSONA_PROFILE.md`
-  - 结构化人格档案，也是给其他 Skill 读取的人设合同；固定结构下的外化属性与短条目（appearance、scene、constraint 等字段约定见 `persona-profile-consumption-guide`）
+  - 结构化人格档案，也是给其他 Skill 读取的人设合同；固定结构下的外化属性与短条目，尤其是 appearance、scene 与 constraint 这三类字段约定见 `persona-profile-consumption-guide`
 - `SOUL.md`
   - 运行时人格表达、边界和互动风格
 - `MEMORY.md`
@@ -79,7 +80,7 @@ clawhub install persona-skill
 - `IDENTITY.md`
   - 人格卡片与基础身份信息
 - `USER.md`
-  - 用户称呼、代词、时区和长期应记住的用户侧信息
+  - 用户称呼、代词、时区、`Support reception mode` 以及长期应记住的用户侧信息
 
 其中，`PERSONA_PROFILE` 先定稿：稳定事实写全、写准，再约束其余几份运行时文件，避免人格只靠大段散文撑着。
 

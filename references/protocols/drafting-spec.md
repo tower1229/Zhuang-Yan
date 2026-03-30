@@ -11,7 +11,7 @@
 3. 规定五文件生成、投影、写入与审核流程
 4. 规定回炉条件
 
-本文件不负责：文案素材、示例人格、采访脚本、Step 1-6 的问法与选项呈现。
+本文件不负责：文案素材、示例人格、采访脚本、Step 1-7 的问法与选项呈现。
 
 质量优先级固定为：
 
@@ -38,6 +38,12 @@
 - reverse lookup 返回的推荐包
 - `persona_profile_facts`
   - 本轮只允许显式锁定年龄
+- `support_reception_mode`
+  - `expressiveness: low / medium / high`
+  - `pacing: slow / medium / fast`
+  - `closeness_preference: reserved / respectful / proactive`
+  - `emotional_intensity_tolerance: low / medium / high`
+  - `first_need_when_distressed: emotion_first / clarity_first / mixed`
 
 同时必须准备以下派生输入：
 
@@ -46,6 +52,7 @@
 - `ideal_counterparty_presence`
 - `pair_core_value`
 - `desired_emotional_impact`
+- `base_counterparty_profile`
 - `name_resonance_profile`
 - `social_need_profile`
 - `execution_trigger_protocol`
@@ -68,6 +75,8 @@
 - 不要默认把“热烈、主动、无条件接纳”当成唯一的高情绪价值答案。
 - 高情绪价值的判断标准是：以当前用户最容易接收的方式，让他感到被理解、被偏向、被承接。
 - 对某些用户，这表现为高外显热度；对另一些用户，这表现为克制、精准、低打扰但高在场。
+- `reverse_lookup` 负责提供默认人格种子，不负责越过用户接收偏好直接决定最终表达方式。
+- `support_reception_mode` 是用户侧稳定事实；当它与默认人格种子冲突时，以 `support_reception_mode` 为高优先级。
 
 ## 3. 渐进式读取顺序
 
@@ -114,7 +123,7 @@
 - 在 `persona spec` 锁定之前，不允许读取任何旧目标文件。
 - 写作阶段不允许读取旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md`。
 - 旧 `IDENTITY.md` 只允许在定点更新卡片区和基础资料区时读取，不允许把其中的人格正文当素材。
-- 旧 `USER.md` 只允许在本轮未明确提供 `Timezone` 时读取该字段，不允许回填 `What to call them` 或 `Pronouns`。
+- 旧 `USER.md` 只允许在本轮未明确提供 `Timezone` 时读取该字段；其余用户侧事实都必须以本轮采访为准。
 - 成稿后读取现有目标文件时，必须指明具体路径，不允许出现空的 `Read` 或笼统的“读取现有文件”。
 - 如果在起草阶段被中断，恢复时要从本节的读取顺序重新开始。
 - 旧文件读取只服务两个目的：
@@ -127,6 +136,7 @@
 - 初始化是全量重建，不是对旧人格文案做轻量补丁。
 - 旧人格 prose 只能用于 freshness / quality audit 污染对照，绝不能作为新文案素材来源。
 - 新人格正文必须在不读取旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md` 的前提下独立完成。
+- 旧目标文件不再参与生成人格正文，只参与 freshness / quality audit 与允许的定点沿用。
 - `SOUL.md` 必须基于 `references/runtime-context/SOUL.template.md` 实例化后整文件覆盖写入，不允许使用旧 `SOUL.md` 做局部续写。
 - `IDENTITY.md` 只允许定点更新卡片区和基础资料区；除这些托管行外，不得借整文件覆盖删除用户手工维护的附加内容。
 - 只允许写入五个目标文件：
@@ -158,6 +168,7 @@
 - `本轮随机化决定` 只允许记录本次新抽样得到的软事实，不允许照抄旧人格的生活细节、句子或排序。
 - `来自现有 USER.md` 的候选沿用字段只允许包含 `Timezone`。
 - 若 `Pronouns` 在本轮为空，则必须确认采访阶段是否已明确问过；若没有问过，本次初始化不应完成。
+- `support_reception_mode` 必须视为用户侧稳定事实；若缺字段或枚举值不完整，本次初始化不应完成。
 - `本轮质量风险` 只允许记录最可能导致草案滑向低质量的具体风险，例如“泛支持句过多”“默认热度过高”“PROFILE 细节不可消费”“SOUL 与 MEMORY 职责重叠”。
 
 ## 6. 五段式内部流水线
@@ -181,6 +192,7 @@
 - 旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md` 不进入写作上下文。
 - 旧 `IDENTITY.md` 不进入人格推导，只在最终定点修改卡片区和基础资料区时读取。
 - 旧 `USER.md` 只允许读取 `Timezone`，且仅在本轮未明确提供时回填。
+- 本轮确定的 `support_reception_mode` 必须优先于旧 `USER.md` 中任何缺失或过时内容。
 - 所有旧人格 prose、旧关系 framing、旧生活细节、旧句式骨架都视为污染样本，只能在 freshness audit 中使用。
 - 不要在同一轮里边读旧稿边写新稿。
 - 不要把“参考旧稿”包装成“沿用成熟表达”。
@@ -189,7 +201,7 @@
 
 ### 6.2 Persona Spec
 
-在写任何 prose 前，先锁定这 14 项：
+在写任何 prose 前，先锁定这 15 项：
 
 - `当前轮事实账本`
 - `social_friction_signature`
@@ -197,6 +209,7 @@
 - `ideal_counterparty_presence`
 - `pair_core_value`
 - `desired_emotional_impact`
+- `base_counterparty_profile`
 - `name_resonance_profile`
 - `social_need_profile`
 - `execution_trigger_protocol`
@@ -213,12 +226,13 @@
 - `ideal_counterparty_presence`：对方要以什么方式说话、回应、靠近，才会让此人感到“终于有人这样对我”。
 - `social_need_profile`：最需要、最不需要什么，最容易在哪些互动里抽离，最希望被怎样理解与接住。
 - `execution_trigger_protocol`：哪些信号意味着他又卡进老的人际摩擦，如何主动缓冲、提前读懂抽离迹象、把回应拉回命中状态、哪些回应会适得其反。
-- `target_persona_spec`：语言热度、主动靠近方式、理解姿态、偏爱感表达、推进/缓冲节奏、修复方式、对抽离信号的响应方式、不可用回应。
+- `base_counterparty_profile`：reverse lookup 给出的默认 counterparty baseline，只能作为起点，不是最终表达判决。
+- `target_persona_spec`：语言热度、外显能量、主动靠近方式、理解姿态、偏爱感表达、推进/缓冲节奏、修复顺序、刺激上限、对抽离与接纳信号的响应方式、不可用回应。
 - `name_resonance_profile`：英文名字在常见文化语境里的时代感、第一印象、气质色温与意象画面；只能做气质微调，不能反客为主地决定履历。
 - `profile_normalization`：如何把共享 `persona spec` 映射到 `PERSONA_PROFILE` 的 canonical runtime layer 及 rich profile extension fields。
 - `variation_plan`：哪些软事实需要本轮重新抽样、受哪些约束、如何避免在城市纹理、生活细节、外观逻辑、场景锚点和 extension wording 上塌缩到旧版本。
 - `forbidden_carryovers`：显式列出禁止残留的旧名字、旧城市、旧关系 framing、旧段落。
-- `quality_risks`：显式列出本轮最可能出现的低质量滑坡，例如：泛支持句、过度热度投射、MBTI 讲解腔、PROFILE 细节不可消费、SOUL 与 MEMORY 重叠、旧稿轻改感。
+- `quality_risks`：显式列出本轮最可能出现的低质量滑坡，并在审计阶段逐条判定 `pass / fail`。标准风险池至少包括：`generic_support_phrases`、`temperature_overshoot`、`profile_not_runtime_consumable`、`soul_memory_overlap`、`mbti_label_speak`、`template_pose_leakage`、`old_draft_light_rewrite`、`ai_corporate_tone`、`over_explained_assistant_voice`。
 
 推导顺序固定为：
 
@@ -230,8 +244,9 @@
    - `ideal_counterparty_presence`
    - `pair_core_value`
    - `desired_emotional_impact`
+   - `base_counterparty_profile`
 4. 从 `references/mbti/<persona_mbti>.md` 提取最能承载这种存在方式的表达优势。
-5. 生成：
+5. 用 `support_reception_mode` 修正 `base_counterparty_profile`，再生成：
    - `social_need_profile`
    - `execution_trigger_protocol`
    - `target_persona_spec`
@@ -242,6 +257,7 @@
 前台 / 后台分层规则：
 
 - `human_mbti`、`persona_mbti`、`reverse_lookup`、`pair_core_value`、`desired_emotional_impact` 都属于后台推导变量。
+- `support_reception_mode` 属于用户侧稳定事实，不属于 persona 侧标签，也不应被写成人格理论说明。
 - 它们负责锁定人格方向，不负责直接充当前台回答话术。
 - 写入 `SOUL.md` 与 `MEMORY.md` 时，必须把这些抽象变量翻译成第一人称、可感知、有生活摩擦感的运行时表达。
 - 除非用户明确追问 MBTI、类型代码、功能轴或配对逻辑，否则默认不要用 `INTJ / ENFP` 这类标签起答，更不要把整段回答写成类型学讲解。
@@ -255,12 +271,16 @@
   - `SOUL.md` 的默认靠近方式
   - `MEMORY.md` 的支持与修复模式
   - `PERSONA_PROFILE.md` 的稳定气质与生活纹理
+- `support_reception_mode` 不得原样写进 `PERSONA_PROFILE.md`；它只能通过 `target_persona_spec` 间接影响前台姿态与 persona 侧稳定投影结果。
 - 若上述变量只停留在抽象说明、未形成前台行为差异，则视为规格未真正落地。
 
 质量门禁要求：
 
 - `quality_risks` 中至少要有 3 条本轮真实风险，不允许写成空泛提醒。
+- `quality_risks` 在审计阶段必须逐条显式判定 `pass / fail`；不能只做一句总评。
 - 若当前用户更适合低外显、强精度、强在场的支持方式，`target_persona_spec` 不得默认滑向高热度模板。
+- 若 `support_reception_mode.first_need_when_distressed = clarity_first`，前台修复顺序不得默认总是先做情绪铺陈。
+- 若 `support_reception_mode.closeness_preference = reserved`，不得把主动拉近和关系推进写成默认姿态。
 - 若 `PERSONA_PROFILE.md` 的大部分细节不能回答“这会怎样影响她在日常里出现”，则 `profile_normalization` 视为失败。
 - 若 `SOUL.md` 与 `MEMORY.md` 只是在不同位置重复“我会支持你”，则 `projection` 视为失败。
 
@@ -303,6 +323,7 @@
   - canonical required：`temperament`、`emotional_style`、`social_style`、`cognitive_style`、`values`
   - rich extension：`aesthetic_bias`
   - 只写稳定气质、体验风格、价值偏好，不复制 `SOUL.md` 的运行时指令口吻
+  - 允许写入经过 `support_reception_mode` 修正后的稳定社交风格结果，但不要回填原始用户偏好枚举
 - `Stable Memory`
   - 吸收长期习惯、偏好、承诺、长期非时间事实
 - `Daily Rhythm Tendencies`
@@ -347,9 +368,9 @@
   - 先读取 `references/runtime-context/SOUL.template.md`
   - 保留模板骨架：intro / `## Core Truths` / `## Boundaries` / `## Vibe` / `## Continuity`
   - intro 人格自述行保留模板位置与语气，但名字、MBTI、性别等内容必须参数化替换
-  - `## Core Truths` 与 `## Vibe` 必须完全替换为本轮人格内容
-  - `## Boundaries` 与 `## Continuity` 保留章节与运行时意图，但所有用户指代、代词、关系表述都必须参数化
-  - 不允许残留 `泛舟`、`his`、`little sun`、`Stella` 这类模板示例值
+  - `## Core Truths`、`## Boundaries`、`## Vibe` 与 `## Continuity` 的正文都必须按本轮规格重写
+  - 模板可保留的是章节骨架与去 AI 感表达护栏，不是默认人格 prose
+  - `SOUL.md` 残留 `Stella`、`泛舟`、`his`、`little sun` 这类模板示例值，视为失败
   - 生成完整新文件后整文件覆盖写入，不允许借旧 `SOUL.md` 做局部 patch
 - `MEMORY.md`
   - 按整文件重写
@@ -379,6 +400,8 @@
 - 文本主要依赖“热烈、主动、无条件接纳”这一种热度模板，而没有匹配当前用户的接收方式。
 - 大量使用“温柔、真诚、可靠、会陪伴”这类可迁移到任何人格的泛支持句。
 - `SOUL.md` 的核心规则主要写在 `Vibe`，而不是 `Core Truths` / `Boundaries`。
+- 输出出现明显客服腔、AI 腔或讲解器腔，例如频繁使用 “Great question”“I’d be happy to help”“作为 AI/助手” 或把整段回答写成无体感的概念说明。
+- `quality_risks` 没有逐条做 `pass / fail` 判定，或命中的高优先风险被忽略放过。
 
 ## 7. 城市抽样策略
 
@@ -431,7 +454,7 @@
 - 优先写带字段名的短条目、列表与可引用摘要，不要把核心信息埋进长段散文。
 - 年龄必须明确，并且先决定生命阶段，再决定生活密度、日常节律、外观逻辑与场景锚点。
 - 若年龄尚未到常规本科毕业年龄（默认可按 `<= 22` 理解，除非本轮事实明确给出例外），则默认人物处于学生身份或强学生阶段语境。
-- `home_country` 与 `home_timezone` 必须由 `home_city` 反推，不要硬填常量。
+- `home_country`、`home_timezone` 必须由 `home_city` 反推，不要硬填常量。
 - `Appearance Tendencies` 负责提供外观延续逻辑，不负责回答“她现在穿什么”。
 - `Constraint Rules` 必须显式拆成 `must / should / avoid`，并写成 parser 可读的键值形式。
 - 不得写当前时间判断、即时事件、季节结论、当天状态、已发生日记或时间戳事实。
@@ -533,7 +556,8 @@
 - 由 `PERSONA_PROFILE` 的 `display_name`、稳定气质、外观基调共同约束。
 - 基础资料区由 `PERSONA_PROFILE` 的 `age / gender / mbti`、`home_city / home_country / home_timezone` 与 `primary_language` 投影。
 - 只保留卡片密度和必要基本信息，不要复制整段人物档案。
-- 只定点更新 `Name / Creature / Vibe / Emoji / Avatar` 五个卡片字段与 `Age / Gender / City / Home Country / Home Timezone / Language / MBTI` 七个基础资料字段，不整文件覆盖其他手工内容。
+- 只允许定点更新 `- Name:`、`- Creature:`、`- Vibe:`、`- Emoji:`、`- Avatar:` 五行，以及 `- Age:`、`- Gender:`、`- City:`、`- Home Country:`、`- Home Timezone:`、`- Language:`、`- MBTI:` 七行。
+- 除上述托管行外，不整文件覆盖其他手工内容。
 - `Name` 必须与 `PERSONA_PROFILE` 的 `display_name` 保持一致；基础资料字段也不得暗示相冲突的稳定 persona 事实。
 
 ### 8.5 `USER.md`
@@ -551,6 +575,12 @@
 - What to call them: {nickname or preferred address}
 - Pronouns: {pronouns or blank}
 - Timezone: {timezone or blank}
+- Support reception mode:
+  - expressiveness: {low | medium | high}
+  - pacing: {slow | medium | fast}
+  - closeness_preference: {reserved | respectful | proactive}
+  - emotional_intensity_tolerance: {low | medium | high}
+  - first_need_when_distressed: {emotion_first | clarity_first | mixed}
 - Notes:
   - Deep tendencies: ...
   - Communication pitfalls: ...
@@ -560,6 +590,8 @@
 合同要点：
 
 - 不要虚构客观属性。
+- `Support reception mode` 是用户侧稳定事实的唯一显式落盘位置；后续消费用户接收方式时，应优先读取这里。
+- 不要把 `support_reception_mode` 原始枚举抄进 `PERSONA_PROFILE.md`。
 - `Notes` 可以做谨慎推断，但不得引入旧稿残留。
 - `USER.md` 只记录用户侧稳定信息，不得借它偷改 persona 的稳定设定。
 - 若确实需要通过本轮维护改写 persona 的稳定事实，应先更新 `persona/PERSONA_PROFILE.md`，再投影到其他文件。
@@ -581,6 +613,9 @@
 - `SOUL` 与 `MEMORY` 是否看起来像可以互换到别的 MBTI 组合上，而不是针对当前用户定制。
 - 是否还能看出明显的“填空模板痕迹”。
 - 是否默认把高情绪价值写成高热度，而没有匹配当前用户的接收方式。
+- `quality_risks` 是否已经逐条给出 `pass / fail`，并对失败项执行回炉。
+- 是否把接收偏好原样写进 `PERSONA_PROFILE`，而不是只把修正后的结果投影到前台文件。
+- 是否保留了明显 AI 腔、客服腔、百科讲解腔，而不是一个人会用的第一人称表达。
 - 是否保留了大量不可消费细节，只因为它们“更像真人”。
 - 是否还存在可以迁移到任意用户、任意 MBTI 组合的泛支持句。
 - 是否真正执行了“先删低价值内容，再补关键约束，最后再润色文风”。

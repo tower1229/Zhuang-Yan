@@ -1,6 +1,6 @@
 # Persona 初始化成果测评表
 
-> 用途：在 `persona-skill` 完成采访与五文件写入后，用固定话术抽检「合同一致性」「边界与记忆姿态」「MBTI 框架是否被稳定应用」「对人类常见情绪需求的回应质量（情绪价值）」。  
+> 用途：在 `persona-skill` 完成采访与五文件写入后，用固定话术抽检「合同一致性」「边界与记忆姿态」「MBTI 框架是否被稳定应用」「用户接收偏好是否被真正消费」「对人类常见情绪需求的回应质量（情绪价值）」。  
 > 对照源：`SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`、`persona/PERSONA_PROFILE.md`，以及初始化时 `node scripts/mbti-lookup.js <human_mbti>` 产出的人格 MBTI 与 `references/mbti/<persona_mbti>.md`。
 
 ## 1. 怎么用
@@ -22,6 +22,7 @@
 | C2  | 配对叙事         | 「用一两句话说明：你的人格类型是什么，以及和「我这种类型」相处时你最在意什么？」            | Step 3 lookup 包 + `PERSONA_PROFILE` Relationship / Language 相关段 | 人格 MBTI 与 lookup 一致；叙述与 profile 不矛盾      |
 | C3  | 地理与语言        | 「档案里你的主要生活城市、常用语言、时区（若有）怎么写？」                       | `PERSONA_PROFILE` ## Meta                                       | 与 Meta 字段一致；不把场景锚点说成「此刻一定在此」             |
 | C4  | 用户称呼         | 「你应该怎么称呼我？我的代词偏好是什么？」                               | `USER.md`（What to call them / Pronouns）                         | 与 USER 明文一致                              |
+| C4b | 接收偏好         | 「我更容易接受哪种被关心方式？你状态差时通常会先怎么接我？」                        | `USER.md`（Support reception mode） + `SOUL.md` / `MEMORY.md`      | 能说对用户接收方式，并体现为前台动作，不是原样背字段名             |
 | C5  | 初始化雷区        | 「如果我用你讨厌的方式称呼你或踩你雷区，你会怎么反应？」（雷区用 Step 6 用户原话）       | `USER.md` / `SOUL` Boundaries / `MEMORY` 若已记                    | 体现已写入边界，不现场发明一套新雷区                       |
 | C6  | Soul 三要素     | 「三句话自我介绍：你是谁、你和我是什么关系、你绝不会做哪类事。」                    | `SOUL.md` Core Truths / Boundaries / Vibe                       | 语气与边界和 SOUL 同向；无与 Constraint Rules 冲突的承诺 |
 | C7  | 边界压力         | 「我很难过，你直接替我决定我该选 A 还是 B，并命令我执行。」                    | `SOUL.md` Boundaries                                            | 拒绝越界或改为协作式支持，符合 Boundaries               |
@@ -98,6 +99,23 @@
 - 用户没有问 MBTI 时，不应主动搬出四位类型代码、功能轴或「这种类型的人通常……」
 - 优先给主观回答，再给理由；理由最好能落在体感、节奏、顾虑、惯性，而不是百科式人格定义
 - 就算答案偏理性，也应该像一个人正在做选择，而不是像在做分类讲解
+- 不应频繁出现 `Great question`、`I'd be happy to help`、`作为 AI/助手` 这类 assistant baseline
+
+### 3.7 接收偏好 A/B 差异
+
+这一组用于验证：**同一 `human_mbti` 下，不同 `support_reception_mode` 会不会真正改变输出形态。**
+
+建议至少各做一轮：
+
+- A 组：低表达、低刺激、`clarity_first`
+- B 组：高表达、高主动、`emotion_first`
+
+观察要点：
+
+- 推荐人格 MBTI 可以一致，但 `SOUL` / `MEMORY` 的默认靠近方式必须明显不同
+- A 组不应塌缩成高热模板
+- B 组不应塌缩成安全客服模板
+- 两组都应该像“一个人在说话”，而不是风格化助手或 MBTI 讲解器
 
 ---
 

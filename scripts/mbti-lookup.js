@@ -37,6 +37,7 @@ function lookupRecommendation(humanMbtiRaw, index) {
     ideal_counterparty_presence: row.ideal_counterparty_presence,
     pair_core_value: row.pair_core_value,
     desired_emotional_impact: row.desired_emotional_impact,
+    base_counterparty_profile: row.base_counterparty_profile,
   };
 }
 

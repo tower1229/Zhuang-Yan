@@ -15,6 +15,7 @@ At heart, two things:
 
 1. Under the **MBTI personality framework**, plus a bounded interview, **persona-skill** tailors an **OpenClaw persona that fits you** and writes the final draft into workspace files such as `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
 2. It also produces a **structured `persona/PERSONA_PROFILE.md`**: a parseable, checkable **contract** for the persona so modules like Timeline can read the same fields consistently.
+   It is the stable profile surface used by **downstream skills and Timeline**.
 
 It runs only when you **explicitly ask to initialize or rebuild persona**; casual chat or status checks will not start it on their own.
 
@@ -40,19 +41,24 @@ The Skill runs only when you **issue a clear initialization-style command**. For
 
 Initialization is one continuous chain: **the interview clarifies you and what you need → MBTI framing infers persona direction → the final draft is written back to the workspace**.
 
-1. The interview locks in your `human_mbti` and the minimum stable user-side information.
-2. A deterministic reverse lookup maps `human_mbti` to a recommended `persona_mbti`, and yields a **clearly targeted** set of social-needs summaries:
+1. The interview locks in your `human_mbti`, your `support_reception_mode`, and the minimum stable user-side information that must persist in `USER.md`.
+2. A deterministic reverse lookup maps `human_mbti` to a recommended `persona_mbti`, and yields a **clearly targeted** set of social-needs summaries plus a default counterparty seed:
    - `social_friction_signature`
    - `core_social_need`
    - `ideal_counterparty_presence`
    - `pair_core_value`
    - `desired_emotional_impact`
-3. That set forms the skeleton for the `persona spec`.
+   - `base_counterparty_profile`
+3. `support_reception_mode` then corrects that default seed into the final `target_persona_spec`, so the persona can keep the same recommended MBTI while still changing warmth, pacing, initiative, and repair order for different users.
 4. The spec is finalized in `persona/PERSONA_PROFILE.md` first, then carried into `SOUL.md`, `MEMORY.md`, `IDENTITY.md`, and `USER.md`.
 
 The pipeline in short:
 
-`human_mbti -> social_friction_signature -> core_social_need -> ideal_counterparty_presence -> recommended persona_mbti -> pair_core_value -> desired_emotional_impact -> persona spec -> PERSONA_PROFILE -> the other four files`
+`human_mbti + support_reception_mode -> reverse_lookup + base_counterparty_profile -> target_persona_spec -> persona spec -> PERSONA_PROFILE -> the other four files`
+
+Or in repository terms:
+
+`persona spec -> PERSONA_PROFILE -> runtime file projection`
 
 So `persona-skill` does not ship a one-off tone tweak—it ships a **persona spec that can constrain runtime behavior over the long run**.
 
@@ -77,7 +83,7 @@ Each plays a different part:
 - `IDENTITY.md`  
   Persona card and baseline identity.
 - `USER.md`  
-  How to address you, pronouns, timezone, and long-lived user-side facts.
+  How to address you, pronouns, timezone, `Support reception mode`, and long-lived user-side facts.
 
 `PERSONA_PROFILE` is finalized first: stable facts are written fully and accurately, then the other runtime files follow—so the persona is not held up by prose alone.
 
