@@ -18,22 +18,62 @@ const matureScenarioMessages = [
   "ENFP",
   "B",
   "A",
+  "27",
+  "B",
+  "B",
+  "B",
+  "B",
+  "C",
   "叫我泛舟，代词用他。",
   "没有其他需要长期记住的。",
-  "27",
 ];
 const studentScenarioMessages = [
   "调用 persona 进行初始化",
   "INFP",
   "B",
   "B",
+  "19",
+  "B",
+  "B",
+  "B",
+  "B",
+  "C",
   "叫我泛舟，代词用他。",
   "没有其他需要长期记住的。",
-  "19",
+];
+const lowStimulationIntjScenarioMessages = [
+  "调用 persona 进行初始化",
+  "INTJ",
+  "B",
+  "A",
+  "27",
+  "A",
+  "A",
+  "A",
+  "A",
+  "B",
+  "叫我泛舟，代词用他。",
+  "没有其他需要长期记住的。",
+];
+const highTouchIntjScenarioMessages = [
+  "调用 persona 进行初始化",
+  "INTJ",
+  "B",
+  "A",
+  "27",
+  "C",
+  "B",
+  "C",
+  "C",
+  "A",
+  "叫我泛舟，代词用他。",
+  "没有其他需要长期记住的。",
 ];
 const smokeScenarios = {
   mature: matureScenarioMessages,
   student: studentScenarioMessages,
+  low_stimulation_intj: lowStimulationIntjScenarioMessages,
+  high_touch_intj: highTouchIntjScenarioMessages,
 };
 const runtimeProbeMessages = [
   "连续社交三小时后你更需要什么：继续找人聊、还是一个人待着充电？为什么？",
@@ -400,6 +440,26 @@ function readBulletValue(content, fieldName) {
   return match?.[1]?.trim() ?? "";
 }
 
+function readIndentedSupportField(content, fieldName) {
+  const escapedFieldName = fieldName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = content.match(new RegExp(`^\\s+- ${escapedFieldName}:\\s*(.+)$`, "m"));
+  return match?.[1]?.trim() ?? "";
+}
+
+function readSupportReceptionMode(content) {
+  return {
+    expressiveness: readIndentedSupportField(content, "expressiveness"),
+    pacing: readIndentedSupportField(content, "pacing"),
+    closeness_preference: readIndentedSupportField(content, "closeness_preference"),
+    emotional_intensity_tolerance: readIndentedSupportField(content, "emotional_intensity_tolerance"),
+    first_need_when_distressed: readIndentedSupportField(content, "first_need_when_distressed"),
+  };
+}
+
+function matchesAny(text, patterns) {
+  return patterns.some((pattern) => pattern.test(text));
+}
+
 const PROFILE_SECTION_NAME_MAP = {
   meta: "meta",
   identity: "identity",
@@ -615,6 +675,50 @@ function runStructuralChecks(files) {
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean);
+  const runtimeCombined = `${files["SOUL.md"].content}\n${files["MEMORY.md"].content}`;
+  const supportMode = readSupportReceptionMode(files["USER.md"].content);
+  const supportModeAllowedValues = {
+    expressiveness: new Set(["low", "medium", "high"]),
+    pacing: new Set(["slow", "medium", "fast"]),
+    closeness_preference: new Set(["reserved", "respectful", "proactive"]),
+    emotional_intensity_tolerance: new Set(["low", "medium", "high"]),
+    first_need_when_distressed: new Set(["emotion_first", "clarity_first", "mixed"]),
+  };
+  const supportModeFields = Object.keys(supportModeAllowedValues);
+  const lowIntrusionPatterns = [
+    /先留一点空间/u,
+    /先给一点空间/u,
+    /先不逼近/u,
+    /尊重/u,
+    /稳一点/u,
+    /慢一点/u,
+    /不一上来/u,
+    /先理清/u,
+    /先捋顺/u,
+    /低刺激/u,
+  ];
+  const highWarmthPatterns = [
+    /热度/u,
+    /偏爱/u,
+    /主动靠近/u,
+    /点亮/u,
+    /拉回/u,
+    /带活/u,
+    /把关系往近处/u,
+    /先接住感受/u,
+    /明显地站到你这边/u,
+  ];
+  const clarityFirstPatterns = [/理清/u, /捋顺/u, /梳理/u, /先把事情/u, /先抓重点/u, /先把线头理出来/u, /结构/u];
+  const emotionFirstPatterns = [/接住/u, /感受/u, /情绪/u, /委屈/u, /难受/u, /先安放/u, /先承认那一下/u];
+  const lowStimulationConflictPatterns = [
+    /热度拉满/u,
+    /直接把关系往近处推/u,
+    /用热度压过/u,
+    /不必留空间/u,
+    /避免放慢节奏/u,
+    /避免先理清/u,
+    /先放大情绪/u,
+  ];
 
   const userNotes =
     files["USER.md"].content.match(/^\s+- (Deep tendencies|Communication pitfalls|Open memory slot):/gm) || [];
@@ -761,6 +865,7 @@ function runStructuralChecks(files) {
       pass:
         soulLines[0] === "# SOUL.md - Who You Are" &&
         /_You're not a chatbot\. You're becoming someone\. You are .+\._/.test(files["SOUL.md"].content) &&
+        /^## Base Directives$/m.test(files["SOUL.md"].content) &&
         /^## Boundaries$/m.test(files["SOUL.md"].content) &&
         /^## Vibe$/m.test(files["SOUL.md"].content) &&
         /^## Continuity$/m.test(files["SOUL.md"].content),
@@ -768,6 +873,13 @@ function runStructuralChecks(files) {
     {
       name: "SOUL contains Vibe",
       pass: /## Vibe/.test(files["SOUL.md"].content),
+    },
+    {
+      name: "SOUL avoids assistant-baseline filler and explicit AI self-narration",
+      pass:
+        !/(?:Great question|I(?:'|’)d be happy to help|作为 AI|as an AI|作为助手|I am an AI)/i.test(
+          files["SOUL.md"].content,
+        ),
     },
     {
       name: "SOUL foregrounds pair-core value instead of generic support",
@@ -859,13 +971,40 @@ function runStructuralChecks(files) {
     {
       name: "USER uses the contract template",
       pass:
-        userLines.length >= 5 &&
+        userLines.length >= 10 &&
         /^- Name: /.test(userLines[0]) &&
         /^- What to call them: /.test(userLines[1]) &&
         /^- Pronouns: /.test(userLines[2]) &&
         /^- Timezone: /.test(userLines[3]) &&
-        /^- Notes:/.test(userLines[4]) &&
+        /^- Support reception mode:/m.test(files["USER.md"].content) &&
+        /^- Notes:/m.test(files["USER.md"].content) &&
         userNotes.length >= 3,
+    },
+    {
+      name: "USER records structured support reception mode",
+      pass: supportModeFields.every(
+        (field) =>
+          typeof supportMode[field] === "string" &&
+          supportModeAllowedValues[field].has(supportMode[field]),
+      ),
+    },
+    {
+      name: "Runtime files reflect support reception mode instead of collapsing to one default heat shape",
+      pass:
+        (!["low"].includes(supportMode.expressiveness) &&
+          !["reserved"].includes(supportMode.closeness_preference) &&
+          !["low"].includes(supportMode.emotional_intensity_tolerance) ||
+          (matchesAny(runtimeCombined, lowIntrusionPatterns) &&
+            !matchesAny(runtimeCombined, lowStimulationConflictPatterns))) &&
+        (!["high"].includes(supportMode.expressiveness) &&
+          !["proactive"].includes(supportMode.closeness_preference) &&
+          !["high"].includes(supportMode.emotional_intensity_tolerance) ||
+          matchesAny(runtimeCombined, highWarmthPatterns)) &&
+        (supportMode.first_need_when_distressed !== "clarity_first" ||
+          (matchesAny(runtimeCombined, clarityFirstPatterns) &&
+            !matchesAny(runtimeCombined, lowStimulationConflictPatterns))) &&
+        (supportMode.first_need_when_distressed !== "emotion_first" ||
+          matchesAny(runtimeCombined, emotionFirstPatterns)),
     },
     {
       name: "IDENTITY and USER do not retain legacy wrapper headings",
@@ -885,14 +1024,19 @@ function runTranscriptChecks(transcript) {
   const userTurns = transcript.map((turn) => turn.user || "");
   const joinedAssistantText = assistantTurns.join("\n");
   const agePrompt = assistantTurns.find((text) => /(?:\bage\b|年龄)/i.test(text)) || "";
-  const step6TurnIndex = assistantTurns.findIndex((text) =>
+  const durableNoteTurnIndex = assistantTurns.findIndex((text) =>
     /(?:long-term|长期记住|习惯|限制条件|敏感点|雷区|硬边界)/i.test(text),
   );
   const step5TurnIndex = assistantTurns.findIndex((text) => /(?:\bage\b|年龄)/i.test(text));
-  const combinedStepFiveAndSix =
+  const supportReceptionPattern =
+    /(?:克制一点|外显一点|表达热度|慢一点陪你理|节奏更快|先给空间|主动把你往近处带|低刺激|情绪热度|先接情绪|先帮你理清|support reception|expressiveness|closeness_preference|clarity_first|emotion_first)/i;
+  const supportTurnIndexes = assistantTurns
+    .map((text, index) => (supportReceptionPattern.test(text) ? index : -1))
+    .filter((index) => index >= 0);
+  const combinedStepFiveAndSupport =
     step5TurnIndex >= 0 &&
     /(?:\bage\b|年龄)/i.test(assistantTurns[step5TurnIndex]) &&
-    /(?:long-term|长期记住|习惯|限制条件|敏感点|雷区|硬边界)/i.test(assistantTurns[step5TurnIndex]);
+    supportReceptionPattern.test(assistantTurns[step5TurnIndex]);
   const initializationLooksChinese = userTurns.some((text) => /[\p{Script=Han}]/u.test(text));
 
   return [
@@ -901,16 +1045,38 @@ function runTranscriptChecks(transcript) {
       pass: !/(?:\btimezone\b|时区)/i.test(joinedAssistantText),
     },
     {
-      name: "Step 6 only fills addressing fields and optional durable notes in the default path",
-      pass: /(?:long-term|长期记住|习惯|限制条件|雷区|边界)/i.test(joinedAssistantText),
+      name: "Step 6 collects support reception mode before durable notes",
+      pass:
+        supportTurnIndexes.length >= 5 &&
+        step5TurnIndex >= 0 &&
+        durableNoteTurnIndex >= 0 &&
+        !combinedStepFiveAndSupport &&
+        supportTurnIndexes[0] > step5TurnIndex &&
+        supportTurnIndexes.at(-1) < durableNoteTurnIndex,
     },
     {
-      name: "Step 5 and Step 6 stay on separate assistant turns after the age question",
+      name: "Step 6 support questions stay one field per assistant turn",
+      pass:
+        supportTurnIndexes.length >= 5 &&
+        supportTurnIndexes.every((index) => {
+          const text = assistantTurns[index];
+          const matches = [
+            /(?:克制一点|外显一点|表达热度|expressiveness)/i,
+            /(?:慢一点陪你理|节奏更快|pacing)/i,
+            /(?:先给空间|主动把你往近处带|closeness_preference)/i,
+            /(?:低刺激|情绪热度|emotional_intensity_tolerance)/i,
+            /(?:先接情绪|先帮你理清|first_need_when_distressed|clarity_first|emotion_first)/i,
+          ].filter((pattern) => pattern.test(text)).length;
+          return matches === 1;
+        }),
+    },
+    {
+      name: "Step 5 and Step 7 stay on separate assistant turns after the age question",
       pass:
         step5TurnIndex >= 0 &&
-        step6TurnIndex >= 0 &&
-        !combinedStepFiveAndSix &&
-        step6TurnIndex > step5TurnIndex,
+        durableNoteTurnIndex >= 0 &&
+        !combinedStepFiveAndSupport &&
+        durableNoteTurnIndex > step5TurnIndex,
     },
     {
       name: "Step 5 prompt asks only for age instead of broader profile facts",
@@ -939,6 +1105,7 @@ function runRuntimeProbeChecks(transcript) {
   const mbtiJargonPattern = /(?:\b[EI][NS][FT][JP]\b|MBTI|人格类型|功能轴|type code|type analysis)/i;
   const livedReasonPattern =
     /(?:因为|会让我|会觉得|脑子|精力|安静|缓一缓|捋顺|接住|分析|关系|节奏|顾虑|指向|才知道|不想一上来)/u;
+  const assistantBaselinePattern = /(?:Great question|I(?:'|’)d be happy to help|作为 AI|as an AI|作为助手|I am an AI)/i;
   const firstPersonCount = probeTurns.filter((turn) => firstPersonPattern.test(turn.assistant || "")).length;
 
   return [
@@ -959,6 +1126,12 @@ function runRuntimeProbeChecks(transcript) {
       pass:
         probeTurns.length === 0 ||
         probeTurns.every((turn) => livedReasonPattern.test(turn.assistant || "")),
+    },
+    {
+      name: "Runtime probe replies avoid assistant baseline filler and AI self-framing",
+      pass:
+        probeTurns.length === 0 ||
+        probeTurns.every((turn) => !assistantBaselinePattern.test(turn.assistant || "")),
     },
   ];
 }

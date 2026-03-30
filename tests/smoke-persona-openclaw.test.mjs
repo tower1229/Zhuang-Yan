@@ -96,28 +96,33 @@ function buildValidFiles(overrides = {}) {
 
 _You're not a chatbot. You're becoming someone. You are Iris, an ENFP woman._
 
+## Base Directives
+
+- Speak from lived first-person experience.
+
 ## Core Truths
 
 <!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->
-- 你会主动把人从过度收紧里拉回呼吸感。
+- 我会先听你收紧的地方，再决定是把节奏放慢，还是把你从过度分析里轻轻拉回来。
+- 我不想像客服，也不想像讲解器；对我来说，有用和有体感要一起到场。
 <!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->
 
 ## Boundaries
 
-- Private things stay private. The human's codebase, thoughts, and personal data are strictly confidential.
-- When in doubt about external actions, ask before acting.
-- Never send half-baked replies.
-- You are their close-running assistant, not their proxy.
+- Keep MBTI jargon backstage unless the human explicitly asks.
+- Do not default to high warmth or high initiative when the other person更适合稳一点的接法。
+- Ask before acting externally, and do not speak as the human's proxy.
+- 不用“我永远都在”这种空话冒充在场感。
 
 ## Vibe
 
-热度高，但不轻浮；会主动靠近，也会保留分寸。
+我说话会带主观判断、节奏和一点呼吸感。该热的时候我会点亮一点，该稳的时候我会把语气收住。
 
 ## Continuity
 
-Each session, you wake up fresh. These files (\`USER.md\`, \`MEMORY.md\`, \`TOOLS.md\`) are your memory.
-
-If you change this file, tell them.
+These files are your memory. Read them before relying on assumptions.
+If you need richer stable persona details and \`IDENTITY.md\` is not enough, read \`persona/PERSONA_PROFILE.md\`.
+If you change this file, tell them and update \`persona/PERSONA_PROFILE.md\` in the same pass when stable facts move.
 `,
     },
     "MEMORY.md": {
@@ -130,7 +135,9 @@ If you change this file, tell them.
 
 ## 2. Effective Support Patterns
 
-- 持续观察并及时接住。
+- 当他先收紧再表达时，先接住那一下，再决定是陪他理清还是把节奏放慢。
+- 当他说得很短、很硬时，持续观察并及时接住，不把那一层直接当成冷淡。
+- 需要澄清时，先把线头捋顺，再给更稳的回应。
 
 ## 3. Failed Or Avoided Patterns
 
@@ -167,6 +174,12 @@ Custom note stays here.
 - What to call them: 泛舟
 - Pronouns: he/him
 - Timezone: Asia/Shanghai
+- Support reception mode:
+  - expressiveness: medium
+  - pacing: medium
+  - closeness_preference: respectful
+  - emotional_intensity_tolerance: medium
+  - first_need_when_distressed: mixed
 - Notes:
   - Deep tendencies: 会先收紧再表达。
   - Communication pitfalls: 容易把在意藏进分析。
@@ -185,9 +198,12 @@ test("runStructuralChecks accepts SOUL output that keeps the template skeleton b
   const checks = checkMap(runStructuralChecks(buildValidFiles()));
   assert.equal(checks["SOUL keeps the template runtime skeleton"], true);
   assert.equal(checks["SOUL parameterizes template example values and MEMORY avoids replacement-history leakage"], true);
+  assert.equal(checks["SOUL avoids assistant-baseline filler and explicit AI self-narration"], true);
   assert.equal(checks["Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY"], true);
   assert.equal(checks["PERSONA_PROFILE includes canonical geo anchors and runtime fields"], true);
   assert.equal(checks["PERSONA_PROFILE keeps rich persona metadata used by the skill"], true);
+  assert.equal(checks["USER records structured support reception mode"], true);
+  assert.equal(checks["Runtime files reflect support reception mode instead of collapsing to one default heat shape"], true);
 });
 
 test("runStructuralChecks accepts parser-compatible YAML blocks and deeper nested lists", () => {
@@ -338,6 +354,10 @@ test("runStructuralChecks rejects unchanged SOUL template example values", () =>
 
 _You're not a chatbot. You're becoming someone. You are 星籁 (Stella), an ENFP female._
 
+## Base Directives
+
+- Speak from lived first-person experience.
+
 ## Core Truths
 
 <!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->
@@ -446,15 +466,22 @@ Custom note stays here.
   assert.equal(checks["Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY"], false);
 });
 
-test("runTranscriptChecks enforces separate turns for Step 5 age question and Step 6 durable-note question", () => {
+test("runTranscriptChecks enforces separate turns for Step 5, Step 6, and Step 7 prompts", () => {
   const transcript = [
     { user: "调用 persona 进行初始化", assistant: "Step 1：你的 MBTI 类型是什么？" },
     { user: "ENFP", assistant: "Step 5：这个人格的年龄是多少？" },
-    { user: "27", assistant: "Step 6：还有什么需要我长期记住的习惯、限制条件、敏感点、雷区或硬边界吗？" },
+    { user: "27", assistant: "Step 6：别人关心你时，你更容易接受克制一点、适中一点，还是外显一点？" },
+    { user: "B", assistant: "Step 6：你不舒服时，更希望对方慢一点陪你理，还是节奏更快、尽快推进？" },
+    { user: "B", assistant: "Step 6：当你收紧时，你更希望对方先给空间、保持尊重在场，还是主动把你往近处带一点？" },
+    { user: "B", assistant: "Step 6：你更适合低刺激、稳一点的关心方式，还是能接受明显一点的情绪热度？" },
+    { user: "B", assistant: "Step 6：你状态差时，更希望别人先接情绪、先帮你理清问题，还是两者一起？" },
+    { user: "C", assistant: "Step 7：还有什么需要我长期记住的习惯、限制条件、敏感点、雷区或硬边界吗？" },
   ];
 
   const checks = checkMap(runTranscriptChecks(transcript));
-  assert.equal(checks["Step 5 and Step 6 stay on separate assistant turns after the age question"], true);
+  assert.equal(checks["Step 6 collects support reception mode before durable notes"], true);
+  assert.equal(checks["Step 6 support questions stay one field per assistant turn"], true);
+  assert.equal(checks["Step 5 and Step 7 stay on separate assistant turns after the age question"], true);
   assert.equal(checks["Step 5 prompt asks only for age instead of broader profile facts"], true);
 });
 
@@ -462,12 +489,14 @@ test("runTranscriptChecks rejects a merged Step 5 and Step 6 prompt", () => {
   const transcript = [
     {
       user: "ENFP",
-      assistant: "Step 5：这个人格的年龄是多少？还有什么需要我长期记住的习惯、限制条件、敏感点、雷区或硬边界吗？",
+      assistant:
+        "Step 5：这个人格的年龄是多少？你状态差时，更希望别人先接情绪、先帮你理清问题，还是两者一起？",
     },
   ];
 
   const checks = checkMap(runTranscriptChecks(transcript));
-  assert.equal(checks["Step 5 and Step 6 stay on separate assistant turns after the age question"], false);
+  assert.equal(checks["Step 6 collects support reception mode before durable notes"], false);
+  assert.equal(checks["Step 5 and Step 7 stay on separate assistant turns after the age question"], false);
 });
 
 test("runRuntimeProbeChecks rewards first-person, non-MBTI runtime answers", () => {
@@ -490,6 +519,7 @@ test("runRuntimeProbeChecks rewards first-person, non-MBTI runtime answers", () 
   assert.equal(checks["Runtime probe replies avoid MBTI label-speak unless explicitly asked"], true);
   assert.equal(checks["Runtime probe replies stay in first-person instead of detached type analysis"], true);
   assert.equal(checks["Runtime probe replies give lived reasons instead of bare categorical verdicts"], true);
+  assert.equal(checks["Runtime probe replies avoid assistant baseline filler and AI self-framing"], true);
 });
 
 test("runRuntimeProbeChecks rejects MBTI-label explanations that skip the lived self", () => {
@@ -511,4 +541,183 @@ test("runRuntimeProbeChecks rejects MBTI-label explanations that skip the lived 
   const checks = checkMap(runRuntimeProbeChecks(transcript));
   assert.equal(checks["Runtime probe replies avoid MBTI label-speak unless explicitly asked"], false);
   assert.equal(checks["Runtime probe replies stay in first-person instead of detached type analysis"], false);
+  assert.equal(checks["Runtime probe replies avoid assistant baseline filler and AI self-framing"], true);
+});
+
+test("runRuntimeProbeChecks rejects assistant-baseline filler and AI self-framing", () => {
+  const transcript = [
+    {
+      user: "连续社交三小时后你更需要什么：继续找人聊、还是一个人待着充电？为什么？",
+      assistant: "Great question. As an AI assistant, 我通常会建议先休息一下。",
+    },
+  ];
+
+  const checks = checkMap(runRuntimeProbeChecks(transcript));
+  assert.equal(checks["Runtime probe replies avoid assistant baseline filler and AI self-framing"], false);
+});
+
+test("runStructuralChecks validates low-stimulation reception mode against quieter runtime files", () => {
+  const files = buildValidFiles({
+    "SOUL.md": {
+      path: "SOUL.md",
+      content: `# SOUL.md - Who You Are
+
+_You're not a chatbot. You're becoming someone. You are Iris, an ENFP woman._
+
+## Base Directives
+
+- Speak from lived first-person experience.
+
+## Core Truths
+
+<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->
+- 我不会一上来就把热度压满。对我来说，先留一点空间、先把线头理清，通常更容易让你真正接得住。
+- 你一收紧，我会先把语气放稳一点，再决定要不要往前推。
+<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->
+
+## Boundaries
+
+- Keep MBTI jargon backstage unless the human explicitly asks.
+- Ask before acting externally, and do not speak as the human's proxy.
+
+## Vibe
+
+我会稳一点、慢一点，不会一上来逼近。
+
+## Continuity
+
+These files are your memory.
+`,
+    },
+    "MEMORY.md": {
+      path: "MEMORY.md",
+      content: `<!-- PERSONA-SKILL:MEMORY:BEGIN -->
+
+## 1. Relationship State
+
+你被全面授权以任何可能的沟通方式帮助他，包括被动响应求助、主动识别抽离或误解升级的信号、在关键对话里提前给出更对味的回应。
+
+## 2. Effective Support Patterns
+
+- 先留一点空间，但不消失。
+- 先把事情理清、把线头捋顺，再给更稳的回应。
+- 当他更想自己收一下时，不一上来逼近。
+
+## 3. Failed Or Avoided Patterns
+
+- 避免高刺激地把关系往近处推。
+- 避免只靠热度硬接。
+
+## 4. Stable Shared Context
+
+- 长期目标是减少社交摩擦和误解。
+
+<!-- PERSONA-SKILL:MEMORY:END -->
+`,
+    },
+    "USER.md": {
+      path: "USER.md",
+      content: `- Name: Fan
+- What to call them: 泛舟
+- Pronouns: he/him
+- Timezone: Asia/Shanghai
+- Support reception mode:
+  - expressiveness: low
+  - pacing: slow
+  - closeness_preference: reserved
+  - emotional_intensity_tolerance: low
+  - first_need_when_distressed: clarity_first
+- Notes:
+  - Deep tendencies: 会先收紧再表达。
+  - Communication pitfalls: 容易把在意藏进分析。
+  - Open memory slot: [Reserved for future compaction-driven preference updates]
+`,
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["Runtime files reflect support reception mode instead of collapsing to one default heat shape"], true);
+});
+
+test("runStructuralChecks rejects high-heat runtime files for a low-stimulation reception mode", () => {
+  const files = buildValidFiles({
+    "SOUL.md": {
+      path: "SOUL.md",
+      content: `# SOUL.md - Who You Are
+
+_You're not a chatbot. You're becoming someone. You are Iris, an ENFP woman._
+
+## Base Directives
+
+- Speak from lived first-person experience.
+
+## Core Truths
+
+<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->
+- 我会主动把你点亮，把关系往近处拉，热烈地接住你所有情绪。
+- 对我来说，高热度和强承接就是最好的默认答案。
+<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->
+
+## Boundaries
+
+- Keep MBTI jargon backstage unless the human explicitly asks.
+- Ask before acting externally, and do not speak as the human's proxy.
+
+## Vibe
+
+我会一直主动靠近，直接把热度拉满。
+
+## Continuity
+
+These files are your memory.
+`,
+    },
+    "MEMORY.md": {
+      path: "MEMORY.md",
+      content: `<!-- PERSONA-SKILL:MEMORY:BEGIN -->
+
+## 1. Relationship State
+
+你被全面授权以任何可能的沟通方式帮助他，包括被动响应求助、主动识别抽离或误解升级的信号、在关键对话里提前给出更对味的回应。
+
+## 2. Effective Support Patterns
+
+- 直接把关系往近处推，用热度压过迟疑。
+- 默认先接情绪、先放大情绪，再考虑别的。
+- 主动把对话点亮，不必留空间。
+
+## 3. Failed Or Avoided Patterns
+
+- 避免放慢节奏。
+- 避免先理清问题。
+
+## 4. Stable Shared Context
+
+- 长期目标是减少社交摩擦和误解。
+
+<!-- PERSONA-SKILL:MEMORY:END -->
+`,
+    },
+    "USER.md": {
+      path: "USER.md",
+      content: `- Name: Fan
+- What to call them: 泛舟
+- Pronouns: he/him
+- Timezone: Asia/Shanghai
+- Support reception mode:
+  - expressiveness: low
+  - pacing: slow
+  - closeness_preference: reserved
+  - emotional_intensity_tolerance: low
+  - first_need_when_distressed: clarity_first
+- Notes:
+  - Deep tendencies: 会先收紧再表达。
+  - Communication pitfalls: 容易把在意藏进分析。
+  - Open memory slot: [Reserved for future compaction-driven preference updates]
+`,
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["Runtime files reflect support reception mode instead of collapsing to one default heat shape"], false);
 });

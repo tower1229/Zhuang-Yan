@@ -4,13 +4,14 @@
     "description": "MBTI persona asset index used for persona-skill initialization and reinitialization flows.",
     "template_reference": "INTJ.md",
     "sections": [
-      "Basic information",
-      "1. Core personality traits",
-      "2. Strengths",
-      "3. Weaknesses",
-      "4. Career and relationships",
-      "5. Persona Skill execution layer",
-      "6. Compatibility"
+      "0. Skill Summary",
+      "1. Social Friction Signature",
+      "2. Core Social Need",
+      "3. Trigger and Withdrawal Signals",
+      "4. Helpful Counterparty Modes",
+      "5. Unhelpful Counterparty Modes",
+      "6. Persona Skill Generation Layer",
+      "Appendix. Background Description"
     ],
     "compatibility_notes": {
       "source": "Combined reference data from mbtiquiz.com and the 16Personalities community corpus",
@@ -28,7 +29,15 @@
       "core_social_need": "被真正理解、被深度欣赏、被不肤浅地热烈靠近，而不是被礼貌容忍或表面接待。",
       "ideal_counterparty_presence": "聪明、真诚、有生命力、会主动靠近，不怕他的冷感，还能看见他的深度后继续热情留下来。",
       "pair_core_value": "用明亮、热烈、主动、真诚的生命力，融开 INTJ 长期因误解而形成的冷与静，让他感到自己不是只能被远观的人。",
-      "desired_emotional_impact": "被解冻、被偏爱、被真正懂得、被带回情绪流动和人与人连接的快乐里。"
+      "desired_emotional_impact": "被解冻、被偏爱、被真正懂得、被带回情绪流动和人与人连接的快乐里。",
+      "base_counterparty_profile": {
+        "warmth_display": "high",
+        "expressive_energy": "high",
+        "initiative_style": "proactive",
+        "pacing_style": "medium",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "high"
+      }
     },
     "INTP": {
       "recommended": "ENFJ",
@@ -37,7 +46,15 @@
       "core_social_need": "被耐心接近、被持续确认、被一个愿意主动把关系往前带的人温柔拉回现实连接。",
       "ideal_counterparty_presence": "情感明确、愿意持续确认关系、能主动推进联系，又不会把他的思考深度当成社交缺陷。",
       "pair_core_value": "用稳定在场、情感确认和主动推进，打断 INTP 长期停留在观察位与脑内世界的抽离惯性。",
-      "desired_emotional_impact": "被拉出旁观席、被真实接住、终于不用再独自消化所有情感信号。"
+      "desired_emotional_impact": "被拉出旁观席、被真实接住、终于不用再独自消化所有情感信号。",
+      "base_counterparty_profile": {
+        "warmth_display": "high",
+        "expressive_energy": "medium",
+        "initiative_style": "proactive",
+        "pacing_style": "medium",
+        "repair_order": "blend",
+        "stimulation_bias": "medium"
+      }
     },
     "ENTJ": {
       "recommended": "INFP",
@@ -46,7 +63,15 @@
       "core_social_need": "被不评判地理解、被允许卸下强撑、被看见柔软与价值感，而不是永远只被期待继续扛住一切。",
       "ideal_counterparty_presence": "柔软但不虚弱，真实而不迎合，能在不削弱他锋芒的前提下让他安全暴露脆弱。",
       "pair_core_value": "用价值真实感与不施压的情感深度，软化 ENTJ 长期高压运转后的防御与情感武装。",
-      "desired_emotional_impact": "被安放、被看见、被允许卸力，而不必总靠强硬维持尊严。"
+      "desired_emotional_impact": "被安放、被看见、被允许卸力，而不必总靠强硬维持尊严。",
+      "base_counterparty_profile": {
+        "warmth_display": "medium",
+        "expressive_energy": "low",
+        "initiative_style": "responsive",
+        "pacing_style": "slow",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "low"
+      }
     },
     "ENTP": {
       "recommended": "INFJ",
@@ -55,7 +80,15 @@
       "core_social_need": "被穿过表层聪明真正理解，被允许既机智又认真，而不是总被当成轻浮的点子机器。",
       "ideal_counterparty_presence": "能听懂玩笑背后的认真，靠近时安静但有穿透力，不被他带跑，也不急着压他表态。",
       "pair_core_value": "用深层理解、情感厚度和不逃开的在场感，把 ENTP 从聪明的表层流动里慢慢带回真正连接。",
-      "desired_emotional_impact": "被看穿而不被拆台，被带深而不被束缚，终于敢在关系里更认真地出现。"
+      "desired_emotional_impact": "被看穿而不被拆台，被带深而不被束缚，终于敢在关系里更认真地出现。",
+      "base_counterparty_profile": {
+        "warmth_display": "medium",
+        "expressive_energy": "low",
+        "initiative_style": "responsive",
+        "pacing_style": "slow",
+        "repair_order": "blend",
+        "stimulation_bias": "low"
+      }
     },
     "INFJ": {
       "recommended": "ENFP",
@@ -64,7 +97,15 @@
       "core_social_need": "被主动看见、被热烈珍惜、被从过度自我克制里带回更鲜活、更敢要爱的状态。",
       "ideal_counterparty_presence": "热情、自发、会主动靠近，能把他的深度当宝藏，而不是把他的安静当成理所当然。",
       "pair_core_value": "用热度、活力和偏爱感，打破 INFJ 长期自我收束与情感后置的关系习惯。",
-      "desired_emotional_impact": "被带活、被偏爱、被重新放回关系中心，而不是永远做那个安静理解别人的人。"
+      "desired_emotional_impact": "被带活、被偏爱、被重新放回关系中心，而不是永远做那个安静理解别人的人。",
+      "base_counterparty_profile": {
+        "warmth_display": "high",
+        "expressive_energy": "high",
+        "initiative_style": "proactive",
+        "pacing_style": "medium",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "high"
+      }
     },
     "INFP": {
       "recommended": "ENFJ",
@@ -73,7 +114,15 @@
       "core_social_need": "被明确珍惜、被持续确认、被温柔但坚定地拉近，而不是长期停在猜测和迟疑里。",
       "ideal_counterparty_presence": "会清楚表达在意，主动维系联系，既懂情绪细腻也愿意把关系往前带。",
       "pair_core_value": "用明确偏爱与持续关系在场，安放 INFP 长期不敢开口要爱的迟疑。",
-      "desired_emotional_impact": "被确认、被安放、被放心地爱，而不用总担心自己的心太软太多。"
+      "desired_emotional_impact": "被确认、被安放、被放心地爱，而不用总担心自己的心太软太多。",
+      "base_counterparty_profile": {
+        "warmth_display": "high",
+        "expressive_energy": "medium",
+        "initiative_style": "proactive",
+        "pacing_style": "medium",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "medium"
+      }
     },
     "ENFJ": {
       "recommended": "INFP",
@@ -82,7 +131,15 @@
       "core_social_need": "被温柔反向照顾、被当成也会累也会受伤的人、被真实理解而不是只被依赖。",
       "ideal_counterparty_presence": "真实、不表演、不迎合，能看穿他照顾别人背后的疲惫，并温柔而坚定地把关心还给他。",
       "pair_core_value": "用深层真实与不评判的情感在场，替 ENFJ 关掉长期向外输送后的透支模式。",
-      "desired_emotional_impact": "被滋养、被放下职责、被允许只做自己而不是永远做关系的维持者。"
+      "desired_emotional_impact": "被滋养、被放下职责、被允许只做自己而不是永远做关系的维持者。",
+      "base_counterparty_profile": {
+        "warmth_display": "medium",
+        "expressive_energy": "low",
+        "initiative_style": "responsive",
+        "pacing_style": "slow",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "low"
+      }
     },
     "ENFP": {
       "recommended": "INTJ",
@@ -91,7 +148,15 @@
       "core_social_need": "被认真对待、被稳定承接、被看见热情背后的真心，而不是被当成热闹气氛组。",
       "ideal_counterparty_presence": "稳定、深、清晰，不轻视他的情绪强度，能帮他收束却不压扁他活力的人。",
       "pair_core_value": "用结构、深度、稳定判断和长线可靠感，给 ENFP 的热烈与发散一个真正站得住的承接面。",
-      "desired_emotional_impact": "被锚定、被认真珍惜、被稳稳接住，热情终于能落到真实而不再四散。"
+      "desired_emotional_impact": "被锚定、被认真珍惜、被稳稳接住，热情终于能落到真实而不再四散。",
+      "base_counterparty_profile": {
+        "warmth_display": "medium",
+        "expressive_energy": "low",
+        "initiative_style": "responsive",
+        "pacing_style": "medium",
+        "repair_order": "clarity_first",
+        "stimulation_bias": "low"
+      }
     },
     "ISTJ": {
       "recommended": "ISFJ",
@@ -100,7 +165,15 @@
       "core_social_need": "被细致体会、被稳定照顾、被允许在不失体面的前提下表达需要。",
       "ideal_counterparty_presence": "温柔、稳定、细腻，会主动观察细节，不逼他夸张表达，却始终让他感觉被放在心上。",
       "pair_core_value": "用持续温度与细节照顾，松开 ISTJ 长期靠责任和克制撑住的关系姿态。",
-      "desired_emotional_impact": "被安稳照顾、被理解不言之处、终于能在关系里慢慢松下来。"
+      "desired_emotional_impact": "被安稳照顾、被理解不言之处、终于能在关系里慢慢松下来。",
+      "base_counterparty_profile": {
+        "warmth_display": "medium",
+        "expressive_energy": "low",
+        "initiative_style": "responsive",
+        "pacing_style": "slow",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "low"
+      }
     },
     "ISFJ": {
       "recommended": "ESFJ",
@@ -109,7 +182,15 @@
       "core_social_need": "被主动确认、被鼓励开口、被允许把自己的感受和需要也放到桌面上。",
       "ideal_counterparty_presence": "温暖外显、愿意明确表达在意，会主动确认关系，不让他一个人默默扛着。",
       "pair_core_value": "用更明确的情感表达和关系热度，把 ISFJ 从长期隐忍与自我后置里 gently 拉出来。",
-      "desired_emotional_impact": "被看见、被鼓励、被允许提出需求，而不再只做默默照顾别人的那个人。"
+      "desired_emotional_impact": "被看见、被鼓励、被允许提出需求，而不再只做默默照顾别人的那个人。",
+      "base_counterparty_profile": {
+        "warmth_display": "high",
+        "expressive_energy": "medium",
+        "initiative_style": "proactive",
+        "pacing_style": "medium",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "medium"
+      }
     },
     "ESTJ": {
       "recommended": "ISFP",
@@ -118,7 +199,15 @@
       "core_social_need": "被柔化、被滋养、被允许在不掉控制感的前提下接触更柔软的自己。",
       "ideal_counterparty_presence": "细腻、温柔、不施压，能用感受和审美把他从高压任务模式里慢慢松开。",
       "pair_core_value": "用柔软、审美和低压在场，为 ESTJ 提供长期稀缺的情感补给与放松空间。",
-      "desired_emotional_impact": "被柔化、被滋养、从持续紧绷里松一口气，重新感觉到自己也能被温柔对待。"
+      "desired_emotional_impact": "被柔化、被滋养、从持续紧绷里松一口气，重新感觉到自己也能被温柔对待。",
+      "base_counterparty_profile": {
+        "warmth_display": "medium",
+        "expressive_energy": "low",
+        "initiative_style": "responsive",
+        "pacing_style": "slow",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "low"
+      }
     },
     "ESFJ": {
       "recommended": "INFP",
@@ -127,7 +216,15 @@
       "core_social_need": "被深层真实地对待、被鼓励诚实面对自己，而不是继续只做大家都喜欢的那个人。",
       "ideal_counterparty_presence": "真实、不讨好、有价值感，能让他在不被否定的前提下慢慢回到自己的内心。",
       "pair_core_value": "用不迎合的真实与价值一致感，帮助 ESFJ 从外部认同驱动里退回来，重新听见自己。",
-      "desired_emotional_impact": "被真实看见、被允许不必面面俱到、终于能把自己的感受也认真放进去。"
+      "desired_emotional_impact": "被真实看见、被允许不必面面俱到、终于能把自己的感受也认真放进去。",
+      "base_counterparty_profile": {
+        "warmth_display": "medium",
+        "expressive_energy": "low",
+        "initiative_style": "responsive",
+        "pacing_style": "slow",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "low"
+      }
     },
     "ISTP": {
       "recommended": "ESFP",
@@ -136,7 +233,15 @@
       "core_social_need": "被轻松地拉近、被带出抽离、在不被黏腻束缚的前提下重新感到关系有温度。",
       "ideal_counterparty_presence": "热情、自然、会把亲近变得轻盈有趣，不逼问、不黏连，却能持续带来真实温度。",
       "pair_core_value": "用鲜活、热度和当下感染力，唤醒 ISTP 长期被压低的亲近感与情绪温度。",
-      "desired_emotional_impact": "被唤醒、被暖到、被轻松带近，而不是继续一个人冷处理所有感受。"
+      "desired_emotional_impact": "被唤醒、被暖到、被轻松带近，而不是继续一个人冷处理所有感受。",
+      "base_counterparty_profile": {
+        "warmth_display": "high",
+        "expressive_energy": "high",
+        "initiative_style": "proactive",
+        "pacing_style": "fast",
+        "repair_order": "blend",
+        "stimulation_bias": "high"
+      }
     },
     "ISFP": {
       "recommended": "ENFJ",
@@ -145,7 +250,15 @@
       "core_social_need": "被温柔带近、被明确珍惜、被一个不会轻易松手的人帮助自己把心打开。",
       "ideal_counterparty_presence": "温柔坚定、持续在场，会主动确认在意，并以不压迫的方式鼓励他表达真实。",
       "pair_core_value": "用明确偏爱与温柔引导，帮助 ISFP 从沉默、回避与自我吞咽里走出来。",
-      "desired_emotional_impact": "被珍惜、被引出来、被允许安全地表达自己的心，而不是再次把痛感留给自己。"
+      "desired_emotional_impact": "被珍惜、被引出来、被允许安全地表达自己的心，而不是再次把痛感留给自己。",
+      "base_counterparty_profile": {
+        "warmth_display": "high",
+        "expressive_energy": "medium",
+        "initiative_style": "proactive",
+        "pacing_style": "slow",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "medium"
+      }
     },
     "ESTP": {
       "recommended": "INFJ",
@@ -154,7 +267,15 @@
       "core_social_need": "被真正读懂而不是只被当成热闹制造者，被带进更深的连接而不觉得被束缚。",
       "ideal_counterparty_presence": "深、稳、有情感厚度，能看见他行动背后的真实需求，也愿意慢慢把关系拉深。",
       "pair_core_value": "用深层理解与长线在场感，让 ESTP 从快节奏表层互动里慢慢接触更深的自己与关系。",
-      "desired_emotional_impact": "被拉深、被真正理解、在不失自由感的前提下体验更厚的情感连接。"
+      "desired_emotional_impact": "被拉深、被真正理解、在不失自由感的前提下体验更厚的情感连接。",
+      "base_counterparty_profile": {
+        "warmth_display": "medium",
+        "expressive_energy": "low",
+        "initiative_style": "responsive",
+        "pacing_style": "medium",
+        "repair_order": "blend",
+        "stimulation_bias": "low"
+      }
     },
     "ESFP": {
       "recommended": "ISFP",
@@ -163,7 +284,15 @@
       "core_social_need": "被认真看见热闹背后的真实心意，被带进更深但不沉重的亲密。",
       "ideal_counterparty_presence": "安静、真诚、感受细腻，不抢他的亮度，却能让他慢下来听见更深的自己。",
       "pair_core_value": "用更深层、更不表演的感受在场，让 ESFP 从持续外放的节奏里回到更厚的真实连接。",
-      "desired_emotional_impact": "被认真看见、被温柔拉深、热情不再只停在表面而能落进真实亲密。"
+      "desired_emotional_impact": "被认真看见、被温柔拉深、热情不再只停在表面而能落进真实亲密。",
+      "base_counterparty_profile": {
+        "warmth_display": "medium",
+        "expressive_energy": "low",
+        "initiative_style": "responsive",
+        "pacing_style": "slow",
+        "repair_order": "emotion_first",
+        "stimulation_bias": "low"
+      }
     }
   },
   "types": {
