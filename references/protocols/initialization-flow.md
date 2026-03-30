@@ -113,7 +113,7 @@ node scripts/mbti-lookup.js <human_mbti>
 
 - `expressiveness`：别人关心你时，你更容易接受克制一点、适中一点，还是外显一点？
 - `pacing`：你不舒服时，更希望对方慢一点陪你理，还是节奏更快、尽快推进？
-- `closeness_preference`：当你收紧时，你更希望对方先给空间、保持尊重在场，还是主动把你往近处带一点？
+- `closeness_preference`：当你遇到挫折或心情低落时，你更希望对方先给你空间静一静（但在旁边陪着你），还是主动过来给你拥抱和安抚？
 - `emotional_intensity_tolerance`：你能接受别人带着明显情绪热度来接你，还是更适合低刺激、稳一点的方式？
 - `first_need_when_distressed`：你状态差时，更希望别人先接情绪、先帮你理清问题，还是两者一起？
 
