@@ -1,6 +1,6 @@
 ---
 name: persona-skill
-description: Initialize or reinitialize an OpenClaw persona by interactively collecting MBTI, persona direction, naming, and stable user context, then drafting and updating SOUL.md, MEMORY.md, IDENTITY.md, USER.md, and persona/PERSONA_PROFILE.md. Use only when the user explicitly asks to initialize, reset, rebuild, or reshape the persona. Do not use for current-status questions, timeline recall, memory lookup, or cross-skill orchestration.
+description: Initialize or reinitialize an OpenClaw persona by interactively collecting MBTI, persona direction, naming, and stable user context, then drafting and updating SOUL.md, MEMORY.md, IDENTITY.md, USER.md, and persona/PERSONA_PROFILE.md with strict file-role separation and quality-gated output review. Use only when the user explicitly asks to initialize, reset, rebuild, or reshape the persona. Do not use for current-status questions, timeline recall, memory lookup, or cross-skill orchestration.
 allowed-tools: Bash(node:*) Read Write
 metadata:
   openclaw:
@@ -43,10 +43,10 @@ metadata:
   - 起草执行唯一依据
   - 负责起草前输入、读取顺序、写入安全边界、四段流水线、profile normalization、五文件合同、城市策略、审核与回炉规则
 - `references/runtime-context/template-pack.md`
-  - 模板与校准唯一依据
+  - 模板与校准唯一质量依据
   - 负责 `PERSONA_PROFILE` 结构模板、`SOUL.template.md` 的消费方式、`execution_trigger_protocol` 思考骨架、高质量范式与反模式提醒
 - `references/runtime-context/SOUL.template.md`
-  - `SOUL.md` 固定骨架唯一依据
+  - `SOUL.md` 固定骨架唯一结构依据
   - 负责提供 intro / `Core Truths` / `Boundaries` / `Vibe` / `Continuity` 的默认结构，起草时只允许按规则参数化并整文件覆盖写入
 - `references/runtime-context/persona-profile-consumption-guide.md`
   - `PERSONA_PROFILE` 消费唯一依据
@@ -56,7 +56,13 @@ metadata:
 
 1. 先用本文件判断是否应该启动初始化。
 2. 确认触发后，再读 `references/protocols/initialization-flow.md` 并完成采访。
+
+- 目的是锁定采访顺序与语言，不得自由改写采访逻辑。
+
 3. 采访结束后，再读 `references/protocols/drafting-spec.md`。
+
+- 目的是锁定起草输入、读取边界、写入合同与审核流程。
+
 4. 真正进入起草时，再读取：
    - `references/runtime-context/template-pack.md`
    - `references/runtime-context/SOUL.template.md`（仅在生成 `SOUL.md` 时）
@@ -64,6 +70,7 @@ metadata:
    - `assets/mbti/mbti-index.json`
    - `references/mbti/<human_mbti>.md`
    - `references/mbti/<persona_mbti>.md`
+   - 目的是只在需要时加载模板、人格知识与消费语义，避免过早污染生成。
 5. 五文件草案通过审核后直接写入，不再等待用户确认。
 6. 写入完成后，明确告知用户初始化完成、哪些文件已更新，以及是否覆盖了现有人格。
 
@@ -76,6 +83,19 @@ metadata:
 - 所有软事实都必须重新抽样后再写，包括生活纹理、外观逻辑、场景锚点与 rich extension wording；只有名字、年龄、MBTI、代词这类硬约束事实允许稳定一致。
 - 推荐 lookup 只能使用本轮刚锁定的人类 MBTI；当前运行人格或任何旧人格 MBTI 都不是初始化事实源。
 - 起草前不读取旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md`；这些旧文件只允许在成稿后的 freshness audit 中作为污染对照读取。
+- 不得默认把“热烈、主动、无条件接纳”当作通用高情绪价值模板；情绪价值必须匹配当前用户的接收方式。
+
+## 质量优先级（起草与审核都必须遵守）
+
+生成五文件时，按以下顺序判断质量，不得倒置：
+
+1. 先看是否真正服务当前用户，而不是生成泛人格文本。
+2. 再看是否可执行，是否能直接影响运行时行为。
+3. 再看是否文件分工清晰，避免 SOUL / MEMORY / PROFILE 内容重叠。
+4. 再看是否具备稳定的一致性，而不是只靠漂亮措辞制造人格感。
+5. 最后才看文风是否流畅、是否有感染力。
+
+如上述前 3 项任一不达标，即使文风很好，也必须回炉。
 
 ## 起草阶段提醒
 
@@ -83,6 +103,7 @@ metadata:
 - `SOUL.md` 只能基于 `references/runtime-context/SOUL.template.md` 实例化后整文件覆盖，不要读取旧 `SOUL.md` 做局部续写。
 - `IDENTITY.md` 只允许定点更新卡片区和基础资料区：`Name / Creature / Vibe / Emoji / Avatar / Age / Gender / City / Home Country / Home Timezone / Language / MBTI`；不要整文件覆盖它的其他手工内容。
 - 旧文件只允许在新稿完成后用于 freshness audit；不要边看旧文边改写新文。
+- 起草时禁止使用可迁移到任意用户的泛支持句，如“我会永远陪伴你”“我会一直理解你”；所有支持表述都必须绑定具体互动信号或关系任务。
 
 ## 回退行为
 
