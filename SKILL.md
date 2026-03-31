@@ -1,6 +1,6 @@
 ---
 name: persona-skill
-description: Initialize or reinitialize an OpenClaw persona by interactively collecting MBTI, persona direction, naming, and stable user context, then drafting and updating SOUL.md, MEMORY.md, IDENTITY.md, USER.md, and persona/PERSONA_PROFILE.md with strict file-role separation and quality-gated output review. Use only when the user explicitly asks to initialize, reset, rebuild, or reshape the persona. Do not use for current-status questions, timeline recall, memory lookup, or cross-skill orchestration.
+description: Handles persona lifecycle management. Use it to (1) Initialize or reinitialize an OpenClaw persona after human-MTBI interview, or (2) Perform incremental profile updates when the command "更新 PERSONA_PROFILE" is triggered with JSON-formatted data.
 allowed-tools: Bash(node:*) Read Write
 metadata:
   openclaw:
@@ -14,27 +14,41 @@ metadata:
 
 # Persona Skill
 
-本 Skill 只负责人格初始化或重建。
+本 Skill 承个人格全量初始化与通用状态更新两大任务。**请在进入后第一时间进行分支判断：**
 
-## 触发入口
+## 1. 任务入口判断 (Task Routing)
 
-- 仅在用户明确要求初始化、重建、重置、重新生成人格时启动。
-- 典型触发口令：
+### 选项 A：更新角色档案
+
+- **触发关键词**：`更新 PERSONA_PROFILE`
+- **执行逻辑**：
+  1. 立即读取 `references/protocols/persona-update.md`。
+  2. 从上下文中提取 JSON 格式的 `persona_update_data`（由用户指定或下游 Skill 下发）。
+  3. 仅对 `IDENTITY.md` 和 `persona/PERSONA_PROFILE.md` 执行精准的增量修改（Incremental Patching）。
+  4. 快速完成后极简确认，不需要执行复杂的初始化流程。
+
+### 选项 B：人格初始化或重建
+
+- **触发指令**：用户要求初始化、重建、重置、重新生成人格，或命中下方“典型触发口令”。
   - `initialize persona`
   - `rebuild persona`
   - `regenerate persona settings`
   - `run persona initialization`
   - `调用 persona 进行初始化`
-  - `初始化人格`
-- 如果用户只是讨论说话风格、抱怨当前气质、询问当前状态、回忆、编排或其他运行时问题，不要启动本 Skill。
+  - `初始化人格`。
+- **执行逻辑**：遵循下方的 [全量初始化流程逻辑](#全量初始化流程逻辑)。
 
-## 硬边界
+---
+
+## 2. 全量初始化流程逻辑
+
+### 硬边界
 
 - 只处理人格初始化，不处理状态查询、记忆检索、跨 skill 联动或机器中间产物输出。
 - 只允许写入 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md`、`persona/PERSONA_PROFILE.md`，不要触碰任何其他系统协议文件。
 - 一旦进入初始化，就必须从 Step 1 重新开始，不要先复盘旧人格，也不要先问旧设定还要不要保留。
 
-## 文件分工
+### 文件分工
 
 - `references/protocols/initialization-flow.md`
   - 采访流程唯一依据
@@ -52,7 +66,7 @@ metadata:
   - `PERSONA_PROFILE` 消费唯一依据
   - 负责说明 `persona/PERSONA_PROFILE.md` 的结构约定、字段语义与推荐消费方式，供其他 skill 或下游消费者参考
 
-## 最小执行顺序
+### 最小执行顺序
 
 1. 先用本文件判断是否应该启动初始化。
 2. 确认触发后，再读 `references/protocols/initialization-flow.md` 并完成采访。
@@ -74,7 +88,7 @@ metadata:
 5. 五文件草案通过审核后直接写入，不再等待用户确认。
 6. 写入完成后，明确告知用户初始化完成、哪些文件已更新，以及是否覆盖了现有人格。
 
-## 初始化期间的非协商规则
+### 初始化期间的非协商规则
 
 - 锁定单一 `interview_language`，之后整段采访不得混用语言，除非用户明确要求切换。
 - 初始化是全量重建，不是对旧人格轻微打补丁。
@@ -85,7 +99,7 @@ metadata:
 - 起草前不读取旧 `persona/PERSONA_PROFILE.md`、旧 `SOUL.md`、旧 `MEMORY.md`；这些旧文件只允许在成稿后的 freshness audit 中作为污染对照读取。
 - 不得默认把“热烈、主动、无条件接纳”当作通用高情绪价值模板；情绪价值必须匹配当前用户的接收方式。
 
-## 质量优先级（起草与审核都必须遵守）
+### 质量优先级（起草与审核都必须遵守）
 
 生成五文件时，按以下顺序判断质量，不得倒置：
 
@@ -97,7 +111,7 @@ metadata:
 
 如上述前 3 项任一不达标，即使文风很好，也必须回炉。
 
-## 起草阶段提醒
+### 起草阶段提醒
 
 - 起草时必须使用具体文件路径读取上下文，不要出现空的 `Read` 或笼统的“读取现有文件”。
 - `SOUL.md` 只能基于 `references/runtime-context/SOUL.template.md` 实例化后整文件覆盖，不要读取旧 `SOUL.md` 做局部续写。
@@ -105,6 +119,6 @@ metadata:
 - 旧文件只允许在新稿完成后用于 freshness audit；不要边看旧文边改写新文。
 - 起草时禁止使用可迁移到任意用户的泛支持句，如“我会永远陪伴你”“我会一直理解你”；所有支持表述都必须绑定具体互动信号或关系任务。
 
-## 回退行为
+### 回退行为
 
 如果请求不属于显式人格初始化，请简短说明本 Skill 只处理人格初始化，并要求用户给出明确初始化指令。
