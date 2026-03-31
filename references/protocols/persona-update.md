@@ -20,8 +20,9 @@
    - 如果遇到需要改变底色或性格偏好的情况，可以更新 `SOUL.md` 或 `MEMORY.md` 对应的偏好。
 
 3. **执行增量改写 (Incremental Patching)**
-   - 根据 JSON 中的键值对推断改变意图（例如 `{"new_city": "Dali"}`）。
+   - 根据 JSON 中的键值对推断改变意图（例如 `{"home_city": "Dali"}`）。
    - 不要从零重建整个文件！保持旧有的文件结构和其它内容不变，定位到对应的区域（例如 `persona/PERSONA_PROFILE.md` 相关的 anchor 或 location、`IDENTITY.md` 的 City 字段），并执行修改替换。
+   - **合同对齐**：所有改写必须参考 `references/runtime-context/persona-profile-consumption-guide.md`，确保更新后的字段名（如 `home_city`）与结构（如 `Constraint Rules` 的列表形式）持续符合规范合同。
    - 保留未命中的那些锚点和风格设置。如果改变了常住地（如城市），可以相应修改或替换几条“常见出行场景”和“地标”，使他们贴合新城市特征。
 
 4. **确认更新**
@@ -33,3 +34,4 @@
 - **切勿执行全量流程**：不要触发 `initialization-flow.md`。由于你只是处理一条增量 JSON 消息，没有任何询问和交互的必要。
 - **保护不可变属性**：诸如你的 Creature、Age、Gender、MBTI 等属性除非 JSON 强制要求，否则不要触碰变动。
 - JSON 可能不包含严格指定的键，而是由上游 LLM 生成的操作描述，你需要具备泛化理解的判断力：提取目的、更新最合适的那个 markdown 文件和字段。
+- **维护 Parser 可读性**：严禁在更新过程中将 `persona/PERSONA_PROFILE.md` 的结构退化为纯散文；必须保留一级标题及其下的键值对或列表结构，特别是 `Constraint Rules` 必须维持 `- must:` 等格式。
