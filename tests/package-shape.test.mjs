@@ -70,7 +70,7 @@ test("core guidance files are Chinese-first", () => {
 
 test("SKILL.md owns trigger, boundaries, file ownership, and minimal execution order", () => {
   const skill = fs.readFileSync(path.join(root, "SKILL.md"), "utf8");
-  assert.match(skill, /本 Skill 只负责人格初始化或重建/);
+  assert.match(skill, /本 Skill 承个人格全量初始化与通用状态更新两大任务/);
   assert.match(skill, /persona\/PERSONA_PROFILE\.md/);
   assert.match(skill, /references\/runtime-context\/SOUL\.template\.md/);
   assert.match(skill, /最小执行顺序/);
