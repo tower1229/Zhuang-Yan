@@ -73,7 +73,7 @@
 - 不要把目标写成“修复整个人格”或“解决广义人生缺陷”。
 - `SOUL` 与 `MEMORY` 的任务不是治疗全部弱点，而是提供最命中核心社交需求的语言风格与响应策略。
 - 不要默认把“热烈、主动、无条件接纳”当成唯一的高情绪价值答案。
-- 高情绪价值的判断标准是：以当前用户最容易接收的方式，让他感到被理解、被偏向、被承接。
+- 高情绪价值的判断标准 is：以当前用户最容易接收的方式，让他感到被理解、被偏向、被承接。
 - 对某些用户，这表现为高外显热度；对另一些用户，这表现为克制、精准、低打扰但高在场。
 - `reverse_lookup` 负责提供默认人格种子，不负责越过用户接收偏好直接决定最终表达方式。
 - `support_reception_mode` 是用户侧稳定事实；当它与默认人格种子冲突时，以 `support_reception_mode` 为高优先级。
@@ -328,6 +328,7 @@
   - 吸收长期习惯、偏好、承诺、长期非时间事实
 - `Daily Rhythm Tendencies`
   - 只写时间段倾向，不写精确日程表
+  - 允许添加 `world_rhythm_constraints`（如 `sleep: { start: '04:00', end: '12:00' }`）以支持非标准作息人设（如熬夜型）
 - `Appearance Tendencies`
   - canonical required：`default_home_style`、`default_outing_style`、`default_exercise_style`、`change_triggers`、`non_triggers`、`style_constraints`
   - rich extension：`appearance_priority`
@@ -376,7 +377,7 @@
   - 按整文件重写
   - 文件顶部必须重新生成唯一一段 skill 托管块
 - `IDENTITY.md`
-  - 只允许定点更新卡片区和基础资料区；除这些托管行外，不得整文件覆盖其他手工内容。
+  - 只允许定点更新卡片区和基础资料区；除这些托管行外，不得借整文件覆盖删除用户手工维护的附加内容。
   - 若这些字段存在，则原位替换值；若缺失，则补齐卡片区与基础资料区
   - 保留文件中的其他手工内容与原有顺序，不删除非这些托管行的额外内容
 
@@ -451,6 +452,7 @@
 - canonical runtime layer 必须严格对齐 Timeline 真正消费的 8 个一级结构。
 - rich profile layer 允许保留 `persona_id`、`display_name`、`age`、`gender`、`mbti`、`life_stage`、`mobility_radius`、`occupation_style`、`aesthetic_bias`、`appearance_priority` 等补充字段。
 - 只写稳定、可外化、可被其他 skill 或 Timeline 消费的人物事实；不要额外承担“人格剖析文”职责。
+- `Daily Rhythm Tendencies` 必须包含时间段倾向（上午/下午/晚上/深夜），并可可选包含 `world_rhythm_constraints`（如 `sleep: { start: 'start_hour:mm', end: 'end_hour:mm' }`）用于覆盖系统默认睡眠窗口。
 - 优先写带字段名的短条目、列表与可引用摘要，不要把核心信息埋进长段散文。
 - 年龄必须明确，并且先决定生命阶段，再决定生活密度、日常节律、外观逻辑与场景锚点。
 - 若年龄尚未到常规本科毕业年龄（默认可按 `<= 22` 理解，除非本轮事实明确给出例外），则默认人物处于学生身份或强学生阶段语境。

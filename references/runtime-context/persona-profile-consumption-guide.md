@@ -155,11 +155,13 @@ canonical required：
 - `afternoon_bias`
 - `evening_bias`
 - `late_night_bias`
+- `world_rhythm_constraints` (optional rich extension)
 
 消费建议：
 
 - 它适合指导“什么在这个时段通常更 plausible”
 - 它不是精确日程表
+- `world_rhythm_constraints` 允许定义强化的时间基线（如 `sleep: { start: '04:00', end: '12:00' }`），用于覆盖系统默认作息。Timeline runtime 在执行合理性校验时应优先读取此字段。
 
 ### 4.6 `## Appearance Tendencies`
 
