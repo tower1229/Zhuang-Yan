@@ -24,6 +24,14 @@ function isBasicInfoLine(line) {
   return BASIC_INFO_FIELDS.some(([, prefix]) => line.startsWith(prefix));
 }
 
+function isLegacyWrapperLine(line) {
+  return /^# (IDENTITY\.md - Who Am I\?|USER\.md - About Your Human)$/u.test(line.trim());
+}
+
+function isLegacyManagedIdentityLine(line) {
+  return /^- (Home City|AvatarsDir):/u.test(line.trim());
+}
+
 export function patchIdentityCard(existingContent, nextFields) {
   const lines = existingContent.split(/\r?\n/);
   const canonicalCard = CARD_FIELDS.map(([key, prefix]) => `${prefix} ${nextFields[key] ?? ""}`.trimEnd());
@@ -35,6 +43,9 @@ export function patchIdentityCard(existingContent, nextFields) {
   const remainingLines = [];
 
   for (const line of lines) {
+    if (isLegacyWrapperLine(line) || isLegacyManagedIdentityLine(line)) {
+      continue;
+    }
     if (isCardLine(line) || isBasicInfoLine(line)) {
       if (!foundManagedIdentityBlock) {
         insertAt = remainingLines.length;

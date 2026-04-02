@@ -94,3 +94,45 @@ Custom footer
   assert.equal(nonEmptyLines[11], "- MBTI: INFJ");
   assert.match(patched, /Custom footer/);
 });
+
+test("patchIdentityCard removes legacy wrapper lines and deprecated managed keys", () => {
+  const existing = `# IDENTITY.md - Who Am I?
+
+- Name: Old
+- Creature: old creature
+- Vibe: old vibe
+- Emoji: 🙂
+- Avatar: avatars/old.png
+- AvatarsDir: avatars/
+- Age: 20
+- Gender: Old
+- Home City: Old City
+- Home Country: Old Country
+- Home Timezone: Old/Timezone
+- Language: Old Language
+- MBTI: ISTJ
+
+Manual note
+`;
+
+  const patched = patchIdentityCard(existing, {
+    name: "Marcus",
+    creature: "quiet current",
+    vibe: "calm and weighted",
+    emoji: "⚡",
+    avatar: "avatars/1.jpg",
+    age: "27",
+    gender: "Male",
+    city: "Dali",
+    homeCountry: "China",
+    homeTimezone: "Asia/Shanghai",
+    language: "Mandarin Chinese",
+    mbti: "INTJ",
+  });
+
+  assert.doesNotMatch(patched, /^# IDENTITY\.md - Who Am I\?$/m);
+  assert.doesNotMatch(patched, /^- Home City:/m);
+  assert.doesNotMatch(patched, /^- AvatarsDir:/m);
+  assert.match(patched, /^- City: Dali$/m);
+  assert.match(patched, /Manual note/);
+});

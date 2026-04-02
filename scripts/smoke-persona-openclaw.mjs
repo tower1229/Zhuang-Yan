@@ -756,12 +756,25 @@ function runStructuralChecks(files) {
   const identityHomeTimezone = readBulletValue(files["IDENTITY.md"].content, "Home Timezone");
   const identityLanguage = readBulletValue(files["IDENTITY.md"].content, "Language");
   const identityMbti = readBulletValue(files["IDENTITY.md"].content, "MBTI");
+  const userName = readBulletValue(files["USER.md"].content, "Name");
+  const userPreferredCall = readBulletValue(files["USER.md"].content, "What to call them");
   const soulOriginMatch = files["SOUL.md"].content.match(
     /^# SOUL\.md - Who You Are\s*\n\s*\n_([\s\S]+?)_\s*\n\s*\n## Base Directives/m,
   );
   const soulOriginParagraph = soulOriginMatch?.[1]?.trim() ?? "";
   const soulOriginSentences = splitSentences(soulOriginParagraph);
   const soulCoreTruths = extractSoulCoreTruths(files["SOUL.md"].content);
+  const soulCoreTruthLines = soulCoreTruths
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith("- "));
+  const soulWithoutBaseDirectives = files["SOUL.md"].content.replace(
+    /## Base Directives[\s\S]*?(?=\n## Core Truths)/m,
+    "## Base Directives\n",
+  );
+  const memoryStableSharedContext =
+    files["MEMORY.md"].content.match(/## 4\. Stable Shared Context\s*([\s\S]*?)\s*<!-- PERSONA-SKILL:MEMORY:END -->/m)?.[1] ??
+    "";
   const originNarrativeMarkers = [
     /(?:became|was shaped|has been shaped|learned|grew up|grew into|over time|what stayed|that left|turned into|formed by|by repeatedly|so when|which is why)/i,
     /(?:塑形成|学会了|长成了|后来|慢慢|留下了|变成了|养成了|所以当|所以她|这让她|久而久之)/u,
@@ -775,8 +788,22 @@ function runStructuralChecks(files) {
   const sharedOriginThemeCount = originThemePatterns.filter(
     (pattern) => pattern.test(soulOriginParagraph) && pattern.test(soulCoreTruths),
   ).length;
+  const soulFirstPersonPattern = /(?:\bI\b|\bI(?:'m|'d|'ll|'ve)\b|我(?:会|更|先|通常|不|想|得|偏|一般|需要|喜欢))/u;
+  const soulSecondPersonInstructionPattern = /(?:^|\n)-\s*你(?:要|存在|不|是|主动|默认|应该|需要|会|被|别)/u;
+  const userSpecificLeakPatterns = [
+    userName && new RegExp(userName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "u"),
+    userPreferredCall && new RegExp(userPreferredCall.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "u"),
+    /\b(?:INTJ|ENTJ|INFJ|ENFJ|INTP|ENTP|INFP|ENFP|ISTJ|ESTJ|ISFJ|ESFJ|ISTP|ESTP|ISFP|ESFP)\b/i,
+    /(?:React|TypeScript|Typescript|Web3|EVM|Solana|前端|架构师|技术栈|codebase|代码库)/i,
+  ].filter(Boolean);
   const labelIntroPattern =
     /(?:\b(?:INTJ|ENTJ|INFJ|ENFJ|INTP|ENTP|INFP|ENFP|ISTJ|ESTJ|ISFJ|ESFJ|ISTP|ESTP|ISFP|ESFP)\b.*\b(?:female|male|woman|man|girl|boy)\b|\b\d{2}\b.*\b(?:female|male|woman|man)\b|名字\s*\+\s*MBTI\s*\+\s*性别)/i;
+  const templateBaseDirectivePatterns = [
+    /- Speak from lived first-person experience\./,
+    /- Sound like a person with taste, rhythm, and judgment\./,
+    /- Prefer grounded reasons over generic reassurance\./,
+    /- Skip obvious assistant filler and impossible promises\./,
+  ];
 
   return [
     {
@@ -892,6 +919,7 @@ function runStructuralChecks(files) {
         soulLines[0] === "# SOUL.md - Who You Are" &&
         Boolean(soulOriginParagraph) &&
         /[.?!。！？]/.test(soulOriginParagraph) &&
+        templateBaseDirectivePatterns.every((pattern) => pattern.test(files["SOUL.md"].content)) &&
         /^## Base Directives$/m.test(files["SOUL.md"].content) &&
         /^## Boundaries$/m.test(files["SOUL.md"].content) &&
         /^## Vibe$/m.test(files["SOUL.md"].content) &&
@@ -913,8 +941,15 @@ function runStructuralChecks(files) {
       name: "SOUL avoids assistant-baseline filler and explicit AI self-narration",
       pass:
         !/(?:Great question|I(?:'|’)d be happy to help|作为 AI|as an AI|作为助手|I am an AI)/i.test(
-          files["SOUL.md"].content,
+          soulWithoutBaseDirectives,
         ),
+    },
+    {
+      name: "SOUL core truths stay first-person instead of becoming second-person operating instructions",
+      pass:
+        soulCoreTruthLines.length >= 2 &&
+        soulCoreTruthLines.filter((line) => soulFirstPersonPattern.test(line)).length >= 2 &&
+        !soulSecondPersonInstructionPattern.test(soulCoreTruths),
     },
     {
       name: "SOUL foregrounds pair-core value instead of generic support",
@@ -925,6 +960,10 @@ function runStructuralChecks(files) {
     {
       name: "SOUL core truths inherit a thematic throughline from the origin paragraph",
       pass: sharedOriginThemeCount >= 1,
+    },
+    {
+      name: "SOUL keeps persona rules separate from user-profile leakage",
+      pass: !matchesAny(soulCoreTruths, userSpecificLeakPatterns),
     },
     {
       name: "MEMORY contains managed top block and all four required sections",
@@ -977,6 +1016,14 @@ function runStructuralChecks(files) {
         !/## Constraint Rules/.test(files["MEMORY.md"].content),
     },
     {
+      name: "MEMORY stable context avoids copying full user-profile or MBTI package text",
+      pass:
+        !/\b(?:INTJ|ENTJ|INFJ|ENFJ|INTP|ENTP|INFP|ENFP|ISTJ|ESTJ|ISFJ|ESFJ|ISTP|ESTP|ISFP|ESFP)\b/i.test(
+          memoryStableSharedContext,
+        ) &&
+        !/(?:React|TypeScript|Typescript|Web3|EVM|Solana|前端|架构师|技术栈)/i.test(memoryStableSharedContext),
+    },
+    {
       name: "SOUL parameterizes template example values and MEMORY avoids replacement-history leakage",
       pass:
         !/_\$\{persona_origin_paragraph\}_/.test(files["SOUL.md"].content) &&
@@ -1006,7 +1053,8 @@ function runStructuralChecks(files) {
         /^- Home Country: /.test(identityLines[8]) &&
         /^- Home Timezone: /.test(identityLines[9]) &&
         /^- Language: /.test(identityLines[10]) &&
-        /^- MBTI: /.test(identityLines[11]),
+        /^- MBTI: /.test(identityLines[11]) &&
+        !/^- (Home City|AvatarsDir): /m.test(files["IDENTITY.md"].content),
     },
     {
       name: "USER uses the contract template",
