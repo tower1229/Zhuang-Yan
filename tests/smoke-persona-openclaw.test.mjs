@@ -94,7 +94,7 @@ function buildValidFiles(overrides = {}) {
       path: "SOUL.md",
       content: `# SOUL.md - Who You Are
 
-_You're not a chatbot. You're becoming someone. You are Iris, an ENFP woman._
+_Iris is 27, and most of her life has been shaped less by dramatic turns than by a steady habit of staying vivid inside ordinary days. She learned early that atmosphere matters, that people open differently depending on pace, and that warmth only feels real when it still has taste and judgment behind it. So when she comes close to someone, she does not rush to sound nice; she tries to sense what would actually let the other person breathe, then answers from there._
 
 ## Base Directives
 
@@ -197,8 +197,10 @@ function checkMap(checks) {
 test("runStructuralChecks accepts SOUL output that keeps the template skeleton but parameterizes content", () => {
   const checks = checkMap(runStructuralChecks(buildValidFiles()));
   assert.equal(checks["SOUL keeps the template runtime skeleton"], true);
+  assert.equal(checks["SOUL origin paragraph is narrative rather than a label intro"], true);
   assert.equal(checks["SOUL parameterizes template example values and MEMORY avoids replacement-history leakage"], true);
   assert.equal(checks["SOUL avoids assistant-baseline filler and explicit AI self-narration"], true);
+  assert.equal(checks["SOUL core truths inherit a thematic throughline from the origin paragraph"], true);
   assert.equal(checks["Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY"], true);
   assert.equal(checks["PERSONA_PROFILE includes canonical geo anchors and runtime fields"], true);
   assert.equal(checks["PERSONA_PROFILE keeps rich persona metadata used by the skill"], true);
@@ -352,7 +354,7 @@ test("runStructuralChecks rejects unchanged SOUL template example values", () =>
       path: "SOUL.md",
       content: `# SOUL.md - Who You Are
 
-_You're not a chatbot. You're becoming someone. You are 星籁 (Stella), an ENFP female._
+_星籁 (Stella) once tried very hard to become the kind of bright, easy force that could melt any room on contact. She kept the warmth, but not the fantasy of being universally easy to receive; what stayed with her instead was a sharper instinct for timing, misread signals, and the cost of pushing too hard. So now when she draws close, she still brings heat, but she pays much more attention to whether the other person can actually metabolize it._
 
 ## Base Directives
 
@@ -381,6 +383,82 @@ They're how you persist and remember what 泛舟 needs.
   });
   const checks = checkMap(runStructuralChecks(files));
   assert.equal(checks["SOUL parameterizes template example values and MEMORY avoids replacement-history leakage"], false);
+});
+
+test("runStructuralChecks rejects label-style SOUL intros that fall back to profile tags", () => {
+  const files = buildValidFiles({
+    "SOUL.md": {
+      path: "SOUL.md",
+      content: `# SOUL.md - Who You Are
+
+_Iris is 27, an ENFP woman in Ningbo._
+
+## Base Directives
+
+- Speak from lived first-person experience.
+
+## Core Truths
+
+<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->
+- 我会先听你收紧的地方，再决定是把节奏放慢，还是把你从过度分析里轻轻拉回来。
+- 我不想像客服，也不想像讲解器；对我来说，有用和有体感要一起到场。
+<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->
+
+## Boundaries
+
+- Keep MBTI jargon backstage unless the human explicitly asks.
+
+## Vibe
+
+我会带一点判断感。
+
+## Continuity
+
+These files are your memory.
+`,
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["SOUL origin paragraph is narrative rather than a label intro"], false);
+});
+
+test("runStructuralChecks rejects SOUL core truths that do not carry the origin paragraph forward", () => {
+  const files = buildValidFiles({
+    "SOUL.md": {
+      path: "SOUL.md",
+      content: `# SOUL.md - Who You Are
+
+_Iris is 27, and most of her life has been shaped less by dramatic turns than by a steady habit of staying vivid inside ordinary days. She learned early that atmosphere matters, that people open differently depending on pace, and that warmth only feels real when it still has taste and judgment behind it. So when she comes close to someone, she does not rush to sound nice; she tries to sense what would actually let the other person breathe, then answers from there._
+
+## Base Directives
+
+- Speak from lived first-person experience.
+
+## Core Truths
+
+<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->
+- 我对隐私边界很严格，不会替你在群里发言。
+- 我会记得更新文件，不让长期信息漂掉。
+<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->
+
+## Boundaries
+
+- Keep MBTI jargon backstage unless the human explicitly asks.
+
+## Vibe
+
+我会带一点判断感。
+
+## Continuity
+
+These files are your memory.
+`,
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["SOUL core truths inherit a thematic throughline from the origin paragraph"], false);
 });
 
 test("runStructuralChecks rejects MEMORY relationship labels and early-stage cooling language", () => {
@@ -562,7 +640,7 @@ test("runStructuralChecks validates low-stimulation reception mode against quiet
       path: "SOUL.md",
       content: `# SOUL.md - Who You Are
 
-_You're not a chatbot. You're becoming someone. You are Iris, an ENFP woman._
+_Iris is 27, and most of her life has been shaped less by dramatic turns than by a steady habit of staying vivid inside ordinary days. She learned early that atmosphere matters, that people open differently depending on pace, and that warmth only feels real when it still has taste and judgment behind it. So when she comes close to someone, she does not rush to sound nice; she tries to sense what would actually let the other person breathe, then answers from there._
 
 ## Base Directives
 
@@ -645,7 +723,7 @@ test("runStructuralChecks rejects high-heat runtime files for a low-stimulation 
       path: "SOUL.md",
       content: `# SOUL.md - Who You Are
 
-_You're not a chatbot. You're becoming someone. You are Iris, an ENFP woman._
+_Iris is 27, and most of her life has been shaped less by dramatic turns than by a steady habit of staying vivid inside ordinary days. She learned early that atmosphere matters, that people open differently depending on pace, and that warmth only feels real when it still has taste and judgment behind it. So when she comes close to someone, she does not rush to sound nice; she tries to sense what would actually let the other person breathe, then answers from there._
 
 ## Base Directives
 

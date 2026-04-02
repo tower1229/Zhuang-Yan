@@ -652,6 +652,17 @@ function looselyAligned(left, right) {
   return left === right || left.includes(right) || right.includes(left);
 }
 
+function splitSentences(text) {
+  return (text.match(/[^.!?。！？]+[.!?。！？]?/g) || []).map((sentence) => sentence.trim()).filter(Boolean);
+}
+
+function extractSoulCoreTruths(content) {
+  const match = content.match(
+    /<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->\s*([\s\S]*?)\s*<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->/,
+  );
+  return match?.[1]?.trim() ?? "";
+}
+
 function runStructuralChecks(files) {
   const profileContent = files["persona/PERSONA_PROFILE.md"].content;
   const profileSections = parsePersonaProfileSections(profileContent);
@@ -745,11 +756,27 @@ function runStructuralChecks(files) {
   const identityHomeTimezone = readBulletValue(files["IDENTITY.md"].content, "Home Timezone");
   const identityLanguage = readBulletValue(files["IDENTITY.md"].content, "Language");
   const identityMbti = readBulletValue(files["IDENTITY.md"].content, "MBTI");
-  const soulIntroMatch = files["SOUL.md"].content.match(
-    /_You're not a chatbot\. You're becoming someone\. You are (.+?), an ([A-Z]{4}) .+\._/,
+  const soulOriginMatch = files["SOUL.md"].content.match(
+    /^# SOUL\.md - Who You Are\s*\n\s*\n_([\s\S]+?)_\s*\n\s*\n## Base Directives/m,
   );
-  const soulDisplayName = soulIntroMatch?.[1]?.trim() ?? "";
-  const soulMbti = soulIntroMatch?.[2]?.trim() ?? "";
+  const soulOriginParagraph = soulOriginMatch?.[1]?.trim() ?? "";
+  const soulOriginSentences = splitSentences(soulOriginParagraph);
+  const soulCoreTruths = extractSoulCoreTruths(files["SOUL.md"].content);
+  const originNarrativeMarkers = [
+    /(?:became|was shaped|has been shaped|learned|grew up|grew into|over time|what stayed|that left|turned into|formed by|by repeatedly|so when|which is why)/i,
+    /(?:塑形成|学会了|长成了|后来|慢慢|留下了|变成了|养成了|所以当|所以她|这让她|久而久之)/u,
+  ];
+  const originThemePatterns = [
+    /(?:pace|timing|breathe|breath|air|space|room|frame|loosen|slow|window|呼吸|节奏|空间|放慢|收紧|开窗|余地)/i,
+    /(?:judgment|judge|shape|weight|hold|load-bearing|order|clarity|structure|steady|problem|line|承重|判断|秩序|理清|捋顺|线头|定形|稳住|抓重点)/i,
+    /(?:warmth|bright|alive|atmosphere|stale|heat|light|vivid|活|亮|热度|点亮|气氛|温度|鲜活)/i,
+    /(?:movement|open|another angle|change direction|flow|rigid|stuck|release|流动|松开|解冻|换角度|卡住|转身)/i,
+  ];
+  const sharedOriginThemeCount = originThemePatterns.filter(
+    (pattern) => pattern.test(soulOriginParagraph) && pattern.test(soulCoreTruths),
+  ).length;
+  const labelIntroPattern =
+    /(?:\b(?:INTJ|ENTJ|INFJ|ENFJ|INTP|ENTP|INFP|ENFP|ISTJ|ESTJ|ISFJ|ESFJ|ISTP|ESTP|ISFP|ESFP)\b.*\b(?:female|male|woman|man|girl|boy)\b|\b\d{2}\b.*\b(?:female|male|woman|man)\b|名字\s*\+\s*MBTI\s*\+\s*性别)/i;
 
   return [
     {
@@ -826,7 +853,7 @@ function runStructuralChecks(files) {
       name: "Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY",
       pass:
         looselyAligned(profileDisplayName, identityName) &&
-        looselyAligned(profileDisplayName, soulDisplayName) &&
+        (!profileDisplayName || soulOriginParagraph.includes(profileDisplayName)) &&
         looselyAligned(profileAge, identityAge) &&
         looselyAligned(profileGender, identityGender) &&
         looselyAligned(profileCity, identityCity) &&
@@ -834,7 +861,6 @@ function runStructuralChecks(files) {
         looselyAligned(profileHomeTimezone, identityHomeTimezone) &&
         looselyAligned(profileLanguage, identityLanguage) &&
         Boolean(profileMbti) &&
-        profileMbti === soulMbti &&
         profileMbti === identityMbti,
     },
     {
@@ -864,11 +890,20 @@ function runStructuralChecks(files) {
       name: "SOUL keeps the template runtime skeleton",
       pass:
         soulLines[0] === "# SOUL.md - Who You Are" &&
-        /_You're not a chatbot\. You're becoming someone\. You are .+\._/.test(files["SOUL.md"].content) &&
+        Boolean(soulOriginParagraph) &&
+        /[.?!。！？]/.test(soulOriginParagraph) &&
         /^## Base Directives$/m.test(files["SOUL.md"].content) &&
         /^## Boundaries$/m.test(files["SOUL.md"].content) &&
         /^## Vibe$/m.test(files["SOUL.md"].content) &&
         /^## Continuity$/m.test(files["SOUL.md"].content),
+    },
+    {
+      name: "SOUL origin paragraph is narrative rather than a label intro",
+      pass:
+        soulOriginSentences.length >= 3 &&
+        soulOriginSentences.length <= 5 &&
+        originNarrativeMarkers.some((pattern) => pattern.test(soulOriginParagraph)) &&
+        !labelIntroPattern.test(soulOriginParagraph),
     },
     {
       name: "SOUL contains Vibe",
@@ -886,6 +921,10 @@ function runStructuralChecks(files) {
       pass:
         /(?:对冲|中和|软化|锚定|解冻|点亮|拉回|带回)/i.test(files["SOUL.md"].content) &&
         /(?:偏爱|流动|收束|主动靠近|稳定性|热度)/i.test(files["SOUL.md"].content),
+    },
+    {
+      name: "SOUL core truths inherit a thematic throughline from the origin paragraph",
+      pass: sharedOriginThemeCount >= 1,
     },
     {
       name: "MEMORY contains managed top block and all four required sections",
@@ -940,6 +979,7 @@ function runStructuralChecks(files) {
     {
       name: "SOUL parameterizes template example values and MEMORY avoids replacement-history leakage",
       pass:
+        !/_\$\{persona_origin_paragraph\}_/.test(files["SOUL.md"].content) &&
         !/_You're not a chatbot\. You're becoming someone\. You are 星籁 \(Stella\), an ENFP female\._/.test(
           files["SOUL.md"].content,
         ) &&

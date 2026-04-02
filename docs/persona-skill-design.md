@@ -119,9 +119,11 @@
 - `profile normalization` 必须发生在 `persona spec` 锁定之后、文件投影之前
 - `PERSONA_PROFILE` 先落盘，再约束 `IDENTITY / MEMORY / SOUL / USER` 的一致性
 - `SOUL` 与 `MEMORY` 的高价值内容必须优先围绕 `core_social_need` 与 `pair_core_value` 展开，而不是平均分配给一组泛优点
-- 去 AI 感不等于统一文风；`SOUL.template` 只提供表达方式护栏，不提供固定人格 prose
+- 去 AI 感不等于统一文风；`SOUL.template` 只固定表达护栏与 `Origin Paragraph` 插槽，不提供固定人格 prose
 - `PERSONA_PROFILE` 的稳定事实不能直接从 MBTI 标签偷懒外推，而应先看年龄带来的生命阶段；如果尚未到常规毕业年龄，默认应落在学生身份或强学生阶段语境里。之后再看目标人物画像，用名字在英文文化语境中的联想做轻微气质微调，最后在受约束随机性里生成履历与生活细节
 - `PERSONA_PROFILE` 的职责是“结构化底层档案 + 下游可消费约束”，因此其主体应优先呈现固定结构下的外化属性，减少长篇解释性人格散文，方便其他 skill 解析和复用
+- `SOUL` 顶部的 `Origin Paragraph` 负责提供 `PERSONA_PROFILE` 之上的人物源深度：不是字段摘要，而是解释这些稳定事实为什么属于同一个人
+- `Origin Paragraph` 不是写作时临场发挥的 prose，而应作为 `persona spec` 中显式锁定的 `origin_arc` 变量参与投影
 - 运行时互动行为冲突时，以 `SOUL / MEMORY` 为优先；稳定身份与生活事实冲突视为起草失败
 
 ## 6. 对外维护文档
