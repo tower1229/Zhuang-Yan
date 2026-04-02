@@ -1,7 +1,7 @@
 {
   "name": "persona-skill",
   "description": "Initialize an OpenClaw persona through an MBTI-guided interview and write SOUL.md, MEMORY.md, IDENTITY.md, USER.md, and persona/PERSONA_PROFILE.md.",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "private": true,
   "author": "tower1229",
   "license": "MIT-0",
@@ -28,6 +28,7 @@
     "smoke:persona": "node ./scripts/smoke-persona-openclaw.mjs",
     "smoke:persona:runtime": "node ./scripts/smoke-persona-openclaw.mjs --with-runtime-probes",
     "publish:clawhub": "node ./scripts/release-clawhub.mjs",
+    "sync:local-openclaw": "node ./scripts/sync-local-openclaw.mjs",
     "sync:wsl": "node ./scripts/sync-wsl.mjs"
   }
 }

@@ -31,6 +31,7 @@
 - 不要从 `PERSONA_PROFILE.md` 反推不存在的关系标签、岗位职责或时间事实
 - 不要把 `Scene Anchors` 中的可复用场景误当成已经发生过的历史
 - 用户接收偏好不在 `PERSONA_PROFILE.md` 中维护；若需要知道用户更容易接收哪种关心方式，应读取 `USER.md`
+- 用户 MBTI、用户职业栈、用户侧配对推导结论都不属于 persona 稳定事实；不要把这些内容反写进 `PERSONA_PROFILE.md`
 - 若维护者在 `SOUL.md`、`MEMORY.md`、`IDENTITY.md`、`USER.md` 中改写了稳定 persona 事实，必须同步回写 `PERSONA_PROFILE.md`
 - 纯运行时话术、关系过程更新或纯用户侧信息更新，不应反向污染 `PERSONA_PROFILE.md`
 
@@ -155,11 +156,13 @@ canonical required：
 - `afternoon_bias`
 - `evening_bias`
 - `late_night_bias`
+- `world_rhythm_constraints` (optional rich extension)
 
 消费建议：
 
 - 它适合指导“什么在这个时段通常更 plausible”
 - 它不是精确日程表
+- `world_rhythm_constraints` 允许定义强化的时间基线（如 `sleep: { start: '04:00', end: '12:00' }`），用于覆盖系统默认作息。Timeline runtime 在执行合理性校验时应优先读取此字段。
 
 ### 4.6 `## Appearance Tendencies`
 

@@ -77,7 +77,7 @@ Each plays a different part:
 - `persona/PERSONA_PROFILE.md`  
   Structured persona archive and the contract other Skills read; externalized traits and short entries under a fixed shape (field rules for appearance, scene, constraint, etc. are in `persona-profile-consumption-guide`).
 - `SOUL.md`  
-  Runtime persona voice, boundaries, and interaction style.
+  Runtime persona voice, boundaries, interaction style, and a compact origin paragraph that gives the persona deeper narrative grounding.
 - `MEMORY.md`  
   Stable relational stance, support patterns, and what to avoid.
 - `IDENTITY.md`  
@@ -148,6 +148,7 @@ That way the model reads only what the current step needs, and avoids loading an
 ```bash
 npm test
 npm run smoke:persona
+npm run sync:local-openclaw
 npm run publish:clawhub
 ```
 

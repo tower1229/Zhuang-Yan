@@ -74,7 +74,7 @@ clawhub install persona-skill
 - `persona/PERSONA_PROFILE.md`
   - 结构化人格档案，也是给其他 Skill 读取的人设合同；固定结构下的外化属性与短条目，尤其是 appearance、scene 与 constraint 这三类字段约定见 `persona-profile-consumption-guide`
 - `SOUL.md`
-  - 运行时人格表达、边界和互动风格
+  - 运行时人格表达、边界和互动风格，以及一段提供人物来路深度的 `Origin Paragraph`
 - `MEMORY.md`
   - 稳定的关系姿态、支持模式和避免模式
 - `IDENTITY.md`
@@ -145,6 +145,7 @@ clawhub install persona-skill
 ```bash
 npm test
 npm run smoke:persona
+npm run sync:local-openclaw
 npm run publish:clawhub
 ```
 
