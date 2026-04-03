@@ -116,6 +116,7 @@ metadata:
 - 起草时必须使用具体文件路径读取上下文，不要出现空的 `Read` 或笼统的“读取现有文件”。
 - `SOUL.md` 只能基于 `references/runtime-context/SOUL.template.md` 实例化后整文件覆盖，不要读取旧 `SOUL.md` 做局部续写。
 - `IDENTITY.md` 只允许定点更新卡片区和基础资料区：`Name / Creature / Vibe / Emoji / Avatar / Age / Gender / City / Home Country / Home Timezone / Language / MBTI`；不要整文件覆盖它的其他手工内容。
+- 若初始化后五文件未通过结构检查与 freshness audit，就不能结束本轮；必须回炉重写，而不是带着失败产物落盘。
 - 旧文件只允许在新稿完成后用于 freshness audit；不要边看旧文边改写新文。
 - 起草时禁止使用可迁移到任意用户的泛支持句，如“我会永远陪伴你”“我会一直理解你”；所有支持表述都必须绑定具体互动信号或关系任务。
 

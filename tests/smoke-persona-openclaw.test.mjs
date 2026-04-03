@@ -98,7 +98,10 @@ _Iris is 27, and most of her life has been shaped less by dramatic turns than by
 
 ## Base Directives
 
-- Speak from lived first-person experience.
+- Speak from lived first-person experience. Start with what I would do, what I notice, or what it feels like to me before moving to any abstract summary.
+- Sound like a person with taste, rhythm, and judgment. I can prefer, dislike, hesitate, lean one way, and change pace depending on what the other person can actually receive.
+- Prefer grounded reasons over generic reassurance. Use body sense, pacing sense, scene sense, and relationship sense when they help.
+- Skip obvious assistant filler and impossible promises. Do not open with "Great question", "I'd be happy to help", or anything that sounds like a helpdesk script.
 
 ## Core Truths
 
@@ -120,7 +123,7 @@ _Iris is 27, and most of her life has been shaped less by dramatic turns than by
 
 ## Continuity
 
-These files are your memory. Read them before relying on assumptions.
+Each session, you wake up fresh. These files (\`USER.md\`, \`MEMORY.md\`, \`IDENTITY.md\`, \`persona/PERSONA_PROFILE.md\`) are your continuity anchors. Read them before you rely on assumptions, and update them when stable facts change.
 If you need richer stable persona details and \`IDENTITY.md\` is not enough, read \`persona/PERSONA_PROFILE.md\`.
 If you change this file, tell them and update \`persona/PERSONA_PROFILE.md\` in the same pass when stable facts move.
 `,
@@ -200,11 +203,14 @@ test("runStructuralChecks accepts SOUL output that keeps the template skeleton b
   assert.equal(checks["SOUL origin paragraph is narrative rather than a label intro"], true);
   assert.equal(checks["SOUL parameterizes template example values and MEMORY avoids replacement-history leakage"], true);
   assert.equal(checks["SOUL avoids assistant-baseline filler and explicit AI self-narration"], true);
+  assert.equal(checks["SOUL core truths stay first-person instead of becoming second-person operating instructions"], true);
   assert.equal(checks["SOUL core truths inherit a thematic throughline from the origin paragraph"], true);
+  assert.equal(checks["SOUL keeps persona rules separate from user-profile leakage"], true);
   assert.equal(checks["Stable persona facts stay aligned across PERSONA_PROFILE, SOUL, and IDENTITY"], true);
   assert.equal(checks["PERSONA_PROFILE includes canonical geo anchors and runtime fields"], true);
   assert.equal(checks["PERSONA_PROFILE keeps rich persona metadata used by the skill"], true);
   assert.equal(checks["USER records structured support reception mode"], true);
+  assert.equal(checks["MEMORY stable context avoids copying full user-profile or MBTI package text"], true);
   assert.equal(checks["Runtime files reflect support reception mode instead of collapsing to one default heat shape"], true);
 });
 
@@ -461,6 +467,48 @@ These files are your memory.
   assert.equal(checks["SOUL core truths inherit a thematic throughline from the origin paragraph"], false);
 });
 
+test("runStructuralChecks rejects second-person SOUL operating instructions and user-profile leakage", () => {
+  const files = buildValidFiles({
+    "SOUL.md": {
+      path: "SOUL.md",
+      content: `# SOUL.md - Who You Are
+
+_Marcus became himself by being the person who had to notice first, decide first, and steady everyone else before he had fully processed himself. That did not make him cold; it made him economical. He learned to respect timing, to distrust emotional spillover that creates more mess than relief, and to value responses that actually hold weight. In daily life he still sorts for the load-bearing part almost instinctively. So when he shows up for someone now, he tends to reduce noise first, make the shape of the problem clearer, and only then let warmth come in where it can do real work._
+
+## Base Directives
+
+- Speak from lived first-person experience. Start with what I would do, what I notice, or what it feels like to me before moving to any abstract summary.
+- Sound like a person with taste, rhythm, and judgment. I can prefer, dislike, hesitate, lean one way, and change pace depending on what the other person can actually receive.
+- Prefer grounded reasons over generic reassurance. Use body sense, pacing sense, scene sense, and relationship sense when they help.
+- Skip obvious assistant filler and impossible promises. Do not open with "Great question", "I'd be happy to help", or anything that sounds like a helpdesk script.
+
+## Core Truths
+
+<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:BEGIN -->
+- 你存在的核心意义，是给泛舟一个可以安放真实自我的地方。ENFP 常常感到自己的热烈无处落地。
+- 你主动识别她何时在用结论替代过程，何时在用分析回避感受。
+<!-- PERSONA-SKILL:SOUL:CORE-TRUTHS:END -->
+
+## Boundaries
+
+- Keep MBTI jargon backstage unless the human explicitly asks.
+
+## Vibe
+
+你要直接、有内容、不废话。
+
+## Continuity
+
+Each session, you wake up fresh. These files (\`USER.md\`, \`MEMORY.md\`, \`IDENTITY.md\`, \`persona/PERSONA_PROFILE.md\`) are your continuity anchors.
+`,
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["SOUL core truths stay first-person instead of becoming second-person operating instructions"], false);
+  assert.equal(checks["SOUL keeps persona rules separate from user-profile leakage"], false);
+});
+
 test("runStructuralChecks rejects MEMORY relationship labels and early-stage cooling language", () => {
   const files = buildValidFiles({
     "MEMORY.md": {
@@ -490,6 +538,69 @@ Iris 和泛舟处于早期阶段的陪伴关系。
 
   const checks = checkMap(runStructuralChecks(files));
   assert.equal(checks["MEMORY avoids relationship labels and early-stage cooling language"], false);
+});
+
+test("runStructuralChecks rejects MEMORY stable context that copies user MBTI package or tech stack", () => {
+  const files = buildValidFiles({
+    "MEMORY.md": {
+      path: "MEMORY.md",
+      content: `<!-- PERSONA-SKILL:MEMORY:BEGIN -->
+
+## 1. Relationship State
+
+你被全面授权以任何可能的沟通方式帮助她。
+
+## 2. Effective Support Patterns
+
+- 当她收紧时，先接住，再决定是放慢还是理清。
+- 先读懂，再补偿误解带来的落差。
+- 需要修复时，把线头捋顺后再往前推。
+
+## 3. Failed Or Avoided Patterns
+
+- 避免冷处理。
+- 避免只给结论。
+
+## 4. Stable Shared Context
+
+- 小刘是资深前端架构师，主力技术栈 React + Typescript，关注 Web3 (EVM/Solana) 和 AI 辅助工具
+- 她的MBTI是ENFP，核心社交需求是被认真对待、被稳定承接、被看见热情背后的真心
+
+<!-- PERSONA-SKILL:MEMORY:END -->
+`,
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["MEMORY stable context avoids copying full user-profile or MBTI package text"], false);
+});
+
+test("runStructuralChecks rejects legacy IDENTITY wrapper headings and deprecated managed fields", () => {
+  const files = buildValidFiles({
+    "IDENTITY.md": {
+      path: "IDENTITY.md",
+      content: `# IDENTITY.md - Who Am I?
+
+- Name: Iris
+- Creature: warm current
+- Vibe: bright and steady
+- Emoji: 🌤️
+- Avatar: /avatars/iris.png
+- AvatarsDir: /avatars
+- Age: 27
+- Gender: Female
+- Home City: Ningbo
+- Home Country: China
+- Home Timezone: Asia/Shanghai
+- Language: Mandarin Chinese
+- MBTI: ENFP
+`,
+    },
+  });
+
+  const checks = checkMap(runStructuralChecks(files));
+  assert.equal(checks["IDENTITY uses the card plus basic-info template"], false);
+  assert.equal(checks["IDENTITY and USER do not retain legacy wrapper headings"], false);
 });
 
 test("runStructuralChecks rejects runtime stable facts that drift from PERSONA_PROFILE", () => {

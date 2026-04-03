@@ -2,6 +2,13 @@
 
 All notable repository-level changes to this project are documented in this file.
 
+## [1.2.1] - 2026-04-02
+
+- **初始化验收门禁加严 (Post-init Quality Gate)**：在 `SKILL.md` 中明确规定，初始化完成后若五份目标文件未通过结构检查与 freshness audit，则不得结束当前轮，必须回炉重写，而不是带着失败产物落盘。
+- **SOUL / MEMORY 分层校验增强**：升级 `smoke-persona-openclaw.mjs` 与对应测试，新增对 `SOUL.md` 二人称操作说明、用户姓名 / MBTI / 技术画像泄漏、以及 `MEMORY.md` 抄写完整用户画像或 MBTI 推导包的拦截，避免 persona 层重新退化成“针对当前用户的说明书”。
+- **IDENTITY 旧格式清理 (Legacy Identity Cleanup)**：更新 `identity-card.mjs`，在定点 patch 时主动移除 legacy heading、`Home City`、`AvatarsDir` 等旧托管残留，进一步收紧 `IDENTITY.md` 到当前 12 行卡片合同。
+- **Continuity 边界统一**：同步调整 `SOUL.template.md` 与消费指南，将 continuity anchors 明确到 `USER.md`、`MEMORY.md`、`IDENTITY.md`、`persona/PERSONA_PROFILE.md`，并补充 persona / user 分层说明，禁止把用户 MBTI、职业栈与配对推导结论反写进 `PERSONA_PROFILE.md`。
+
 ## [1.1.1] - 2026-04-01
 
 - **支持自定义世界律动 (World Rhythm Constraints)**：在 `PERSONA_PROFILE.md` 中引入 `world_rhythm_constraints` 字段。支持定义非标准作息（如熬夜型、极早起型）的睡眠与活动窗口，供 Timeline 插件在执行合理性校验时优先读取。

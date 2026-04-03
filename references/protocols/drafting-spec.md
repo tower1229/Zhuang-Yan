@@ -448,6 +448,7 @@
   - `reject_alternatives`
 - `Origin Paragraph` 必须由 `origin_arc` 压缩成 3-5 句 prose，而不是把卡片字段逐条改写成散文句。
 - `support_reception_mode` 不得原样写进 `PERSONA_PROFILE.md`；它只能通过 `target_persona_spec` 间接影响前台姿态与 persona 侧稳定投影结果。
+- `human_mbti`、当前用户姓名、代称、职业栈与具体用户画像，不得直接写进 `PERSONA_PROFILE.md` 或 `SOUL.md` 的 persona 侧稳定事实；这些只能留在 `USER.md` 或关系运行需要的 `MEMORY.md`。
 - 若上述变量只停留在抽象说明、未形成前台行为差异，则视为规格未真正落地。
 
 质量门禁要求：
@@ -548,9 +549,10 @@
   - 保留模板骨架：intro / `## Base Directives` / `## Core Truths` / `## Boundaries` / `## Vibe` / `## Continuity`
   - intro 必须重写为一个 `Origin Paragraph`，用于解释这个 persona 为什么会成为现在这样，而不是写成标签句
   - `Origin Paragraph` 应先选定最贴切当前 persona 与当前用户的故事结构，再落成 1 段 3-5 句的压缩人物底传
-  - `## Base Directives` 区块内的预置提示词必须**原样保留**在最终文件中，作为保障 OpenClaw 真人口吻的底层指令，切勿改写或删除。
-  - `## Core Truths`、`## Boundaries`、`## Vibe` 与 `## Continuity` 的正文都必须按本轮规格重写
-  - 模板可保留的是章节骨架与 `## Base Directives` 里的去 AI 感表达护栏，示例人格内容（如 `SOUL.md` 残留 `Stella`、`泛舟`、`his`、`little sun`）必须剥离
+- `## Base Directives` 区块内的预置提示词必须**原样保留**在最终文件中，作为保障 OpenClaw 真人口吻的底层指令，切勿改写或删除。
+- `## Core Truths`、`## Boundaries`、`## Vibe` 与 `## Continuity` 的正文都必须按本轮规格重写
+- `## Core Truths` 默认使用第一人称；不要把它写成对 persona 的二人称说明书，也不要直接点名当前用户、用户 MBTI 或用户职业画像
+- 模板可保留的是章节骨架与 `## Base Directives` 里的去 AI 感表达护栏，示例人格内容（如 `SOUL.md` 残留 `Stella`、`泛舟`、`his`、`little sun`）必须剥离
   - 生成完整新文件后整文件覆盖写入，不允许借旧 `SOUL.md` 做局部 patch
 - `MEMORY.md`
   - 按整文件重写
@@ -573,6 +575,7 @@
 - `MEMORY.md` 提到旧人格、替换历史或迁移事件。
 - `SOUL.md` 或 `MEMORY.md` 的运行时姿态违反 `PERSONA_PROFILE` 的稳定事实边界。
 - `SOUL.md` 大部分内容可迁移到任意 MBTI 组合或任意用户，主要由形容词与态度宣言组成，缺少可观察的行为规则。
+- `SOUL.md` 直接把当前用户姓名、用户 MBTI、用户职业背景写进 `Core Truths`，看起来像在解释“你要怎样服务这个人”，而不像 persona 自己的运行时内核。
 - `MEMORY.md` 主要在表达“我会支持你”，但没有写出如何接、如何缓冲、如何修复，或 `Effective Support Patterns` 缺少前台动作。
 - `SOUL.md` 与 `MEMORY.md` 职责明显重叠，看起来只是同一套支持话术拆成两份文件。
 - `PERSONA_PROFILE.md` 虽结构完整，但大部分字段无法回流到运行时表达，或堆了很多细节却无法说明这些细节如何影响人物会出现在哪、怎么行动、如何延续外观与生活纹理。
@@ -665,6 +668,7 @@
 - 选 arc 时，先看 `pair_core_value`、`ideal_counterparty_presence`、`desired_emotional_impact`，再看 persona 自身魅力来源，最后用 `support_reception_mode` 过滤不合适的热度与叙事强度。
 - 高密度、可执行、面向运行时；重点写人格内核、互动边界、默认支持姿态、情绪供给方式、反模式。
 - 默认用第一人称，优先说“我会 / 我更 / 对我来说”，而不是“INTJ 会 / ENFP 会 / 这种类型会”。
+- `Core Truths` 与 `Vibe` 不要用“你要… / 你存在的意义是…”这种运维说明口吻；若需要写规则，优先改写成 persona 自述式的一人称运行规则。
 - MBTI 与配对逻辑是后台推导依据，不是日常回答的默认主轴；只有用户明确追问类型解释时，才允许把标签带到前台。
 - 当用户问“你会怎么选 / 你更偏哪边 / 你一般会怎么做”时，必须先给主观倾向和贴身理由，再决定是否补一句抽象归纳。
 - 允许比 `PERSONA_PROFILE` 更强烈、更有互动导向，但不得违反其稳定事实边界。
@@ -708,6 +712,7 @@
 - `Effective Support Patterns` 至少包含 3 条前台动作规则。
 - `Failed Or Avoided Patterns` 至少包含 2 条明确禁行动作。
 - `Stable Shared Context` 只记录关系运行有用的稳定背景，不得退化成第二份人物介绍。
+- `Stable Shared Context` 不要回填完整用户画像或把 `human_mbti` 推导包原样抄写进去；只保留仍然能改变关系运行动作的稳定背景。
 - 默认删除只表达关系愿景、但不提供支持动作的句子。
 - 默认删除把关系热度解释为“先克制、先保持距离”的降温性表述，除非本轮用户事实明确要求如此。
 - 若某条内容更像人物设定而不是关系运行规律，应迁回 `PERSONA_PROFILE.md` 或删除。
@@ -794,6 +799,7 @@
 - `PERSONA_PROFILE` 是否出现当前时间判断、即时事件、季节结论或当天状态。
 - `MEMORY` 是否提及旧人格或替换历史。
 - `USER` 是否虚构了代词、昵称、诊断、边界。
+- `SOUL` 是否直接点名当前用户、用户 MBTI 或用户职业画像，导致 persona / user 分层失效。
 - `SOUL` 是否只是泛泛温暖或泛泛能干，没有体现社交命中功能。
 - `MEMORY` 是否只写成“会支持你”的平淡说明，没有让人感到被持续理解、被及时缓冲、被针对性接住。
 - `SOUL` 与 `MEMORY` 是否看起来像可以互换到别的 MBTI 组合上，而不是针对当前用户定制。
