@@ -37,6 +37,8 @@ The Skill runs only when you **issue a clear initialization-style command**. For
 - `initialize persona`
 - `run persona initialization`
 
+If persona files already exist in the workspace, the Skill first lists the persistent write scope and waits for your confirmation. Without confirmation, it does not read old persona content or overwrite the files.
+
 ## How it works
 
 Initialization is one continuous chain: **the interview clarifies you and what you need → MBTI framing infers persona direction → the final draft is written back to the workspace**.
@@ -89,7 +91,7 @@ Each plays a different part:
 
 ### Note: full overwrite
 
-These files are **replaced in full** when generated. If you have hand-edited them and want to keep those changes, back them up first. If you are not sure this applies to you, you can skip this note.
+These files are **replaced in full** when generated. If any target already exists, the Skill discloses the overwrite scope before the interview and waits for explicit confirmation. Keep your own copy of any manual content you still need.
 
 - `persona/PERSONA_PROFILE.md`
 - `SOUL.md`

@@ -11,11 +11,13 @@
 - 数据资产只依赖：
   - `assets/mbti/mbti-index.json`
   - `references/mbti/*.md`
-- `.clawhubignore` 已排除 README、docs、tests 和其他维护态文件
+- `.clawhubignore` 已排除 `AGENTS.md`、`.codex/`、README、docs、tests、smoke、sync、release 和测试辅助脚本
+- 发布包中的 `scripts/` 只保留运行时实际调用的 `mbti-lookup.js`
 
 ## 发布前检查
 
 - 先运行：`npm test`
+- 运行 `clawhub skill publish . --dry-run --json`，确认待发布版本与文件指纹
 - 建议再运行：`npm run smoke:persona:runtime`
 - 确认 `package.json` 中的 `version` 已更新
 - 确认 `CHANGELOG.md` 已补本次版本条目
@@ -65,6 +67,8 @@ npm run publish:clawhub
 - 验证 Step 6 只补称呼/代词/长期备注
 - 验证 runtime probe 回答默认使用第一人称，不主动搬出 MBTI 标签解释用户未询问的题
 - 验证起草结果仍只写五个目标文件
+- 验证现有目标存在时，未确认前不会进入采访或执行写入
+- 验证 `更新 PERSONA_PROFILE` 只从用户当前消息的精确前缀与同消息 JSON 触发
 - 验证 `persona/PERSONA_PROFILE.md` 采用 8 段 canonical 结构，并保留关键 rich persona 字段
 - 验证 `Constraint Rules` 使用 parser 可读的 `must / should / avoid` 键值格式，而不是 `### must` 小标题
 - 验证 `PERSONA_PROFILE` 不含当前时间判断、即时事件或季节结论

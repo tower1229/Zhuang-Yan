@@ -38,6 +38,8 @@ clawhub install persona-skill
 - `initialize persona`
 - `run persona initialization`
 
+如果工作区中已经存在人格文件，Skill 会先列明持久写入范围并等待你确认；未确认不会读取旧人格内容或覆盖文件。
+
 ## 它如何工作
 
 初始化是一条连贯链路：**采访把人和需求问清楚 → 在 MBTI 框架下反推人格方向 → 把定稿写回工作区**。
@@ -86,7 +88,7 @@ clawhub install persona-skill
 
 ### 注意：覆盖写入
 
-下列文件在生成时会被**整文件覆盖**。若你已手工改过其中内容且希望保留，请先自行备份。若不确定是否与你有关，可跳过本条。
+下列文件在生成时会被**整文件覆盖**。检测到任一现有目标后，Skill 会在采访前披露覆盖范围并等待一次明确确认；你仍应自行保留需要的手工内容。
 
 - `persona/PERSONA_PROFILE.md`
 - `SOUL.md`

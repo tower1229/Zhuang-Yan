@@ -2,6 +2,13 @@
 
 All notable repository-level changes to this project are documented in this file.
 
+## [1.2.2] - 2026-06-27
+
+- **ClawHub 发布边界收紧**：发布包排除 `AGENTS.md`、`.codex/`、smoke、sync、release 与测试辅助脚本，只保留运行时需要的 `scripts/mbti-lookup.js`。
+- **覆盖写入确认**：检测到现有人格目标文件时，初始化会先披露整文件重写与定点 patch 范围，获得用户明确确认后才进入采访和写入。
+- **增量触发加固**：`更新 PERSONA_PROFILE` 只接受用户当前消息中的精确前缀与同消息 JSON，不再从引用内容、历史上下文或模糊的下游指令触发持久更新。
+- **行为与语言边界**：移除模板中的 blanket authorization，限制主动支持只发生在用户授权的当前对话内；所有 MBTI 资料明确为概念元数据，用户可见输出始终服从 `interview_language`。
+
 ## [1.2.1] - 2026-04-02
 
 - **初始化验收门禁加严 (Post-init Quality Gate)**：在 `SKILL.md` 中明确规定，初始化完成后若五份目标文件未通过结构检查与 freshness audit，则不得结束当前轮，必须回炉重写，而不是带着失败产物落盘。

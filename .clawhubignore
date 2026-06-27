@@ -12,6 +12,7 @@
 **/.DS_Store
 
 # Maintainer docs and repo files
+AGENTS.md
 README.md
 README_ZH.md
 CHANGELOG.md
@@ -19,6 +20,7 @@ CONTRIBUTING.md
 LICENSE
 .gitignore
 .clawhubignore
+.codex/
 docs/
 package.json
 tests/
@@ -39,7 +41,10 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# Maintainer-only scripts
+# Maintainer-only scripts. The published skill only executes mbti-lookup.js.
+scripts/identity-card.mjs
 scripts/release-clawhub.mjs
-
+scripts/smoke-persona-openclaw.mjs
+scripts/sync-local-openclaw.mjs
+scripts/sync-wsl.mjs
 

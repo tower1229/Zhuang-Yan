@@ -42,6 +42,8 @@ test("runtime files required by the skill exist under the PERSONA_PROFILE archit
 
 test(".clawhubignore excludes maintainer-only files", () => {
   const ignore = fs.readFileSync(path.join(root, ".clawhubignore"), "utf8");
+  assert.match(ignore, /^AGENTS\.md$/m);
+  assert.match(ignore, /^\.codex\/$/m);
   assert.match(ignore, /^README\.md$/m);
   assert.match(ignore, /^README_ZH\.md$/m);
   assert.match(ignore, /^CHANGELOG\.md$/m);
@@ -50,6 +52,11 @@ test(".clawhubignore excludes maintainer-only files", () => {
   assert.match(ignore, /^docs\/$/m);
   assert.match(ignore, /^tests\/$/m);
   assert.match(ignore, /^scripts\/release-clawhub\.mjs$/m);
+  assert.match(ignore, /^scripts\/identity-card\.mjs$/m);
+  assert.match(ignore, /^scripts\/smoke-persona-openclaw\.mjs$/m);
+  assert.match(ignore, /^scripts\/sync-local-openclaw\.mjs$/m);
+  assert.match(ignore, /^scripts\/sync-wsl\.mjs$/m);
+  assert.doesNotMatch(ignore, /^scripts\/mbti-lookup\.js$/m);
 });
 
 test("core guidance files are Chinese-first", () => {
@@ -76,6 +83,10 @@ test("SKILL.md owns trigger, boundaries, file ownership, and minimal execution o
   assert.match(skill, /最小执行顺序/);
   assert.match(skill, /SOUL\.md` 只能基于 `references\/runtime-context\/SOUL\.template\.md`/);
   assert.match(skill, /IDENTITY\.md` 只允许定点更新卡片区和基础资料区/);
+  assert.match(skill, /持久写入授权/);
+  assert.match(skill, /等待用户明确确认/);
+  assert.match(skill, /用户当前消息必须以 `更新 PERSONA_PROFILE` 开头/);
+  assert.match(skill, /不得修改文件/);
   assert.doesNotMatch(skill, /Current City|Core Identity|Relationship State/);
   assert.doesNotMatch(skill, /companion|assistant|mentor|friend/);
 });
@@ -83,6 +94,7 @@ test("SKILL.md owns trigger, boundaries, file ownership, and minimal execution o
 test("initialization flow stays interview-only while switching completion target to PERSONA_PROFILE", () => {
   const flow = fs.readFileSync(path.join(root, "references/protocols/initialization-flow.md"), "utf8");
   assert.match(flow, /本文件只负责采访流程本身/);
+  assert.match(flow, /未获得确认时不得进入 Step 1/);
   assert.match(flow, /Step 1：确认人类用户的 MBTI/);
   assert.match(flow, /Step 5：只锁定年龄/);
   assert.match(flow, /Step 6：采集用户接收偏好/);
@@ -312,6 +324,11 @@ test("MBTI reference assets align with the persona-profile-plus-runtime model", 
 
   for (const fileName of files) {
     const text = fs.readFileSync(path.join(mbtiDir, fileName), "utf8");
+    assert.match(
+      text,
+      /本文件仅提供概念元数据.*所有用户可见内容必须使用本轮锁定的 `interview_language`/,
+      `${fileName} should keep source language out of user-facing output`,
+    );
     assert.doesNotMatch(
       text,
       /情景感知和 prompt 组装消费|人物小传生成时的气质锚定|人物小传生成和价值主张描述的背景语料/,
