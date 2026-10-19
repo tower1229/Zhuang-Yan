@@ -41,6 +41,7 @@ node ./scripts/release-clawhub.mjs
 
 - `scripts/runtime-bundle.mjs` owns the explicit runtime allowlist shared by publishing, local sync, Windows-to-WSL sync, and smoke installation.
 - Add required runtime files there. Unlisted files are excluded even when placed inside `references/`, `assets/`, or `scripts/`.
+- Keep `scripts/package.json` in the runtime bundle: it isolates the CommonJS lookup script from an ancestor workspace's ESM package type. Tests execute lookup under both package contexts and check Markdown reference closure.
 - Regenerate `.clawhubignore` after changing the allowlist; tests reject drift:
 
 ```bash
@@ -48,7 +49,9 @@ node --input-type=module -e "import fs from 'node:fs'; import { renderClawHubIgn
 ```
 
 - Local sync uses Node's filesystem API and replaces only the installed skill directory, removing old helpers while leaving workspace persona files outside that directory intact.
-- On Windows, `sync:wsl` uses `wsl.exe --exec` with argument arrays to reach the default distribution's current user. Install `rsync` inside that distribution first. On native Linux/macOS or inside WSL, the same command performs a local sync.
+- On Windows, `sync:wsl` uses `wsl.exe --exec` with argument arrays to reach the default distribution's current user. Install `rsync` and provide `realpath`, `mktemp`, and `mv -T` (GNU coreutils or compatible tools) inside that distribution. On native Linux/macOS or inside WSL, the same command performs a local sync.
+- Both installers compare the original source and target paths plus filesystem identities along both ancestor chains, rejecting overlapping directories, case aliases, symlinked target directories, and Git checkouts at the target. WSL resolves paths and checks `test -ef` inside Linux before modifying the target.
+- Both installers stage into hidden sibling directories before switching the installation. WSL never runs `rsync --delete` against the existing installation. Transfer failures preserve the old files; switch failures attempt rollback. Rollback failures or uncertain move acknowledgements preserve the recovery directory and report its path. Do not clean a backup merely because the launcher returned an error: the move may already have completed.
 - Source paths come from the repository location, not the shell's current directory. Do not reintroduce shell command interpolation for paths or release metadata.
 - The offline WSL transport tests use a subprocess emulator; a real Windows/WSL check is still required before claiming platform acceptance.
 

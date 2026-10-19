@@ -4,6 +4,10 @@ All notable repository-level changes to this project are documented in this file
 
 ## [Unreleased]
 
+- 复核修复 WSL 原始仓库与安装目录重叠时可能误删仓库的问题：检查双向祖先关系和文件系统身份，防止大小写或链接别名漏判，目标为 Git checkout 时拒绝替换。
+- WSL 改为先同步到隐藏暂存目录，再备份并切换安装，避免原位 `rsync --delete` 在传输失败后破坏旧文件；切换失败尝试回滚，恢复失败或移动结果不确定时保留恢复目录。
+- 运行包补充 `scripts/package.json` 的 CommonJS 边界，确保 ESM 工作区中的 MBTI lookup 可执行，并增加递归文档引用、路径重叠和失败保留测试。
+
 - 保留 Windows 到默认 WSL 发行版的同步，改用 `wsl.exe --exec` 与独立参数执行路径转换、目录创建和 rsync，消除路径拼接进 shell 命令的注入风险。
 - 发布、本地同步和 smoke 安装统一使用显式运行文件白名单，排除维护工具与未知文件；本地同步会清理旧安装中的维护脚本。
 - `.clawhubignore` 由同一白名单生成并由测试校验；发布先暂存运行包，新增不调用 ClawHub 的本地 `--dry-run`，Windows 发布调用也移除 shell 拼接。

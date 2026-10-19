@@ -16,7 +16,7 @@
 - `scripts/runtime-bundle.mjs` 的 `RUNTIME_FILES` 是发布、本地同步、Windows 到 WSL 同步和 smoke 安装的唯一运行文件白名单
 - `.clawhubignore` 由该白名单生成，默认排除所有未列入的文件；测试检查两者一致
 - 发布包装脚本只向 ClawHub 传递临时运行包目录，不上传整个仓库
-- 发布包中的 `scripts/` 只保留运行时实际调用的 `mbti-lookup.js`
+- 发布包中的 `scripts/` 只保留运行时实际调用的 `mbti-lookup.js` 和用于隔离 ESM 祖先的最小 `package.json`（`type: commonjs`）
 
 ## 发布前检查
 

@@ -3,151 +3,271 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { syncWsl } from "../scripts/sync-wsl.mjs";
 import { RUNTIME_FILES } from "../scripts/runtime-bundle.mjs";
 import { createRuntimeFixture, listFiles } from "./helpers/runtime-fixture.mjs";
+import { emulateWsl, linuxPath } from "./helpers/wsl-emulator.mjs";
 
-test("Windows to WSL sync keeps special paths in separate arguments and stages only runtime files", (t) => {
-  const { sourceDir } = createRuntimeFixture(t);
-  const linuxSource = '/mnt/c/A & B;$(printf INJECTED)|"quote"/中文';
-  const linuxHome = "/home/test & ;'$(printf INJECTED)%USERPROFILE% 中文";
+const emulator = fileURLToPath(new URL("./helpers/wsl-emulator.mjs", import.meta.url));
+
+function harness(t, options = {}) {
+  const fixture = createRuntimeFixture(t, "repo & semi;$(echo nope) 中文");
+  const config = {
+    ...fixture,
+    homeDir: path.join(fixture.temporary, "home & ;'$(printf INJECTED)%USERPROFILE% 中文"),
+    linuxHome: "/home/test & ;'$(printf INJECTED)%USERPROFILE% 中文",
+    ...options,
+  };
+  const configPath = path.join(fixture.temporary, "wsl-config.json");
+  fs.mkdirSync(config.homeDir, { recursive: true });
+  fs.writeFileSync(configPath, JSON.stringify(config));
   const calls = [];
-  let staged;
-  const spawn = (command, args, options) => {
-    calls.push({ command, args, options });
+  const spawn = (command, args, spawnOptions) => {
     assert.equal(command, "wsl.exe");
     assert.equal(args[0], "--exec");
-    assert.equal(options.shell, false);
-    if (args[1] === "wslpath") {
-      staged = args[4];
-      assert.deepEqual(listFiles(staged), [...RUNTIME_FILES].sort());
-      return { status: 0, stdout: `${linuxSource}\n` };
-    }
-    return { status: 0, stdout: args[1] === "printenv" ? `${linuxHome}\n` : "" };
+    assert.equal(spawnOptions.shell, false);
+    calls.push(args);
+    return options.subprocess
+      ? spawnSync(process.execPath, [emulator, configPath, ...args], spawnOptions)
+      : emulateWsl(args, config);
   };
-  const destination = `${linuxHome}/.openclaw/workspace/skills/persona-skill`;
-  assert.equal(syncWsl({ sourceDir, platform: "win32", spawn }), destination);
-  assert.deepEqual(calls.map((call) => call.args), [
-    ["--exec", "wslpath", "-a", "-u", staged],
-    ["--exec", "printenv", "HOME"],
-    ["--exec", "test", "!", "-L", destination],
-    ["--exec", "mkdir", "-p", "--", destination],
-    ["--exec", "rsync", "-a", "--delete", "--", `${linuxSource}/`, `${destination}/`],
-  ]);
-  assert.equal(fs.existsSync(path.dirname(staged)), false);
-});
+  return { ...fixture, config, calls, spawn, destination: path.join(config.homeDir, ".openclaw/workspace/skills/persona-skill") };
+}
 
-test("WSL transport preserves paths across real child processes and replaces stale installed files", (t) => {
-  const { temporary, sourceDir } = createRuntimeFixture(t, "repo & semi;$(echo nope) 中文");
-  const homeDir = path.join(temporary, "home & semi;$(echo nope) 中文");
-  const destination = path.join(homeDir, ".openclaw/workspace/skills/persona-skill");
+function seedInstallation(destination) {
   fs.mkdirSync(path.join(destination, "scripts"), { recursive: true });
   fs.writeFileSync(path.join(destination, "scripts/sync-wsl.mjs"), "old unsafe helper");
-  const emulator = path.join(temporary, "wsl-emulator.cjs");
-  const mapping = path.join(temporary, "source-path.json");
-  const linuxHome = "/home/test & semi;$(echo nope) 中文";
-  fs.writeFileSync(emulator, `
-const fs = require("node:fs");
-const path = require("node:path");
-const [home, mapping, linuxHome, flag, command, ...args] = process.argv.slice(2);
-function destination(value) {
-  if (!value.startsWith(linuxHome + "/")) process.exit(5);
-  return path.join(home, ...value.slice(linuxHome.length + 1).split("/"));
+  fs.writeFileSync(path.join(destination, "keep-until-success"), "previous installation");
 }
-if (flag !== "--exec") process.exit(2);
-if (command === "wslpath") {
-  fs.writeFileSync(mapping, JSON.stringify(args[2]));
-  process.stdout.write("/staged-bundle\\n");
-}
-else if (command === "printenv") process.stdout.write(linuxHome + "\\n");
-else if (command === "test") {
-  const target = destination(args[2]);
-  if (fs.existsSync(target) && fs.lstatSync(target).isSymbolicLink()) process.exit(1);
-}
-else if (command === "mkdir") fs.mkdirSync(destination(args[2]), { recursive: true });
-else if (command === "rsync") {
-  if (args[1] !== "--delete" || args[2] !== "--") process.exit(3);
-  if (args[3] !== "/staged-bundle/") process.exit(6);
-  const target = destination(args[4]);
-  fs.rmSync(target, { recursive: true, force: true });
-  fs.cpSync(JSON.parse(fs.readFileSync(mapping, "utf8")), target, { recursive: true });
-} else process.exit(4);
-`);
-  const spawn = (command, args, options) => {
-    assert.equal(command, "wsl.exe");
-    assert.equal(options.shell, false);
-    return spawnSync(process.execPath, [emulator, homeDir, mapping, linuxHome, ...args], options);
-  };
-  const linuxDestination = syncWsl({ sourceDir, platform: "win32", spawn });
-  assert.equal(linuxDestination, `${linuxHome}/.openclaw/workspace/skills/persona-skill`);
-  assert.deepEqual(listFiles(destination), [...RUNTIME_FILES].sort());
-});
 
-for (const failure of ["missing executable", "wslpath", "printenv", "test", "mkdir", "rsync", "terminated process"]) {
-  test(`WSL sync reports ${failure} and removes its temporary bundle`, (t) => {
-    const { sourceDir } = createRuntimeFixture(t);
-    let staged;
-    const calls = [];
-    const spawn = (_command, args) => {
-      calls.push(args[1]);
-      if (args[1] === "wslpath") staged = args[4];
-      if (failure === "missing executable") return { error: new Error("ENOENT") };
-      if (failure === "terminated process") return { status: null, signal: "SIGTERM" };
-      if (args[1] === failure) return { status: 1, stderr: "failed" };
-      return { status: 0, stdout: args[1] === "wslpath" ? "/mnt/c/staged\n" : "/home/test\n" };
-    };
-    assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn }), /WSL/u);
-    assert.equal(fs.existsSync(path.dirname(staged)), false);
-    if (failure === "wslpath" || failure === "missing executable") assert.deepEqual(calls, ["wslpath"]);
+function contents(directory) {
+  return Object.fromEntries(listFiles(directory).map((file) => [file, fs.readFileSync(path.join(directory, file), "base64")]));
+}
+
+function assertWindowsSnapshotCleaned(calls) {
+  const staged = calls.find((args) => args[1] === "wslpath")?.[4];
+  if (staged) assert.equal(fs.existsSync(path.dirname(staged)), false);
+}
+
+for (const subprocess of [false, true]) {
+  test(`Windows WSL transport preserves special paths and stages only runtime files (subprocess=${subprocess})`, (t) => {
+    const { sourceDir, destination, calls, spawn } = harness(t, { subprocess });
+    seedInstallation(destination);
+    const result = syncWsl({ sourceDir, platform: "win32", spawn });
+    assert.equal(result, linuxPath(fs.realpathSync(destination)));
+    assert.deepEqual(listFiles(destination), [...RUNTIME_FILES].sort());
+    for (const file of RUNTIME_FILES) {
+      assert.deepEqual(fs.readFileSync(path.join(destination, file)), fs.readFileSync(path.join(sourceDir, file)));
+    }
+    const rsync = calls.find((args) => args[1] === "rsync");
+    assert.deepEqual(rsync.slice(0, 4), ["--exec", "rsync", "-a", "--"]);
+    assert.ok(rsync.at(-1).includes(".persona-skill-stage."));
+    assert.equal(calls.some((args) => args.includes("--delete")), false);
+    assert.deepEqual(fs.readdirSync(path.dirname(destination)), ["persona-skill"]);
+    assertWindowsSnapshotCleaned(calls);
   });
 }
 
-test("WSL sync stops before mkdir or rsync when the destination is a symlink", (t) => {
-  const { sourceDir } = createRuntimeFixture(t);
-  const commands = [];
-  const spawn = (_command, args) => {
-    commands.push(args[1]);
-    return args[1] === "test"
-      ? { status: 1, stderr: "destination is a symlink" }
-      : { status: 0, stdout: args[1] === "wslpath" ? "/mnt/c/staged\n" : "/home/test\n" };
-  };
-  assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn }), /destination is a symlink/u);
-  assert.deepEqual(commands, ["wslpath", "printenv", "test"]);
+test("WSL supports a first installation without an existing destination", (t) => {
+  const { sourceDir, destination, calls, spawn } = harness(t);
+  syncWsl({ sourceDir, platform: "win32", spawn });
+  assert.deepEqual(listFiles(destination), [...RUNTIME_FILES].sort());
+  assert.equal(calls.filter((args) => args[1] === "mv").length, 1);
 });
 
-test("WSL command arrays work with real host rsync in a temporary workspace", (t) => {
+for (const failCommand of ["wslpath", "printenv", "realpath", "test", "mkdir", "mktemp", "rsync"]) {
+  test(`WSL ${failCommand} failure preserves the old installation`, (t) => {
+    const { sourceDir, destination, calls, spawn } = harness(t, { failCommand });
+    seedInstallation(destination);
+    const before = contents(destination);
+    assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn }), /WSL/u);
+    assert.ok(calls.some((args) => args[1] === failCommand));
+    assert.deepEqual(contents(destination), before);
+    assert.deepEqual(fs.readdirSync(path.dirname(destination)), ["persona-skill"]);
+    assertWindowsSnapshotCleaned(calls);
+  });
+}
+
+for (const failure of [{ error: new Error("ENOENT") }, { status: null, signal: "SIGTERM" }]) {
+  test(`WSL reports launcher failure ${failure.error?.message ?? failure.signal}`, (t) => {
+    const { sourceDir } = createRuntimeFixture(t);
+    let staged;
+    assert.throws(() => syncWsl({
+      sourceDir, platform: "win32",
+      spawn: (_command, args) => { staged = args[4]; return failure; },
+    }), /WSL/u);
+    assert.equal(fs.existsSync(path.dirname(staged)), false);
+  });
+}
+
+test("WSL install rename failure restores the previous skill", (t) => {
+  const { sourceDir, destination, calls, spawn } = harness(t, { failInstall: true });
+  seedInstallation(destination);
+  const before = contents(destination);
+  assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn }), /simulated install failure/u);
+  assert.deepEqual(contents(destination), before);
+  assert.deepEqual(fs.readdirSync(path.dirname(destination)), ["persona-skill"]);
+  assertWindowsSnapshotCleaned(calls);
+});
+
+test("WSL rollback failure keeps the previous skill in a recoverable backup", (t) => {
+  const { sourceDir, destination, calls, spawn } = harness(t, { failInstall: true, failRestore: true });
+  seedInstallation(destination);
+  const before = contents(destination);
+  assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn }), /backup preserved/u);
+  const backup = fs.readdirSync(path.dirname(destination)).find((entry) => entry.startsWith(".persona-skill-stage."));
+  assert.ok(backup);
+  assert.deepEqual(contents(path.join(path.dirname(destination), backup, "previous")), before);
+  assertWindowsSnapshotCleaned(calls);
+});
+
+for (const phase of ["backup", "install", "restore"]) {
+  test(`WSL retains recovery files when ${phase} succeeds before its acknowledgement is lost`, (t) => {
+    const fixture = harness(t, { failInstall: phase === "restore" });
+    const { sourceDir, destination, calls } = fixture;
+    seedInstallation(destination);
+    const before = contents(destination);
+    let interrupted = false;
+    const spawn = (command, args, options) => {
+      const result = fixture.spawn(command, args, options);
+      const from = args.at(-2);
+      const to = args.at(-1);
+      const matched = phase === "backup" ? to.endsWith("/previous")
+        : phase === "restore" ? from.endsWith("/previous")
+        : from.endsWith("/persona-skill") && to.endsWith("/persona-skill");
+      if (!interrupted && args[1] === "mv" && result.status === 0 && matched) {
+        interrupted = true;
+        return { status: null, signal: "SIGTERM" };
+      }
+      return result;
+    };
+    assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn }), /recovery directory preserved/u);
+    assert.equal(interrupted, true);
+    const recovery = fs.readdirSync(path.dirname(destination)).find((entry) => entry.startsWith(".persona-skill-stage."));
+    assert.ok(recovery);
+    if (phase === "restore") assert.deepEqual(contents(destination), before);
+    else assert.deepEqual(contents(path.join(path.dirname(destination), recovery, "previous")), before);
+    assert.equal(calls.some((args) => args[1] === "rm"), false);
+    assertWindowsSnapshotCleaned(calls);
+  });
+}
+
+test("WSL rejects case aliases through an ancestor symlink before moving old files", (t) => {
+  const fixture = harness(t);
+  const parent = path.join(fixture.temporary, "MiXeD");
+  const sourceDir = path.join(parent, "persona-skill/checkout");
+  fs.mkdirSync(parent);
+  const alias = path.join(fixture.temporary, "mixed");
+  if (!fs.existsSync(alias)) return t.skip("Requires a case-insensitive filesystem");
+  fs.mkdirSync(sourceDir, { recursive: true });
+  for (const file of RUNTIME_FILES) {
+    const target = path.join(sourceDir, file);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.copyFileSync(path.join(fixture.sourceDir, file), target);
+  }
+  fs.mkdirSync(path.join(sourceDir, ".git"));
+  fs.writeFileSync(path.join(sourceDir, ".git/config"), "must preserve repository");
+  const skills = path.dirname(fixture.destination);
+  fs.mkdirSync(path.dirname(skills), { recursive: true });
+  try { fs.symlinkSync(alias, skills, "junction"); }
+  catch (error) {
+    if (error.code === "EPERM") return t.skip("Creating symlinks requires additional Windows privileges");
+    throw error;
+  }
+  const before = contents(sourceDir);
+  assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn: fixture.spawn }), /must not overlap/u);
+  assert.deepEqual(contents(sourceDir), before);
+  assert.equal(fixture.calls.some((args) => ["mkdir", "mktemp", "rsync", "mv", "rm"].includes(args[1])), false);
+});
+
+for (const relationship of ["same", "source contains destination", "destination contains source", "ancestor symlink"]) {
+  test(`WSL refuses source/target overlap: ${relationship}`, (t) => {
+    const fixture = harness(t);
+    const { config, destination, spawn, calls } = fixture;
+    fs.mkdirSync(destination, { recursive: true });
+    let sourceDir = destination;
+    if (relationship === "source contains destination") sourceDir = config.homeDir;
+    if (relationship === "destination contains source") sourceDir = path.join(destination, "checkout");
+    if (relationship === "ancestor symlink") {
+      fs.rmSync(path.dirname(destination), { recursive: true });
+      fs.mkdirSync(path.join(fixture.temporary, "repositories"));
+      try {
+        fs.symlinkSync(path.join(fixture.temporary, "repositories"), path.dirname(destination), "junction");
+      } catch (error) {
+        if (error.code === "EPERM") return t.skip("Creating symlinks requires additional Windows privileges");
+        throw error;
+      }
+      sourceDir = path.join(fixture.temporary, "repositories/persona-skill");
+    }
+    fs.mkdirSync(sourceDir, { recursive: true });
+    for (const file of RUNTIME_FILES) {
+      const target = path.join(sourceDir, file);
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.copyFileSync(path.join(fixture.sourceDir, file), target);
+    }
+    fs.mkdirSync(path.join(sourceDir, ".git"));
+    fs.writeFileSync(path.join(sourceDir, ".git/config"), "must not delete source");
+    const before = contents(sourceDir);
+    assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn }), /must not overlap/u);
+    assert.deepEqual(contents(sourceDir), before);
+    assert.equal(calls.some((args) => ["mkdir", "mktemp", "rsync", "mv", "rm"].includes(args[1])), false);
+    assertWindowsSnapshotCleaned(calls);
+  });
+}
+
+for (const gitKind of ["file", "directory"]) {
+  test(`WSL refuses an unrelated Git checkout with a .git ${gitKind}`, (t) => {
+    const { sourceDir, destination, calls, spawn } = harness(t);
+    seedInstallation(destination);
+    if (gitKind === "directory") fs.mkdirSync(path.join(destination, ".git"));
+    else fs.writeFileSync(path.join(destination, ".git"), "gitdir: elsewhere");
+    const before = contents(destination);
+    assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn }), /WSL test/u);
+    assert.deepEqual(contents(destination), before);
+    assert.equal(calls.some((args) => args[1] === "mv"), false);
+  });
+}
+
+test("WSL refuses a symlinked destination before changing its target", (t) => {
+  const { sourceDir, destination, temporary, spawn } = harness(t);
+  const outside = path.join(temporary, "outside");
+  seedInstallation(outside);
+  fs.mkdirSync(path.dirname(destination), { recursive: true });
+  try { fs.symlinkSync(outside, destination, "junction"); }
+  catch (error) {
+    if (error.code === "EPERM") return t.skip("Creating symlinks requires additional Windows privileges");
+    throw error;
+  }
+  const before = contents(outside);
+  assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn }), /WSL test/u);
+  assert.deepEqual(contents(outside), before);
+});
+
+test("WSL staging uses real host rsync without changing old files before completion", (t) => {
   const probe = spawnSync("rsync", ["--version"], { stdio: "ignore", shell: false });
   if (process.platform === "win32" || probe.error || probe.status !== 0) {
     return t.skip("Requires a POSIX host with rsync; WSL launcher remains simulated");
   }
-  const { temporary, sourceDir } = createRuntimeFixture(t);
-  const homeDir = path.join(temporary, "home & ;$(printf INJECTED) ' 中文");
-  const destination = path.join(homeDir, ".openclaw/workspace/skills/persona-skill");
-  fs.mkdirSync(path.join(destination, "scripts"), { recursive: true });
-  fs.writeFileSync(path.join(destination, "scripts/sync-wsl.mjs"), "old unsafe helper");
-  const spawn = (_command, args, options) => {
-    if (args[1] === "wslpath") return { status: 0, stdout: `${args[4]}\n` };
-    if (args[1] === "printenv") return { status: 0, stdout: `${homeDir}\n` };
-    return spawnSync(args[1], args.slice(2), options);
-  };
-  assert.equal(syncWsl({ sourceDir, platform: "win32", spawn }), destination);
+  const { sourceDir, destination, spawn } = harness(t, { realRsync: true });
+  seedInstallation(destination);
+  const source = fs.readFileSync(path.join(sourceDir, "SKILL.md"));
+  fs.writeFileSync(path.join(destination, "SKILL.md"), Buffer.alloc(source.length, "x"));
+  syncWsl({ sourceDir, platform: "win32", spawn });
+  assert.deepEqual(fs.readFileSync(path.join(destination, "SKILL.md")), source);
   assert.deepEqual(listFiles(destination), [...RUNTIME_FILES].sort());
 });
 
-for (const value of ["", "relative/path", "/home/test\n/another/path", "/home/test\0bad"]) {
-  test(`WSL sync rejects invalid home path ${JSON.stringify(value)} before writing`, (t) => {
-    const { sourceDir } = createRuntimeFixture(t);
-    const commands = [];
-    const spawn = (_command, args) => {
-      commands.push(args[1]);
-      return { status: 0, stdout: args[1] === "wslpath" ? "/mnt/c/staged\n" : value };
-    };
+for (const homeOutput of ["", "relative/path", "/home/test\n/another/path", "/home/test\0bad"]) {
+  test(`WSL refuses invalid home output ${JSON.stringify(homeOutput)}`, (t) => {
+    const { sourceDir, destination, calls, spawn } = harness(t, { homeOutput });
     assert.throws(() => syncWsl({ sourceDir, platform: "win32", spawn }), /absolute Linux path/u);
-    assert.deepEqual(commands, ["wslpath", "printenv"]);
+    assert.equal(fs.existsSync(destination), false);
+    assert.equal(calls.some((args) => args[1] === "mkdir"), false);
   });
 }
 
-test("native and WSL-hosted sync use the local runtime installer without invoking a shell", (t) => {
+test("native and WSL-hosted sync use the local installer without launching a process", (t) => {
   const { temporary, sourceDir } = createRuntimeFixture(t);
   for (const platform of ["linux", "darwin"]) {
     const destination = syncWsl({

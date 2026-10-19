@@ -153,9 +153,11 @@ npm run publish:clawhub -- --dry-run
 npm run publish:clawhub
 ```
 
-发布、本地同步、Windows 到 WSL 同步和 smoke 安装共用 `scripts/runtime-bundle.mjs` 中的显式运行文件白名单。安装内容仅包含 `SKILL.md`、MBTI 索引与类型资料、人格协议和模板，以及 `scripts/mbti-lookup.js`；维护脚本和未列入清单的文件不会安装。
+发布、本地同步、Windows 到 WSL 同步和 smoke 安装共用 `scripts/runtime-bundle.mjs` 中的显式运行文件白名单。安装内容仅包含 `SKILL.md`、MBTI 索引与类型资料、人格协议和模板、`scripts/mbti-lookup.js`，以及其最小 CommonJS 包边界 `scripts/package.json`。该包边界确保 lookup 在 ESM 工作区中也可执行；维护脚本和未列入清单的文件不会安装。
 
-`sync:local-openclaw` 只替换 `~/.openclaw/workspace/skills/persona-skill`，会移除该 Skill 目录中的旧文件。Windows 上的 `sync:wsl` 同步到默认 WSL 发行版当前用户的同一路径，需要 WSL 内已安装 `rsync`；它通过 `wsl.exe --exec` 和独立参数执行，不经过 shell。Linux、macOS 或 WSL 内运行时执行本地同步。两种同步都拒绝将符号链接作为目标 Skill 目录。同步源始终以仓库所在位置为准，不受当前目录影响。
+`sync:local-openclaw` 只替换 `~/.openclaw/workspace/skills/persona-skill`，会移除该 Skill 目录中的旧文件。Windows 上的 `sync:wsl` 同步到默认 WSL 发行版当前用户的同一路径，需要 WSL 内提供 `rsync`、`realpath`、`mktemp` 和支持 `-T` 的 `mv`（GNU coreutils 或兼容工具）；它通过 `wsl.exe --exec` 和独立参数执行，不经过 shell。Linux、macOS 或 WSL 内运行时执行本地同步。两种同步都拒绝源与目标重叠、目标 Skill 目录为符号链接或目标内含 `.git` 的情况。同步源始终以仓库所在位置为准，不受当前目录影响。
+
+两种安装器都会沿源和目标的祖先链核对文件系统身份，防止大小写别名和祖先符号链接掩盖重叠关系。它们先完成独立暂存，再替换旧 Skill；传输失败不会修改旧安装，切换失败时尝试回滚。回滚失败或移动执行结果不确定时保留恢复目录，并在错误中给出路径，避免删掉可能仅剩的副本。
 
 发布包装脚本会先运行测试，再暂存运行文件。`--dry-run` 仅在本地校验并列出该文件清单，不调用 ClawHub、不上传；它不代表注册表已接受发布。测试覆盖特殊字符路径、旧文件清理、运行包一致性及人格检查。
 
