@@ -6,18 +6,22 @@
 - 运行时核心文档只依赖：
   - `references/protocols/initialization-flow.md`
   - `references/protocols/drafting-spec.md`
+  - `references/protocols/persona-update.md`
   - `references/runtime-context/template-pack.md`
+  - `references/runtime-context/SOUL.template.md`
   - `references/runtime-context/persona-profile-consumption-guide.md`
 - 数据资产只依赖：
   - `assets/mbti/mbti-index.json`
   - `references/mbti/*.md`
-- `.clawhubignore` 已排除 `AGENTS.md`、`.codex/`、README、docs、tests、smoke、sync、release 和测试辅助脚本
+- `scripts/runtime-bundle.mjs` 的 `RUNTIME_FILES` 是发布、本地同步、Windows 到 WSL 同步和 smoke 安装的唯一运行文件白名单
+- `.clawhubignore` 由该白名单生成，默认排除所有未列入的文件；测试检查两者一致
+- 发布包装脚本只向 ClawHub 传递临时运行包目录，不上传整个仓库
 - 发布包中的 `scripts/` 只保留运行时实际调用的 `mbti-lookup.js`
 
 ## 发布前检查
 
 - 先运行：`npm test`
-- 运行 `clawhub skill publish . --dry-run --json`，确认待发布版本与文件指纹
+- 运行 `npm run publish:clawhub -- --dry-run`，运行测试并在本地确认版本和暂存文件清单；此命令不调用 ClawHub，不代表注册表验证通过
 - 建议再运行：`npm run smoke:persona:runtime`
 - 确认 `package.json` 中的 `version` 已更新
 - 确认 `CHANGELOG.md` 已补本次版本条目
@@ -55,7 +59,7 @@ npm run publish:clawhub
 
 如果本机 `openclaw` 不在 `PATH`，运行 smoke 时可先设置 `OPENCLAW_BIN` 指向可执行文件；如果默认临时目录不可写，可设置 `OPENCLAW_SMOKE_TMPDIR`。
 
-该命令会先运行测试，通过后再读取 `package.json` 的版本号进行发布。
+该命令读取 `package.json` 的版本号，先运行测试，再按统一白名单创建临时运行包并发布，结束后清理暂存目录。维护工具不会进入发布包；Windows 下的发布调用同样使用参数数组，不拼接 shell 命令。
 
 ## 发布后验证
 

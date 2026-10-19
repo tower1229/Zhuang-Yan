@@ -151,10 +151,16 @@ That way the model reads only what the current step needs, and avoids loading an
 npm test
 npm run smoke:persona
 npm run sync:local-openclaw
+npm run sync:wsl
+npm run publish:clawhub -- --dry-run
 npm run publish:clawhub
 ```
 
-Tests cover MBTI lookup, identity-card updates, package layout, and smoke checks after persona initialization.
+Publishing, local sync, Windows-to-WSL sync, and smoke installation all use the explicit runtime file allowlist in `scripts/runtime-bundle.mjs`. Only `SKILL.md`, the MBTI index and type references, the persona protocols/templates, and `scripts/mbti-lookup.js` are installed. Maintainer scripts and unlisted files are excluded.
+
+`sync:local-openclaw` replaces only `~/.openclaw/workspace/skills/persona-skill`, removing stale files in that skill directory. On Windows, `sync:wsl` targets the default WSL distribution's current user and requires `rsync` there; it invokes `wsl.exe --exec` with separate arguments and no shell. On Linux, macOS, or inside WSL, it performs a local sync. Both sync commands reject a symlink as the target skill directory. Sync sources always resolve from the repository location, regardless of the current directory.
+
+The publish wrapper runs tests and stages the runtime bundle before publishing. `--dry-run` validates and lists that bundle locally without invoking ClawHub or uploading anything. It is a local packaging check, not registry acceptance. Tests cover special-character paths, stale-file removal, runtime bundle consistency, and persona checks.
 
 ## Project info
 

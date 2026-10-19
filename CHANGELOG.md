@@ -2,6 +2,13 @@
 
 All notable repository-level changes to this project are documented in this file.
 
+## [Unreleased]
+
+- 保留 Windows 到默认 WSL 发行版的同步，改用 `wsl.exe --exec` 与独立参数执行路径转换、目录创建和 rsync，消除路径拼接进 shell 命令的注入风险。
+- 发布、本地同步和 smoke 安装统一使用显式运行文件白名单，排除维护工具与未知文件；本地同步会清理旧安装中的维护脚本。
+- `.clawhubignore` 由同一白名单生成并由测试校验；发布先暂存运行包，新增不调用 ClawHub 的本地 `--dry-run`，Windows 发布调用也移除 shell 拼接。
+- 增加特殊路径、跨进程参数传递、旧文件清理、运行包可执行性、失败清理和安装保留测试。
+
 ## [1.2.2] - 2026-06-27
 
 - **ClawHub 发布边界收紧**：发布包排除 `AGENTS.md`、`.codex/`、smoke、sync、release 与测试辅助脚本，只保留运行时需要的 `scripts/mbti-lookup.js`。

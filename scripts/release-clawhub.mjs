@@ -2,6 +2,7 @@ import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { RUNTIME_FILES, withRuntimeBundle } from "./runtime-bundle.mjs";
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PACKAGE_JSON_PATH = path.join(ROOT_DIR, "package.json");
@@ -10,11 +11,12 @@ const TEST_TARGET = "tests/*.mjs";
 function usage(exitCode = 0) {
   const msg = `
 Usage:
-  node ./scripts/release-clawhub.mjs [--slug persona-skill] [--name "Persona Skill"] [--tag latest] [--changelog "..."] [--version <semver>]
+  node ./scripts/release-clawhub.mjs [--dry-run] [--slug persona-skill] [--name "Persona Skill"] [--tag latest] [--changelog "..."] [--version <semver>]
 
 Behavior:
   - Runs local tests before publishing
-  - Publishes this repo root as the ClawHub skill directory
+  - Stages and publishes only the shared runtime file allowlist
+  - --dry-run validates and lists the staged files without invoking ClawHub
   - Reads version from package.json by default
   - Pins --workdir to the repo root to avoid cwd resolution issues
   - Uses clawhub if present, otherwise falls back to npx clawhub
@@ -38,11 +40,13 @@ function parseArgs(argv, options = {}) {
     name: "Persona Skill",
     tag: "latest",
     changelog: "",
+    dryRun: false,
   };
 
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
-    if (a === "--version") out.version = argv[++i] ?? "";
+    if (a === "--dry-run") out.dryRun = true;
+    else if (a === "--version") out.version = argv[++i] ?? "";
     else if (a === "--slug") out.slug = argv[++i] ?? out.slug;
     else if (a === "--name") out.name = argv[++i] ?? out.name;
     else if (a === "--tag") out.tag = argv[++i] ?? out.tag;
@@ -66,25 +70,7 @@ function parseArgs(argv, options = {}) {
   return out;
 }
 
-function quoteWin(arg) {
-  const value = String(arg);
-  const escaped = value.replace(/"/g, '\\"');
-  return /[ \t&()^<>|]/.test(escaped) ? `"${escaped}"` : escaped;
-}
-
-function buildCommandSpec(cmd, args, platform = process.platform, capture = false) {
-  if (platform === "win32") {
-    return {
-      command: [cmd, ...args].map(quoteWin).join(" "),
-      options: {
-        stdio: capture ? "pipe" : "inherit",
-        cwd: ROOT_DIR,
-        shell: true,
-        encoding: capture ? "utf8" : undefined,
-      },
-    };
-  }
-
+function buildCommandSpec(cmd, args, capture = false) {
   return {
     command: cmd,
     args,
@@ -99,21 +85,29 @@ function buildCommandSpec(cmd, args, platform = process.platform, capture = fals
 
 function run(cmd, args) {
   const spec = buildCommandSpec(cmd, args);
-  const result =
-    spec.args === undefined
-      ? spawnSync(spec.command, spec.options)
-      : spawnSync(spec.command, spec.args, spec.options);
+  const result = spawnSync(spec.command, spec.args, spec.options);
 
   if (result.error) throw result.error;
-  if (typeof result.status === "number" && result.status !== 0) process.exit(result.status);
+  if (result.status !== 0) throw new Error(`Command failed (${result.status ?? result.signal}): ${cmd}`);
 }
 
-function runCapture(cmd, args) {
-  const spec = buildCommandSpec(cmd, args, process.platform, true);
-  const result =
-    spec.args === undefined
-      ? spawnSync(spec.command, spec.options)
-      : spawnSync(spec.command, spec.args, spec.options);
+function resolveNpxCli({ npmExecPath = process.env.npm_execpath, execPath = process.execPath } = {}) {
+  const candidates = [
+    npmExecPath && path.join(path.dirname(npmExecPath), "npx-cli.js"),
+    path.join(path.dirname(execPath), "node_modules", "npm", "bin", "npx-cli.js"),
+    path.resolve(path.dirname(execPath), "..", "lib", "node_modules", "npm", "bin", "npx-cli.js"),
+  ].filter(Boolean);
+  const cli = candidates.find((candidate) => fs.existsSync(candidate));
+  if (!cli) throw new Error("Could not locate npx-cli.js. Run this command through npm or install npm alongside Node.js.");
+  return cli;
+}
+
+function runPublisher(args, { spawn = spawnSync, npxCli } = {}) {
+  const probe = spawn("clawhub", ["--help"], { cwd: ROOT_DIR, stdio: "ignore", shell: false });
+  const spec = !probe.error && probe.status === 0
+    ? buildCommandSpec("clawhub", args, true)
+    : buildCommandSpec(process.execPath, [npxCli ?? resolveNpxCli(), "-y", "clawhub", ...args], true);
+  const result = spawn(spec.command, spec.args, spec.options);
 
   return {
     status: result.status ?? 1,
@@ -121,14 +115,6 @@ function runCapture(cmd, args) {
     stdout: typeof result.stdout === "string" ? result.stdout : "",
     stderr: typeof result.stderr === "string" ? result.stderr : "",
   };
-}
-
-function hasCmd(cmd) {
-  const isWin = process.platform === "win32";
-  const result = isWin
-    ? spawnSync(`${cmd} --help`, { stdio: "ignore", cwd: ROOT_DIR, shell: true })
-    : spawnSync(cmd, ["--help"], { stdio: "ignore", cwd: ROOT_DIR, shell: false });
-  return !result.error && result.status === 0;
 }
 
 function detectPublisherBootstrapBug(output) {
@@ -155,47 +141,49 @@ function runTests() {
   run(process.execPath, ["--test", TEST_TARGET]);
 }
 
-function publish(args) {
-  const publishArgs = [
-    "--workdir",
-    ROOT_DIR,
-    "publish",
-    ".",
-    "--slug",
-    args.slug,
-    "--name",
-    args.name,
-    "--version",
-    args.version,
-    "--tags",
-    args.tag,
-    "--changelog",
-    String(args.changelog).replace(/\r?\n/g, "\\n"),
-  ];
+function publish(args, { sourceDir = ROOT_DIR, invokePublisher = runPublisher } = {}) {
+  return withRuntimeBundle((bundleDir) => {
+    if (args.dryRun) return { version: args.version, files: [...RUNTIME_FILES] };
+    const publishArgs = [
+      "--workdir",
+      ROOT_DIR,
+      "publish",
+      bundleDir,
+      "--slug",
+      args.slug,
+      "--name",
+      args.name,
+      "--version",
+      args.version,
+      "--tags",
+      args.tag,
+      "--changelog",
+      String(args.changelog),
+    ];
 
-  const command = hasCmd("clawhub")
-    ? { cmd: "clawhub", args: publishArgs }
-    : { cmd: "npx", args: ["-y", "clawhub", ...publishArgs] };
+    const result = invokePublisher(publishArgs);
 
-  const result = runCapture(command.cmd, command.args);
+    if (result.stdout) process.stdout.write(result.stdout);
+    if (result.stderr) process.stderr.write(result.stderr);
 
-  if (result.stdout) process.stdout.write(result.stdout);
-  if (result.stderr) process.stderr.write(result.stderr);
-
-  if (result.error) throw result.error;
-  if (result.status !== 0) {
-    const combined = `${result.stdout}\n${result.stderr}`;
-    if (detectPublisherBootstrapBug(combined)) {
-      printPublisherBootstrapHelp();
+    if (result.error) throw result.error;
+    if (result.status !== 0) {
+      const combined = `${result.stdout}\n${result.stderr}`;
+      if (detectPublisherBootstrapBug(combined)) {
+        printPublisherBootstrapHelp();
+      }
+      const error = new Error(`ClawHub publish failed (${result.status})`);
+      error.exitCode = result.status;
+      throw error;
     }
-    process.exit(result.status);
-  }
+  }, { sourceDir });
 }
 
 function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv);
   runTests();
-  publish(args);
+  const result = publish(args);
+  if (args.dryRun) console.log(JSON.stringify(result, null, 2));
 }
 
 const isDirectRun =
@@ -206,11 +194,18 @@ export {
   buildCommandSpec,
   detectPublisherBootstrapBug,
   parseArgs,
+  publish,
   printPublisherBootstrapHelp,
-  quoteWin,
   readPackageVersion,
+  resolveNpxCli,
+  runPublisher,
 };
 
 if (isDirectRun) {
-  main();
+  try {
+    main();
+  } catch (error) {
+    console.error(error.message);
+    process.exitCode = error.exitCode ?? 1;
+  }
 }

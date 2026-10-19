@@ -148,10 +148,16 @@ clawhub install persona-skill
 npm test
 npm run smoke:persona
 npm run sync:local-openclaw
+npm run sync:wsl
+npm run publish:clawhub -- --dry-run
 npm run publish:clawhub
 ```
 
-测试覆盖了 MBTI lookup、身份卡更新、包结构，以及 persona 初始化后的 smoke 检查。
+发布、本地同步、Windows 到 WSL 同步和 smoke 安装共用 `scripts/runtime-bundle.mjs` 中的显式运行文件白名单。安装内容仅包含 `SKILL.md`、MBTI 索引与类型资料、人格协议和模板，以及 `scripts/mbti-lookup.js`；维护脚本和未列入清单的文件不会安装。
+
+`sync:local-openclaw` 只替换 `~/.openclaw/workspace/skills/persona-skill`，会移除该 Skill 目录中的旧文件。Windows 上的 `sync:wsl` 同步到默认 WSL 发行版当前用户的同一路径，需要 WSL 内已安装 `rsync`；它通过 `wsl.exe --exec` 和独立参数执行，不经过 shell。Linux、macOS 或 WSL 内运行时执行本地同步。两种同步都拒绝将符号链接作为目标 Skill 目录。同步源始终以仓库所在位置为准，不受当前目录影响。
+
+发布包装脚本会先运行测试，再暂存运行文件。`--dry-run` 仅在本地校验并列出该文件清单，不调用 ClawHub、不上传；它不代表注册表已接受发布。测试覆盖特殊字符路径、旧文件清理、运行包一致性及人格检查。
 
 ## 项目信息
 

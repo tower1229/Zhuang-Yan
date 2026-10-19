@@ -4,6 +4,7 @@ import path from "node:path";
 import process from "node:process";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { copyRuntimeBundle } from "./runtime-bundle.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const home = os.homedir();
@@ -167,17 +168,8 @@ function ensureReadable(filePath) {
   fs.accessSync(filePath, fs.constants.R_OK);
 }
 
-function copyRepoIntoSkillDir(destinationDir) {
-  fs.cpSync(root, destinationDir, {
-    recursive: true,
-    filter(source) {
-      const basename = path.basename(source);
-      if (basename === ".git" || basename === "node_modules") {
-        return false;
-      }
-      return true;
-    },
-  });
+function installSmokeSkill(destinationDir, sourceDir = root) {
+  copyRuntimeBundle(destinationDir, sourceDir);
 }
 
 function copyIfPresent(source, destination) {
@@ -281,7 +273,7 @@ function prepareTempOpenClawState(options) {
   const sanitizedConfig = sanitizeSmokeConfig(config, workspaceDir);
   fs.writeFileSync(configPath, JSON.stringify(sanitizedConfig, null, 2), "utf8");
 
-  copyRepoIntoSkillDir(skillDir);
+  installSmokeSkill(skillDir);
   writePersonaSeed(workspaceDir, options.seedLiveWorkspace);
 
   return { tempRoot, stateDir, workspaceDir, configPath, skillDir };
@@ -1344,7 +1336,7 @@ function main() {
 const isDirectRun =
   process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
 
-export { parseArgs, runRuntimeProbeChecks, runStructuralChecks, runTranscriptChecks };
+export { installSmokeSkill, parseArgs, runRuntimeProbeChecks, runStructuralChecks, runTranscriptChecks };
 
 if (isDirectRun) {
   main();

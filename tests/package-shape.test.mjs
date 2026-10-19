@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { renderClawHubIgnore } from "../scripts/runtime-bundle.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(new URL(import.meta.url))), "..");
 
@@ -40,23 +41,12 @@ test("runtime files required by the skill exist under the PERSONA_PROFILE archit
   assert.equal(exists("docs/persona-generation-strategy.md"), false);
 });
 
-test(".clawhubignore excludes maintainer-only files", () => {
+test(".clawhubignore is generated from the shared runtime allowlist", () => {
   const ignore = fs.readFileSync(path.join(root, ".clawhubignore"), "utf8");
-  assert.match(ignore, /^AGENTS\.md$/m);
-  assert.match(ignore, /^\.codex\/$/m);
-  assert.match(ignore, /^README\.md$/m);
-  assert.match(ignore, /^README_ZH\.md$/m);
-  assert.match(ignore, /^CHANGELOG\.md$/m);
-  assert.match(ignore, /^CONTRIBUTING\.md$/m);
-  assert.match(ignore, /^LICENSE$/m);
-  assert.match(ignore, /^docs\/$/m);
-  assert.match(ignore, /^tests\/$/m);
-  assert.match(ignore, /^scripts\/release-clawhub\.mjs$/m);
-  assert.match(ignore, /^scripts\/identity-card\.mjs$/m);
-  assert.match(ignore, /^scripts\/smoke-persona-openclaw\.mjs$/m);
-  assert.match(ignore, /^scripts\/sync-local-openclaw\.mjs$/m);
-  assert.match(ignore, /^scripts\/sync-wsl\.mjs$/m);
-  assert.doesNotMatch(ignore, /^scripts\/mbti-lookup\.js$/m);
+  assert.equal(ignore, renderClawHubIgnore());
+  assert.match(ignore, /^\*$/m);
+  assert.match(ignore, /^!\/scripts\/mbti-lookup\.js$/m);
+  assert.doesNotMatch(ignore, /^!.*(?:sync-wsl|sync-local-openclaw|runtime-bundle|release-clawhub|smoke-persona-openclaw)\.mjs$/m);
 });
 
 test("core guidance files are Chinese-first", () => {
